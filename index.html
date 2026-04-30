@@ -2485,9 +2485,8 @@
         // Đang nghỉ sau rep
         if (ts.isResting) {
           ts.restRem--;
-          const half = Math.floor(ts.items[ts.idx].restSec / 2);
           if (
-            ts.restRem <= half &&
+            ts.restRem <= 10 &&
             ts.restRem !== lastSpoken &&
             ts.restRem > 0
           ) {
@@ -2517,9 +2516,7 @@
             return;
           }
         }
-        const total = ts.isOn ? item.onSec : item.offSec,
-          half = Math.floor(total / 2);
-        if (ts.rem <= half && ts.rem !== lastSpoken && ts.rem > 0) {
+        if (ts.rem <= 10 && ts.rem !== lastSpoken && ts.rem > 0) {
           lastSpoken = ts.rem;
           speak(String(ts.rem));
         }
