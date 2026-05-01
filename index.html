@@ -869,24 +869,8 @@
       }
 
       /* preview mode */
-      body.preview-mode .sticky-start {
-        display: none !important;
-      }
       .preview-note {
         display: none;
-        background: #1a1500;
-        border: 1px solid #3a3000;
-        border-radius: 8px;
-        margin: 16px 20px 0;
-        padding: 10px 14px;
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: #f59e0b;
-        letter-spacing: 1px;
-        text-align: center;
-      }
-      body.preview-mode .preview-note {
-        display: block;
       }
     </style>
   </head>
@@ -1924,7 +1908,10 @@
           },
         ];
       }
-      function repSets(ph, name, detail, reps, sets, restSec) {
+      function repSets(ph, name, detail, reps, sets, restSec, betweenSec) {
+        // restSec = nghỉ giữa các set cùng bài
+        // betweenSec = nghỉ sau set cuối trước khi sang bài mới (mặc định = restSec)
+        const between = betweenSec !== undefined ? betweenSec : restSec;
         const items = [];
         for (let s = 1; s <= sets; s++)
           items.push({
@@ -1932,7 +1919,7 @@
             name: `${name} SET ${s}`,
             detail: s === 1 ? detail : `${reps} rep`,
             reps,
-            restSec: s < sets ? restSec : 0,
+            restSec: s < sets ? restSec : between,
           });
         return items;
       }
@@ -1945,7 +1932,11 @@
         reps,
         sets,
         restSec,
+        betweenSec,
       ) {
+        // restSec = nghỉ sau mỗi cặp TRÁI+PHẢI
+        // betweenSec = nghỉ sau cặp cuối trước khi sang bài mới (mặc định = restSec)
+        const between = betweenSec !== undefined ? betweenSec : restSec;
         const items = [];
         for (let s = 1; s <= sets; s++) {
           items.push({
@@ -1960,7 +1951,7 @@
             name: `${nameR} SET ${s}`,
             detail: s === 1 ? detailR : `${reps} rep`,
             reps,
-            restSec: s < sets ? restSec : 0,
+            restSec: s < sets ? restSec : between,
           });
         }
         return items;
@@ -2455,8 +2446,7 @@
         sessData = data;
         renderSchedule(data.morning, "schedule-morning");
         renderSchedule(data.afternoon, "schedule-afternoon");
-        if (!preview)
-          document.getElementById("stickyStart").style.display = "block";
+        document.getElementById("stickyStart").style.display = "block";
         switchTab("morning");
         updateEstTime();
       }
@@ -2606,6 +2596,18 @@
         if (isRep(item)) {
           showRing(false);
           document.getElementById("repNum").textContent = item.reps;
+          // Fix nextName/nextDetail cho rep items
+          const niRep = document.getElementById("nextName");
+          const ndRep = document.getElementById("nextDetail");
+          const nxRep = ts.idx + 1;
+          if (nxRep < ts.items.length) {
+            niRep.textContent = ts.items[nxRep].name;
+            ndRep.textContent = ts.items[nxRep].detail || "";
+          } else {
+            niRep.textContent = "🏁 KẾT THÚC";
+            ndRep.textContent = "";
+          }
+          niRep.className = "next-name";
         } else {
           showRing(true);
           const { isOn, rem } = ts,
@@ -2779,7 +2781,6 @@
         } catch (e) {}
       }
       function startSession() {
-        if (isPreviewMode()) return;
         const items = sessData[curSess];
         if (!items || !items.length) return;
         startCountdown(items, 0);
@@ -2829,7 +2830,6 @@
       }
       function jumpToRound(idx, sid) {
         if (sid !== curSess) return;
-        if (isPreviewMode()) return;
         const items = sessData[curSess];
         if (!items || idx >= items.length) return;
         if (ts.iv) {
