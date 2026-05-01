@@ -837,6 +837,37 @@
         font-size: 11px;
       }
 
+      /* COUNTDOWN */
+      .countdown-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 250;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+      .countdown-overlay.show {
+        display: flex;
+      }
+      .countdown-num {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(120px, 30vw, 200px);
+        line-height: 1;
+        letter-spacing: -4px;
+        color: var(--text);
+        animation: pulse 0.5s ease-in-out infinite;
+      }
+      .countdown-lbl {
+        font-family: "DM Mono", monospace;
+        font-size: 13px;
+        letter-spacing: 4px;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
       /* preview mode */
       body.preview-mode .sticky-start {
         display: none !important;
@@ -948,6 +979,13 @@
     <div class="sticky-start" id="stickyStart">
       <div class="est-time" id="estTime"></div>
       <button class="btn-start" onclick="startSession()">BẮT ĐẦU</button>
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="countdown-overlay" id="countdownOverlay">
+      <div class="countdown-lbl">CHUẨN BỊ</div>
+      <div class="countdown-num" id="countdownNum">5</div>
+      <div class="countdown-lbl" id="countdownNext">—</div>
     </div>
 
     <div class="timer-overlay" id="timerOverlay">
@@ -2744,26 +2782,50 @@
         if (isPreviewMode()) return;
         const items = sessData[curSess];
         if (!items || !items.length) return;
-        ts = {
-          items,
-          idx: 0,
-          isOn: true,
-          rem: isRep(items[0]) ? 0 : items[0].onSec,
-          paused: false,
-          iv: null,
-          isResting: false,
-          restRem: 0,
-        };
-        lastSpoken = -1;
-        document.getElementById("timerOverlay").classList.add("show");
-        document.getElementById("btnPR").textContent = "PAUSE";
-        speak(
-          items[0].detail
-            ? items[0].name + ". " + items[0].detail
-            : items[0].name,
-        );
-        startIv();
-        updateUI();
+        startCountdown(items, 0);
+      }
+
+      function startCountdown(items, startIdx) {
+        let count = 5;
+        const overlay = document.getElementById("countdownOverlay");
+        const numEl = document.getElementById("countdownNum");
+        const nextEl = document.getElementById("countdownNext");
+        const firstItem = items[startIdx];
+        nextEl.textContent =
+          firstItem.name + (firstItem.detail ? " — " + firstItem.detail : "");
+        numEl.textContent = count;
+        overlay.classList.add("show");
+        speak("Chuẩn bị");
+        const iv = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(iv);
+            overlay.classList.remove("show");
+            ts = {
+              items,
+              idx: startIdx,
+              isOn: true,
+              rem: isRep(firstItem) ? 0 : firstItem.onSec,
+              paused: false,
+              iv: null,
+              isResting: false,
+              restRem: 0,
+            };
+            lastSpoken = -1;
+            document.getElementById("timerOverlay").classList.add("show");
+            document.getElementById("btnPR").textContent = "PAUSE";
+            speak(
+              firstItem.detail
+                ? firstItem.name + ". " + firstItem.detail
+                : firstItem.name,
+            );
+            startIv();
+            updateUI();
+          } else {
+            numEl.textContent = count;
+            speak(String(count));
+          }
+        }, 1000);
       }
       function jumpToRound(idx, sid) {
         if (sid !== curSess) return;
@@ -2774,26 +2836,7 @@
           clearInterval(ts.iv);
           ts.iv = null;
         }
-        ts = {
-          items,
-          idx,
-          isOn: true,
-          rem: isRep(items[idx]) ? 0 : items[idx].onSec,
-          paused: false,
-          iv: null,
-          isResting: false,
-          restRem: 0,
-        };
-        lastSpoken = -1;
-        document.getElementById("timerOverlay").classList.add("show");
-        document.getElementById("btnPR").textContent = "PAUSE";
-        speak(
-          items[idx].detail
-            ? items[idx].name + ". " + items[idx].detail
-            : items[idx].name,
-        );
-        startIv();
-        updateUI();
+        startCountdown(items, idx);
       }
       function togglePause() {
         ts.paused = !ts.paused;
