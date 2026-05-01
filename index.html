@@ -676,6 +676,13 @@
         color: var(--survive);
         animation: pulse 0.5s ease-in-out infinite;
       }
+      .next-detail {
+        font-family: "DM Mono", monospace;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
       .t-controls {
         display: flex;
         gap: 12px;
@@ -830,7 +837,7 @@
         font-size: 11px;
       }
 
-      /* preview mode — ẩn nút BẮT ĐẦU */
+      /* preview mode */
       body.preview-mode .sticky-start {
         display: none !important;
       }
@@ -977,6 +984,7 @@
       <div class="next-box">
         <div class="next-lbl">TIẾP THEO</div>
         <div class="next-name" id="nextName">—</div>
+        <div class="next-detail" id="nextDetail"></div>
       </div>
       <div class="t-controls" id="tControls">
         <button class="btn btn-sec" onclick="skipRound()">SKIP ⏭</button>
@@ -1059,7 +1067,6 @@
         "Tháng 12",
       ];
 
-      // Ngày thật hôm nay (múi giờ VN)
       const realNow = new Date(
         new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }),
       );
@@ -1067,10 +1074,7 @@
       const TODAY_M = realNow.getMonth();
       const TODAY_D = realNow.getDate();
 
-      // Ngày đang xem (mặc định = hôm nay)
       let viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
-
-      // Calendar state
       let calYear = TODAY_Y,
         calMonth = TODAY_M;
 
@@ -1093,7 +1097,7 @@
       }
 
       // ══════════════════════════════════
-      // WEEK CALC (dùng viewDate thay vì tzNow)
+      // WEEK CALC
       // ══════════════════════════════════
       function weekNumFrom(startDateStr, refDate) {
         const s = new Date(startDateStr);
@@ -1213,7 +1217,7 @@
       }
 
       // ══════════════════════════════════
-      // BUILDERS (giữ nguyên)
+      // BUILDERS
       // ══════════════════════════════════
       const isRep = (item) => !!item.reps;
       const W3 = () => [
@@ -1403,42 +1407,126 @@
           ...FREE(bp),
         ];
       }
+
+      // ✅ buildTuesday_M theo tuần — 5 đòn thủ: Slip, Duck, Pull back, Block, Deflect
       function buildTuesday_M() {
         const bp = getBoxingPhase();
-        return [
-          ...W3(),
-          ...SH2(),
-          {
-            phase: "defend",
-            name: "Drill H1 — Slip",
-            detail: "Vai trước giật → slip trái | Vai sau xoay → slip phải",
-            onSec: 120,
-            offSec: 40,
-          },
-          {
-            phase: "defend",
-            name: "Drill H2 — Duck",
-            detail: "Khuỷu vòng → duck xuống (GỐI, không lưng)",
-            onSec: 120,
-            offSec: 40,
-          },
-          {
-            phase: "defend",
-            name: "Drill H3 — Pull Back",
-            detail: "Người lao tới → pull back → chờ hụt → phản",
-            onSec: 120,
-            offSec: 40,
-          },
-          {
-            phase: "defend",
-            name: "Drill H4 — Tự do",
-            detail: "Defend xong là dừng, không thêm combo",
-            onSec: 120,
-            offSec: 40,
-          },
-          ...CORE(),
-        ];
+        const w = getWkBoxing();
+        const base = [...W3(), ...SH2()];
+
+        if (w <= 2) {
+          // Tuần 1-2: 3 đòn né cơ bản
+          return [
+            ...base,
+            {
+              phase: "defend",
+              name: "Drill H1 — Slip",
+              detail:
+                "Vai giật → slip trái | Vai xoay → slip phải. Đầu lệch, chân không nhấc",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H2 — Duck",
+              detail:
+                "Khuỷu vòng rộng → gập GỐI xuống thấp, lưng thẳng, không cúi đầu",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H3 — Pull Back",
+              detail:
+                "Người lao tới → rút toàn thân ra sau → chờ hụt → phản ngay",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H4 — Tự do",
+              detail: "3 đòn trên tùy cue — defend xong dừng, không thêm combo",
+              onSec: 120,
+              offSec: 40,
+            },
+            ...CORE(),
+          ];
+        } else if (w <= 4) {
+          // Tuần 3-4: thêm Block + Deflect, tập từng cái riêng
+          return [
+            ...base,
+            {
+              phase: "defend",
+              name: "Drill H1 — Slip + Duck",
+              detail: "Đòn thẳng → slip | Đòn vòng → duck gối. Xen kẽ 2 cue",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H2 — Pull Back",
+              detail:
+                "Bất kỳ đòn nào → rút toàn thân → chờ hụt → bước vào phản",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H3 — Block",
+              detail:
+                "Đòn tới → khuỷu/cánh tay áp vào chặn → hấp thụ lực → phản ngay",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H4 — Deflect",
+              detail:
+                "Đòn tới → khuỷu/cánh tay hướng lệch góc → lực trượt qua → phản ngay",
+              onSec: 120,
+              offSec: 40,
+            },
+            ...CORE(),
+          ];
+        } else {
+          // Tuần 5+: mix, tăng tốc
+          return [
+            ...base,
+            {
+              phase: "defend",
+              name: "Drill H1 — Slip + Duck",
+              detail:
+                "Đòn thẳng → slip | Đòn vòng → duck. Phản xạ ngay, không nghĩ",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H2 — Pull Back + Block",
+              detail:
+                "Khoảng cách xa → pull back | Khoảng cách gần → block → phản",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H3 — Deflect",
+              detail: "Cảm nhận góc đòn → hướng lệch bằng khuỷu → counter liền",
+              onSec: 120,
+              offSec: 40,
+            },
+            {
+              phase: "defend",
+              name: "Drill H4 — Tự do cả 5",
+              detail: "Mắt đọc cue → tay tự chọn defend → phản → lui ngay",
+              onSec: 120,
+              offSec: 40,
+            },
+            ...CORE(),
+          ];
+        }
       }
+
       function buildWednesday_M() {
         const bp = getBoxingPhase();
         return [
@@ -1456,39 +1544,134 @@
       }
       function buildThursday_M() {
         const bp = getBoxingPhase();
+        const w = getWkBoxing();
         const t = 60,
           r = 45;
+        const base = [...W3(), ...SH2()];
+
+        let speedRounds = [];
+        if (w <= 2) {
+          speedRounds = [
+            {
+              phase: "speed",
+              name: "Speed H1 — T0 MAX",
+              detail: "Tay thả → vào thẳng MAX SPEED ngay",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H2 — T0 MAX",
+              detail: "Giữ tốc độ tối đa, không do dự",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H3 — T3 Slip",
+              detail: "Vai giật → slip trái/phải → đánh thân → Hook ngay",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H4 — T3 Duck",
+              detail: "Khuỷu vòng → duck gối → vào sát → đánh thân",
+              onSec: t,
+              offSec: r,
+            },
+          ];
+        } else if (w <= 4) {
+          speedRounds = [
+            {
+              phase: "speed",
+              name: "Speed H1 — T0 MAX",
+              detail: "Tay thả → vào thẳng MAX SPEED ngay",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H2 — T0 MAX",
+              detail: "Giữ tốc độ tối đa, không do dự",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H3 — T3 Slip + Duck",
+              detail: "Đòn thẳng → slip → phản | Đòn vòng → duck gối → phản",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H4 — T3 Pull back + Block",
+              detail:
+                "Người lao → pull back → chờ hụt → phản | Đòn gần → block → phản",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "trigger-fast",
+              name: "Speed H5 — FREESTYLE ⭐",
+              detail: "T0 hoặc T3 tùy cue — mắt đọc → tay tự chạy",
+              onSec: t,
+              offSec: r,
+            },
+          ];
+        } else {
+          speedRounds = [
+            {
+              phase: "speed",
+              name: "Speed H1 — T0 MAX",
+              detail: "Tay thả → vào thẳng MAX SPEED ngay",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H2 — T3 Slip + Duck",
+              detail: "Đòn thẳng → slip → phản | Đòn vòng → duck gối → phản",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H3 — T3 Pull back + Block",
+              detail: "Người lao → pull back → phản | Đòn gần → block → phản",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "speed",
+              name: "Speed H4 — T3 Deflect",
+              detail:
+                "Đòn tới → khuỷu hướng lệch góc → lực trượt qua → counter liền",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "trigger-fast",
+              name: "Speed H5 — T0 + T3 xen kẽ ⭐",
+              detail: "Tay thả → T0 | Họ ra đòn → T3. Xen kẽ liên tục",
+              onSec: t,
+              offSec: r,
+            },
+            {
+              phase: "trigger-fast",
+              name: "Speed H6 — FREESTYLE ⭐",
+              detail:
+                "Mắt đọc → tay tự chạy. Không nghĩ trước. Xong → lui ngay",
+              onSec: t,
+              offSec: r,
+            },
+          ];
+        }
+
         return [
-          ...W3(),
-          ...SH2(),
-          {
-            phase: "speed",
-            name: "Speed H1 — T0 MAX",
-            detail: "Tay thả → vào thẳng MAX SPEED ngay",
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "speed",
-            name: "Speed H2 — T0 MAX",
-            detail: "Giữ tốc độ tối đa, không do dự",
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "speed",
-            name: "Speed H3 — T3 CUE 1",
-            detail: "Vai trước giật → slip trái → đánh thân → Hook",
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "speed",
-            name: "Speed H4 — T3 CUE 2",
-            detail: "Khuỷu vòng rộng → duck gối → vào sát → đánh thân",
-            onSec: t,
-            offSec: r,
-          },
+          ...base,
+          ...speedRounds,
           {
             phase: "footwork",
             name: "Footwork H1",
@@ -1703,7 +1886,6 @@
           },
         ];
       }
-      // repSets với rest: nghỉ restSec sau mỗi set, set cuối = 0
       function repSets(ph, name, detail, reps, sets, restSec) {
         const items = [];
         for (let s = 1; s <= sets; s++)
@@ -1716,7 +1898,6 @@
           });
         return items;
       }
-      // repPairs: tay/chân trái → phải luân phiên, nghỉ sau PHẢI mỗi cặp
       function repPairs(
         ph,
         nameL,
@@ -1758,7 +1939,6 @@
           });
         return items;
       }
-
       function buildStrengthA() {
         const sp = getStrengthPhase();
         const rs = sp.restSec;
@@ -1784,7 +1964,6 @@
             onSec: 120,
             offSec: 0,
           },
-          // Push-up: nghỉ rs giữa set
           ...repSets(
             "strength",
             "Push-up",
@@ -1793,7 +1972,6 @@
             sp.sets,
             rs,
           ),
-          // Row: trái → phải → nghỉ rs sau mỗi cặp
           ...repPairs(
             "strength",
             "Row 1 tay TRÁI 10kg",
@@ -1816,7 +1994,6 @@
               rs,
             ),
           );
-        // Shoulder Tap Plank: nghỉ 45s
         items.push(
           ...repSets(
             "strength",
@@ -1827,7 +2004,6 @@
             45,
           ),
         );
-        // Step-up: trái → phải → nghỉ 45s sau cặp
         items.push(
           ...repPairs(
             "strength",
@@ -1840,7 +2016,6 @@
             45,
           ),
         );
-        // Leg Raise: nghỉ 45s
         items.push(
           ...repSets(
             "core",
@@ -1853,7 +2028,6 @@
         );
         return items;
       }
-
       function buildStrengthB() {
         const sp = getStrengthPhase();
         const rs = sp.restSec;
@@ -1879,7 +2053,6 @@
             onSec: 120,
             offSec: 0,
           },
-          // Pike Push-up: nghỉ rs
           ...repSets(
             "strength",
             "Pike Push-up",
@@ -1888,7 +2061,6 @@
             sp.sets,
             rs,
           ),
-          // Row tempo: trái → phải → nghỉ rs
           ...repPairs(
             "strength",
             "Row 1 tay TRÁI tempo chậm",
@@ -1899,7 +2071,6 @@
             sp.sets,
             rs,
           ),
-          // Rear Delt Fly: nghỉ 45s
           ...repSets(
             "strength",
             "Rear Delt Fly 5kg",
@@ -1908,7 +2079,6 @@
             sp.sets,
             45,
           ),
-          // Glute Bridge: trái → phải → nghỉ 45s
           ...repPairs(
             "strength",
             "Glute Bridge CHÂN TRÁI",
@@ -1920,7 +2090,6 @@
             45,
           ),
         ];
-        // Side Plank: timer, nghỉ 30s sau PHẢI mỗi cặp (set cuối = 0)
         for (let s = 1; s <= sp.sets; s++) {
           items.push({
             phase: "strength",
@@ -1938,7 +2107,6 @@
             offSec: s < sp.sets ? 30 : 0,
           });
         }
-        // Dead Bug: trái → phải → nghỉ 30s sau cặp
         items.push(
           ...repPairs(
             "strength",
@@ -1953,7 +2121,6 @@
         );
         return items;
       }
-
       function buildStrengthC() {
         const sp = getStrengthPhase();
         const rs = sp.restSec;
@@ -1979,7 +2146,6 @@
             onSec: 120,
             offSec: 0,
           },
-          // Diamond Push-up: nghỉ rs
           ...repSets(
             "strength",
             "Diamond Push-up",
@@ -1988,7 +2154,6 @@
             sp.sets,
             rs,
           ),
-          // Row: trái → phải → nghỉ rs
           ...repPairs(
             "strength",
             "Row 1 tay TRÁI 10kg",
@@ -2011,7 +2176,6 @@
               rs,
             ),
           );
-        // Russian Twist: nghỉ 45s
         items.push(
           ...repSets(
             "strength",
@@ -2023,7 +2187,6 @@
           ),
         );
         if (sp.explosive) {
-          // Jump Squat: nghỉ 60s
           items.push(
             ...repSets(
               "strength",
@@ -2035,7 +2198,6 @@
             ),
           );
         } else {
-          // Split Squat: trái → phải → nghỉ 45s
           items.push(
             ...repPairs(
               "strength",
@@ -2049,7 +2211,6 @@
             ),
           );
         }
-        // Plank: timer, nghỉ 30s giữa set
         items.push(
           ...timerSets(
             "core",
@@ -2166,17 +2327,12 @@
       function renderCalendar() {
         document.getElementById("calMonthTitle").textContent =
           `${MONTHS_VI[calMonth].toUpperCase()} ${calYear}`;
-        const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+        const firstDay = new Date(calYear, calMonth, 1).getDay();
         const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
         const daysInPrev = new Date(calYear, calMonth, 0).getDate();
-
         let html = "";
-        // prev month days
-        for (let i = firstDay - 1; i >= 0; i--) {
-          const d = daysInPrev - i;
-          html += `<div class="cal-day other-month">${d}</div>`;
-        }
-        // current month
+        for (let i = firstDay - 1; i >= 0; i--)
+          html += `<div class="cal-day other-month">${daysInPrev - i}</div>`;
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(calYear, calMonth, d);
           const dow = date.getDay();
@@ -2194,27 +2350,21 @@
           if (hasTrain) cls += " has-training";
           html += `<div class="${cls}" onclick="selectDate(${calYear},${calMonth},${d})">${d}</div>`;
         }
-        // next month fill
         const total = firstDay + daysInMonth;
         const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
-        for (let d = 1; d <= remaining; d++) {
+        for (let d = 1; d <= remaining; d++)
           html += `<div class="cal-day other-month">${d}</div>`;
-        }
         document.getElementById("calDays").innerHTML = html;
-
-        // footer info
         const selDow = viewDate.getDay();
         const selStr = `${DAYS_VI[selDow].toUpperCase()} ${viewDate.getDate().toString().padStart(2, "0")}/${(viewDate.getMonth() + 1).toString().padStart(2, "0")}/${viewDate.getFullYear()}`;
         document.getElementById("calFooterInfo").textContent =
           `ĐÃ CHỌN: ${selStr}`;
       }
-
       function selectDate(y, m, d) {
         viewDate = new Date(y, m, d);
         closeCalendar();
         loadViewDate();
       }
-
       function goToday() {
         viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
         closeCalendar();
@@ -2228,46 +2378,32 @@
         const dayIdx = viewDate.getDay();
         const dayEnView = DAYS_EN[dayIdx];
         const preview = isPreviewMode();
-
-        // header
         document.getElementById("dayBadge").textContent =
           DAYS_VI[dayIdx].toUpperCase();
         document.getElementById("dateBadge").textContent =
           viewDate.toLocaleDateString("vi-VN");
-
-        // viewing banner
         const banner = document.getElementById("viewingBanner");
         if (preview) {
-          const vd = document.getElementById("viewingDate");
-          vd.textContent = `${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2, "0")}/${(viewDate.getMonth() + 1).toString().padStart(2, "0")}/${viewDate.getFullYear()}`;
+          document.getElementById("viewingDate").textContent =
+            `${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2, "0")}/${(viewDate.getMonth() + 1).toString().padStart(2, "0")}/${viewDate.getFullYear()}`;
           banner.classList.add("show");
         } else {
           banner.classList.remove("show");
         }
-
-        // preview mode CSS
         document.body.classList.toggle("preview-mode", preview);
-
-        // calendar btn highlight
         document
           .getElementById("btnCalendar")
           .classList.toggle("today-active", !preview);
-
-        // done screens reset (chỉ khi xem ngày khác)
         ["morning", "afternoon"].forEach((s) => {
           document.getElementById(`done-${s}`).classList.remove("show");
           document.getElementById(`schedule-${s}`).style.display = "";
         });
-
-        // stop any running timer
         if (ts.iv) {
           clearInterval(ts.iv);
           ts.iv = null;
         }
         document.getElementById("timerOverlay").classList.remove("show");
         document.getElementById("progressFill").style.width = "0%";
-
-        // render
         if (dayEnView === "Sunday") {
           ["morning", "afternoon"].forEach((s) => {
             document.getElementById(`schedule-${s}`).innerHTML =
@@ -2277,17 +2413,12 @@
           sessData = { morning: [], afternoon: [] };
           return;
         }
-
         const data = buildScheduleFromDay(dayEnView);
         sessData = data;
         renderSchedule(data.morning, "schedule-morning");
         renderSchedule(data.afternoon, "schedule-afternoon");
-
-        if (!preview) {
+        if (!preview)
           document.getElementById("stickyStart").style.display = "block";
-        }
-
-        // reset tab to morning
         switchTab("morning");
         updateEstTime();
       }
@@ -2297,9 +2428,9 @@
       // ══════════════════════════════════
       function fmtDur(item) {
         if (item.reps) {
-          if (item.restSec && item.restSec > 0)
-            return item.reps + " REP + " + item.restSec + "s";
-          return item.reps + " REP";
+          return item.restSec && item.restSec > 0
+            ? item.reps + " REP + " + item.restSec + "s"
+            : item.reps + " REP";
         }
         if (item.offSec > 0) return item.onSec + "s+" + item.offSec + "s";
         const s = item.onSec;
@@ -2314,8 +2445,8 @@
           if (!isRep(item)) total += (item.onSec || 0) + (item.offSec || 0);
         });
         if (total === 0) return null;
-        const m = Math.floor(total / 60);
-        const s = total % 60;
+        const m = Math.floor(total / 60),
+          s = total % 60;
         return m > 0 ? (s > 0 ? `~${m} phút ${s}s` : `~${m} phút`) : `~${s}s`;
       }
       function updateEstTime() {
@@ -2324,7 +2455,6 @@
         const est = calcEstTime(sessData[curSess]);
         el.innerHTML = est ? `⏱ ước tính timer: <span>${est}</span>` : "";
       }
-
       function renderSchedule(items, cid) {
         const el = document.getElementById(cid);
         if (!items || !items.length) {
@@ -2356,8 +2486,6 @@
       // ══════════════════════════════════
       let curSess = "morning",
         sessData = { morning: [], afternoon: [] };
-      // ts.isResting = true khi đang nghỉ sau rep item
-      // ts.restRem = giây nghỉ còn lại
       let ts = {
         items: [],
         idx: 0,
@@ -2397,8 +2525,6 @@
       function updateUI() {
         const item = ts.items[ts.idx];
         if (!item) return;
-
-        // Đang nghỉ sau rep
         if (ts.isResting) {
           showRing(true);
           document.getElementById("tPhase").textContent =
@@ -2418,9 +2544,12 @@
             .getElementById("ringContainer")
             .classList.toggle("warn", warn);
           const ni = document.getElementById("nextName");
+          const nd = document.getElementById("nextDetail");
           const nx = ts.idx + 1;
           ni.textContent =
             nx < ts.items.length ? ts.items[nx].name : "🏁 KẾT THÚC";
+          nd.textContent =
+            nx < ts.items.length ? ts.items[nx].detail || "" : "";
           ni.className = "next-name";
           document
             .querySelectorAll(`#schedule-${curSess} .round-item`)
@@ -2432,7 +2561,6 @@
             (ts.idx / ts.items.length) * 100 + "%";
           return;
         }
-
         document.getElementById("tPhase").textContent =
           PH_LABEL[item.phase] || item.phase;
         document.getElementById("tName").textContent = item.name;
@@ -2469,6 +2597,14 @@
           }
           ni.textContent = nxt;
           ni.className = "next-name" + (nxtWarn ? " warn-txt" : "");
+          const nd2 = document.getElementById("nextDetail");
+          if (isOn && item.offSec > 0) {
+            nd2.textContent = "";
+          } else {
+            const nx2 = ts.idx + 1;
+            nd2.textContent =
+              nx2 < ts.items.length ? ts.items[nx2].detail || "" : "";
+          }
         }
         document
           .querySelectorAll(`#schedule-${curSess} .round-item`)
@@ -2479,17 +2615,11 @@
         document.getElementById("progressFill").style.width =
           (ts.idx / ts.items.length) * 100 + "%";
       }
-
       function tick() {
         if (ts.paused) return;
-        // Đang nghỉ sau rep
         if (ts.isResting) {
           ts.restRem--;
-          if (
-            ts.restRem <= 10 &&
-            ts.restRem !== lastSpoken &&
-            ts.restRem > 0
-          ) {
+          if (ts.restRem <= 10 && ts.restRem !== lastSpoken && ts.restRem > 0) {
             lastSpoken = ts.restRem;
             speak(String(ts.restRem));
           }
@@ -2523,7 +2653,6 @@
         if (ts.rem === 10 && ts.isOn) playBeep("warning");
         updateUI();
       }
-
       function advance() {
         ts.idx++;
         if (ts.idx >= ts.items.length) {
@@ -2536,15 +2665,19 @@
         lastSpoken = -1;
         const it = ts.items[ts.idx];
         ts.rem = isRep(it) ? 0 : it.onSec;
-        speak(isRep(it) ? it.name + " — " + it.reps + " rep" : it.name);
+        speak(
+          isRep(it)
+            ? it.name + " — " + it.reps + " rep"
+            : it.detail
+              ? it.name + ". " + it.detail
+              : it.name,
+        );
         startIv();
         updateUI();
       }
-
       function repDone() {
         playBeep("end");
         const item = ts.items[ts.idx];
-        // Nếu có restSec → vào chế độ nghỉ, không advance ngay
         if (item && item.restSec && item.restSec > 0) {
           ts.isResting = true;
           ts.restRem = item.restSec;
@@ -2556,13 +2689,11 @@
           advance();
         }
       }
-
       function startIv() {
         if (ts.iv) {
           clearInterval(ts.iv);
           ts.iv = null;
         }
-        // Chạy interval nếu đang nghỉ (rep rest) hoặc đang timer
         const item = ts.items[ts.idx];
         if (ts.isResting || (item && !isRep(item)))
           ts.iv = setInterval(tick, 1000);
@@ -2610,7 +2741,7 @@
         } catch (e) {}
       }
       function startSession() {
-        if (isPreviewMode()) return; // block trong preview
+        if (isPreviewMode()) return;
         const items = sessData[curSess];
         if (!items || !items.length) return;
         ts = {
@@ -2626,13 +2757,17 @@
         lastSpoken = -1;
         document.getElementById("timerOverlay").classList.add("show");
         document.getElementById("btnPR").textContent = "PAUSE";
-        speak(items[0].name);
+        speak(
+          items[0].detail
+            ? items[0].name + ". " + items[0].detail
+            : items[0].name,
+        );
         startIv();
         updateUI();
       }
       function jumpToRound(idx, sid) {
         if (sid !== curSess) return;
-        if (isPreviewMode()) return; // block trong preview
+        if (isPreviewMode()) return;
         const items = sessData[curSess];
         if (!items || idx >= items.length) return;
         if (ts.iv) {
@@ -2652,7 +2787,11 @@
         lastSpoken = -1;
         document.getElementById("timerOverlay").classList.add("show");
         document.getElementById("btnPR").textContent = "PAUSE";
-        speak(items[idx].name);
+        speak(
+          items[idx].detail
+            ? items[idx].name + ". " + items[idx].detail
+            : items[idx].name,
+        );
         startIv();
         updateUI();
       }
