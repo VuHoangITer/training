@@ -31,11 +31,7 @@
         --aerobic: #22d3ee;
         --ring-size: min(270px, 68vw);
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
         background: var(--bg);
         color: var(--text);
@@ -56,822 +52,166 @@
         background: var(--bg);
         z-index: 100;
       }
-      .header-title {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 22px;
-        letter-spacing: 3px;
-      }
-      .day-badge {
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-      }
-      .header-right {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
+      .header-title { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 3px; }
+      .day-badge { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+      .header-right { display: flex; align-items: center; gap: 12px; }
       .btn-calendar {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 8px 12px;
-        color: var(--muted);
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.15s;
+        background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+        padding: 8px 12px; color: var(--muted); cursor: pointer; font-size: 16px;
+        display: flex; align-items: center; gap: 6px; transition: all 0.15s;
       }
-      .btn-calendar:hover {
-        border-color: #444;
-        color: var(--text);
-      }
-      .btn-calendar.today-active {
-        border-color: var(--text);
-        color: var(--text);
-      }
+      .btn-calendar:hover { border-color: #444; color: var(--text); }
+      .btn-calendar.today-active { border-color: var(--text); color: var(--text); }
 
-      /* CALENDAR MODAL */
       .cal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 300;
-        display: none;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 80px;
+        position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300;
+        display: none; align-items: flex-start; justify-content: center; padding-top: 80px;
       }
-      .cal-overlay.show {
-        display: flex;
-      }
+      .cal-overlay.show { display: flex; }
       .cal-modal {
-        background: #0f0f0f;
-        border: 1px solid #2a2a2a;
-        border-radius: 16px;
-        width: min(360px, calc(100vw - 32px));
-        overflow: hidden;
-        animation: slideDown 0.2s ease;
+        background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 16px;
+        width: min(360px, calc(100vw - 32px)); overflow: hidden; animation: slideDown 0.2s ease;
       }
-      @keyframes slideDown {
-        from {
-          opacity: 0;
-          transform: translateY(-12px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .cal-header {
-        padding: 16px 20px;
-        border-bottom: 1px solid #1a1a1a;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .cal-title {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 18px;
-        letter-spacing: 2px;
-      }
-      .cal-nav {
-        display: flex;
-        gap: 4px;
-      }
-      .cal-nav-btn {
-        background: #1a1a1a;
-        border: 1px solid #2a2a2a;
-        border-radius: 6px;
-        padding: 6px 10px;
-        color: var(--muted);
-        cursor: pointer;
-        font-size: 13px;
-        transition: all 0.15s;
-      }
-      .cal-nav-btn:hover {
-        color: var(--text);
-        border-color: #444;
-      }
-      .cal-weekdays {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        padding: 12px 16px 4px;
-        gap: 2px;
-      }
-      .cal-wd {
-        text-align: center;
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: var(--muted);
-        letter-spacing: 1px;
-        padding: 4px 0;
-      }
-      .cal-wd.sunday {
-        color: #ef4444;
-        opacity: 0.6;
-      }
-      .cal-days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        padding: 4px 16px 16px;
-        gap: 4px;
-      }
+      @keyframes slideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+      .cal-header { padding: 16px 20px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: space-between; }
+      .cal-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 2px; }
+      .cal-nav { display: flex; gap: 4px; }
+      .cal-nav-btn { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 6px 10px; color: var(--muted); cursor: pointer; font-size: 13px; transition: all 0.15s; }
+      .cal-nav-btn:hover { color: var(--text); border-color: #444; }
+      .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); padding: 12px 16px 4px; gap: 2px; }
+      .cal-wd { text-align: center; font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; padding: 4px 0; }
+      .cal-wd.sunday { color: #ef4444; opacity: 0.6; }
+      .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 16px 16px; gap: 4px; }
       .cal-day {
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        font-family: "DM Mono", monospace;
-        font-size: 13px;
-        cursor: pointer;
-        transition: all 0.12s;
-        position: relative;
-        border: 1px solid transparent;
+        aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+        border-radius: 8px; font-family: "DM Mono", monospace; font-size: 13px;
+        cursor: pointer; transition: all 0.12s; position: relative; border: 1px solid transparent;
       }
-      .cal-day:hover {
-        background: #1a1a1a;
-        border-color: #333;
-      }
-      .cal-day.empty {
-        cursor: default;
-        pointer-events: none;
-      }
-      .cal-day.sunday {
-        color: #ef4444;
-        opacity: 0.5;
-      }
-      .cal-day.other-month {
-        color: #333;
-      }
-      .cal-day.has-training::after {
-        content: "";
-        position: absolute;
-        bottom: 4px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--text);
-        opacity: 0.4;
-      }
-      .cal-day.selected {
-        background: var(--text);
-        color: var(--bg);
-        border-color: var(--text);
-        font-weight: 600;
-      }
-      .cal-day.selected::after {
-        background: var(--bg);
-        opacity: 0.5;
-      }
-      .cal-day.is-today {
-        border-color: #444;
-        color: var(--text);
-      }
-      .cal-day.is-today:not(.selected) {
-        background: #1a1a1a;
-      }
-      .cal-footer {
-        padding: 12px 16px;
-        border-top: 1px solid #1a1a1a;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .cal-footer-info {
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: var(--muted);
-        letter-spacing: 1px;
-      }
-      .btn-today {
-        background: transparent;
-        border: 1px solid #333;
-        border-radius: 6px;
-        padding: 6px 12px;
-        color: var(--muted);
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: all 0.15s;
-        text-transform: uppercase;
-      }
-      .btn-today:hover {
-        border-color: var(--text);
-        color: var(--text);
-      }
+      .cal-day:hover { background: #1a1a1a; border-color: #333; }
+      .cal-day.empty { cursor: default; pointer-events: none; }
+      .cal-day.sunday { color: #ef4444; opacity: 0.5; }
+      .cal-day.other-month { color: #333; }
+      .cal-day.has-training::after { content: ""; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--text); opacity: 0.4; }
+      .cal-day.selected { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 600; }
+      .cal-day.selected::after { background: var(--bg); opacity: 0.5; }
+      .cal-day.is-today { border-color: #444; color: var(--text); }
+      .cal-day.is-today:not(.selected) { background: #1a1a1a; }
+      .cal-footer { padding: 12px 16px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+      .cal-footer-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+      .btn-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 6px 12px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 1px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+      .btn-today:hover { border-color: var(--text); color: var(--text); }
 
-      /* VIEWING BANNER */
-      .viewing-banner {
-        display: none;
-        background: #161616;
-        border-bottom: 1px solid #1e1e1e;
-        padding: 8px 20px;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .viewing-banner.show {
-        display: flex;
-      }
-      .viewing-info {
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: var(--muted);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-      }
-      .viewing-info span {
-        color: var(--text);
-      }
-      .btn-back-today {
-        background: transparent;
-        border: 1px solid #333;
-        border-radius: 6px;
-        padding: 5px 10px;
-        color: var(--muted);
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        cursor: pointer;
-        transition: all 0.15s;
-        letter-spacing: 1px;
-      }
-      .btn-back-today:hover {
-        color: var(--text);
-        border-color: #555;
-      }
+      .viewing-banner { display: none; background: #161616; border-bottom: 1px solid #1e1e1e; padding: 8px 20px; align-items: center; justify-content: space-between; }
+      .viewing-banner.show { display: flex; }
+      .viewing-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+      .viewing-info span { color: var(--text); }
+      .btn-back-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px; }
+      .btn-back-today:hover { color: var(--text); border-color: #555; }
 
-      .tabs {
-        display: flex;
-        border-bottom: 1px solid var(--border);
-      }
-      .tab {
-        flex: 1;
-        padding: 14px;
-        text-align: center;
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--muted);
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        transition: all 0.2s;
-      }
-      .tab.active {
-        color: var(--text);
-        border-bottom-color: var(--text);
-      }
-      .content {
-        flex: 1;
-        padding: 0 0 100px;
-      }
-      .session {
-        display: none;
-      }
-      .session.active {
-        display: block;
-      }
-      .schedule {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .phase-label {
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        padding: 16px 0 8px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .phase-label::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border);
-      }
-      .phase-label.warmup {
-        color: var(--warmup);
-      }
-      .phase-label.shadow {
-        color: var(--shadow);
-      }
-      .phase-label.trigger {
-        color: var(--trigger);
-      }
-      .phase-label.trigger-fast {
-        color: var(--trigger-fast);
-      }
-      .phase-label.defend {
-        color: var(--defend);
-      }
-      .phase-label.freestyle {
-        color: var(--freestyle);
-      }
-      .phase-label.speed {
-        color: var(--speed);
-      }
-      .phase-label.footwork {
-        color: var(--footwork);
-      }
-      .phase-label.core {
-        color: var(--core);
-      }
-      .phase-label.strength {
-        color: var(--strength);
-      }
-      .phase-label.build {
-        color: var(--build);
-      }
-      .phase-label.peak {
-        color: var(--peak);
-      }
-      .phase-label.survive {
-        color: var(--survive);
-      }
-      .phase-label.aerobic {
-        color: var(--aerobic);
-      }
-      .round-item {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 14px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        transition: all 0.15s;
-        position: relative;
-        overflow: hidden;
-      }
-      .round-item::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-      }
-      .round-item.warmup::before {
-        background: var(--warmup);
-      }
-      .round-item.shadow::before {
-        background: var(--shadow);
-      }
-      .round-item.trigger::before {
-        background: var(--trigger);
-      }
-      .round-item.trigger-fast::before {
-        background: var(--trigger-fast);
-      }
-      .round-item.defend::before {
-        background: var(--defend);
-      }
-      .round-item.freestyle::before {
-        background: var(--freestyle);
-      }
-      .round-item.speed::before {
-        background: var(--speed);
-      }
-      .round-item.footwork::before {
-        background: var(--footwork);
-      }
-      .round-item.core::before {
-        background: var(--core);
-      }
-      .round-item.strength::before {
-        background: var(--strength);
-      }
-      .round-item.build::before {
-        background: var(--build);
-      }
-      .round-item.peak::before {
-        background: var(--peak);
-      }
-      .round-item.survive::before {
-        background: var(--survive);
-      }
-      .round-item.aerobic::before {
-        background: var(--aerobic);
-      }
-      .round-item.current {
-        border-color: #333;
-        background: #161616;
-      }
-      .round-item.done {
-        opacity: 0.35;
-      }
-      .round-num {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 28px;
-        line-height: 1;
-        color: var(--muted);
-        min-width: 36px;
-        text-align: center;
-      }
-      .round-item.current .round-num {
-        color: var(--text);
-      }
-      .round-info {
-        flex: 1;
-      }
-      .round-name {
-        font-weight: 600;
-        font-size: 14px;
-        margin-bottom: 3px;
-      }
-      .round-detail {
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-      }
-      .round-dur {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 17px;
-        color: var(--muted);
-        letter-spacing: 1px;
-        text-align: right;
-        white-space: nowrap;
-      }
-      .round-item.current .round-dur {
-        color: var(--text);
-      }
-      .rep-badge {
-        background: #1a2a1a;
-        color: var(--core);
-        border: 1px solid #2a4a2a;
-        border-radius: 6px;
-        padding: 4px 10px;
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        white-space: nowrap;
-      }
+      .tabs { display: flex; border-bottom: 1px solid var(--border); }
+      .tab { flex: 1; padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+      .tab.active { color: var(--text); border-bottom-color: var(--text); }
+      .content { flex: 1; padding: 0 0 100px; }
+      .session { display: none; }
+      .session.active { display: block; }
+      .schedule { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+      .phase-label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; padding: 16px 0 8px; display: flex; align-items: center; gap: 10px; }
+      .phase-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+      .phase-label.warmup { color: var(--warmup); }
+      .phase-label.shadow { color: var(--shadow); }
+      .phase-label.trigger { color: var(--trigger); }
+      .phase-label.trigger-fast { color: var(--trigger-fast); }
+      .phase-label.defend { color: var(--defend); }
+      .phase-label.freestyle { color: var(--freestyle); }
+      .phase-label.speed { color: var(--speed); }
+      .phase-label.footwork { color: var(--footwork); }
+      .phase-label.core { color: var(--core); }
+      .phase-label.strength { color: var(--strength); }
+      .phase-label.build { color: var(--build); }
+      .phase-label.peak { color: var(--peak); }
+      .phase-label.survive { color: var(--survive); }
+      .phase-label.aerobic { color: var(--aerobic); }
+      .round-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
+      .round-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+      .round-item.warmup::before { background: var(--warmup); }
+      .round-item.shadow::before { background: var(--shadow); }
+      .round-item.trigger::before { background: var(--trigger); }
+      .round-item.trigger-fast::before { background: var(--trigger-fast); }
+      .round-item.defend::before { background: var(--defend); }
+      .round-item.freestyle::before { background: var(--freestyle); }
+      .round-item.speed::before { background: var(--speed); }
+      .round-item.footwork::before { background: var(--footwork); }
+      .round-item.core::before { background: var(--core); }
+      .round-item.strength::before { background: var(--strength); }
+      .round-item.build::before { background: var(--build); }
+      .round-item.peak::before { background: var(--peak); }
+      .round-item.survive::before { background: var(--survive); }
+      .round-item.aerobic::before { background: var(--aerobic); }
+      .round-item.current { border-color: #333; background: #161616; }
+      .round-item.done { opacity: 0.35; }
+      .round-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1; color: var(--muted); min-width: 36px; text-align: center; }
+      .round-item.current .round-num { color: var(--text); }
+      .round-info { flex: 1; }
+      .round-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+      .round-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); }
+      .round-dur { font-family: "Bebas Neue", sans-serif; font-size: 17px; color: var(--muted); letter-spacing: 1px; text-align: right; white-space: nowrap; }
+      .round-item.current .round-dur { color: var(--text); }
+      .rep-badge { background: #1a2a1a; color: var(--core); border: 1px solid #2a4a2a; border-radius: 6px; padding: 4px 10px; font-family: "DM Mono", monospace; font-size: 11px; white-space: nowrap; }
 
-      /* OVERLAY */
-      .timer-overlay {
-        position: fixed;
-        inset: 0;
-        background: var(--bg);
-        z-index: 200;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        padding: 20px;
-      }
-      .timer-overlay.show {
-        display: flex;
-      }
-      .t-phase {
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-      .t-name {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: clamp(22px, 5.5vw, 36px);
-        letter-spacing: 2px;
-        text-align: center;
-        line-height: 1.15;
-        max-width: 320px;
-      }
-      .t-detail {
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        text-align: center;
-        max-width: 300px;
-        line-height: 1.6;
-      }
-      .ring-container {
-        position: relative;
-        width: var(--ring-size);
-        height: var(--ring-size);
-      }
-      .ring-svg {
-        width: 100%;
-        height: 100%;
-        transform: rotate(-90deg);
-      }
-      .ring-bg {
-        fill: none;
-        stroke: var(--border);
-        stroke-width: 6;
-      }
-      .ring-progress {
-        fill: none;
-        stroke-width: 6;
-        stroke-linecap: round;
-        transition:
-          stroke-dashoffset 0.5s linear,
-          stroke 0.3s;
-      }
-      .ring-center {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-      }
-      .t-sec {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: clamp(65px, 17vw, 100px);
-        line-height: 1;
-        letter-spacing: -2px;
-      }
-      .t-lbl {
-        font-family: "DM Mono", monospace;
-        font-size: 12px;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.3;
-        }
-      }
-      .ring-container.warn .t-sec {
-        animation: pulse 0.5s ease-in-out infinite;
-      }
-      .rep-display {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-      }
-      .rep-display.show {
-        display: flex;
-      }
-      .rep-num {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: clamp(58px, 15vw, 88px);
-        line-height: 1;
-        color: var(--core);
-      }
-      .rep-lbl {
-        font-family: "DM Mono", monospace;
-        font-size: 12px;
-        letter-spacing: 3px;
-        color: var(--muted);
-        text-transform: uppercase;
-      }
-      .btn-done {
-        background: var(--core);
-        color: #000;
-        padding: 16px 48px;
-        border-radius: 12px;
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 20px;
-        letter-spacing: 3px;
-        border: none;
-        cursor: pointer;
-      }
-      .btn-done:active {
-        transform: scale(0.96);
-      }
-      .next-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px 18px;
-        text-align: center;
-        width: calc(100% - 40px);
-        max-width: 320px;
-      }
-      .next-lbl {
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        letter-spacing: 3px;
-        color: var(--muted);
-        margin-bottom: 3px;
-        text-transform: uppercase;
-      }
-      .next-name {
-        font-size: 13px;
-        font-weight: 600;
-      }
-      .next-name.warn-txt {
-        color: var(--survive);
-        animation: pulse 0.5s ease-in-out infinite;
-      }
-      .next-detail {
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: var(--muted);
-        margin-top: 4px;
-        line-height: 1.4;
-      }
-      .t-controls {
-        display: flex;
-        gap: 12px;
-      }
-      .btn {
-        border: none;
-        border-radius: 10px;
-        font-family: "DM Mono", monospace;
-        font-size: 12px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .btn-prim {
-        background: var(--text);
-        color: var(--bg);
-        padding: 15px 36px;
-        font-size: 13px;
-      }
-      .btn-sec {
-        background: var(--surface);
-        color: var(--text);
-        border: 1px solid var(--border);
-        padding: 15px 22px;
-      }
-      .btn-close {
-        position: absolute;
-        top: 18px;
-        right: 18px;
-        background: var(--surface);
-        color: var(--muted);
-        border: 1px solid var(--border);
-        padding: 9px 14px;
-        font-size: 11px;
-        letter-spacing: 1px;
-      }
-      .sticky-start {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 28px 20px 16px;
-        background: linear-gradient(transparent, var(--bg) 30%);
-        z-index: 50;
-      }
-      .est-time {
-        text-align: center;
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-      }
-      .est-time span {
-        color: var(--text);
-      }
-      .est-time-bar {
-        text-align: center;
-        font-family: "DM Mono", monospace;
-        font-size: 10px;
-        color: var(--muted);
-        letter-spacing: 2px;
-        padding: 8px 20px;
-        border-bottom: 1px solid var(--border);
-        min-height: 33px;
-      }
-      .est-time-bar span {
-        color: var(--text);
-      }
-      .btn-start {
-        width: 100%;
-        background: var(--text);
-        color: var(--bg);
-        padding: 17px;
-        border-radius: 12px;
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 19px;
-        letter-spacing: 4px;
-        cursor: pointer;
-        border: none;
-      }
-      .progress-bar {
-        height: 2px;
-        background: var(--border);
-      }
-      .progress-fill {
-        height: 100%;
-        background: var(--text);
-        transition: width 0.3s;
-      }
-      .done-screen {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        padding: 40px 20px;
-        text-align: center;
-        min-height: 60vh;
-      }
-      .done-screen.show {
-        display: flex;
-      }
-      .done-icon {
-        font-size: 60px;
-        animation: bounce 0.6s ease;
-      }
-      @keyframes bounce {
-        0% {
-          transform: scale(0);
-        }
-        60% {
-          transform: scale(1.2);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      .done-title {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 46px;
-        letter-spacing: 4px;
-      }
-      .done-sub {
-        color: var(--muted);
-        font-family: "DM Mono", monospace;
-        font-size: 12px;
-        letter-spacing: 2px;
-      }
-      .no-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        padding: 60px 20px;
-        text-align: center;
-        color: var(--muted);
-      }
-      .no-content-icon {
-        font-size: 48px;
-        opacity: 0.3;
-      }
-      .no-content-title {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 26px;
-        letter-spacing: 2px;
-        color: #333;
-      }
-      .no-content-sub {
-        font-family: "DM Mono", monospace;
-        font-size: 11px;
-      }
+      .timer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; }
+      .timer-overlay.show { display: flex; }
+      .t-phase { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
+      .t-name { font-family: "Bebas Neue", sans-serif; font-size: clamp(22px, 5.5vw, 36px); letter-spacing: 2px; text-align: center; line-height: 1.15; max-width: 320px; }
+      .t-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); text-align: center; max-width: 300px; line-height: 1.6; }
+      .ring-container { position: relative; width: var(--ring-size); height: var(--ring-size); }
+      .ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+      .ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
+      .ring-progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s linear, stroke 0.3s; }
+      .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+      .t-sec { font-family: "Bebas Neue", sans-serif; font-size: clamp(65px, 17vw, 100px); line-height: 1; letter-spacing: -2px; }
+      .t-lbl { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+      .ring-container.warn .t-sec { animation: pulse 0.5s ease-in-out infinite; }
+      .rep-display { display: none; flex-direction: column; align-items: center; gap: 14px; }
+      .rep-display.show { display: flex; }
+      .rep-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(58px, 15vw, 88px); line-height: 1; color: var(--core); }
+      .rep-lbl { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+      .btn-done { background: var(--core); color: #000; padding: 16px 48px; border-radius: 12px; font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 3px; border: none; cursor: pointer; }
+      .btn-done:active { transform: scale(0.96); }
+      .next-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; text-align: center; width: calc(100% - 40px); max-width: 320px; }
+      .next-lbl { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; }
+      .next-name { font-size: 13px; font-weight: 600; }
+      .next-name.warn-txt { color: var(--survive); animation: pulse 0.5s ease-in-out infinite; }
+      .next-detail { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+      .t-controls { display: flex; gap: 12px; }
+      .btn { border: none; border-radius: 10px; font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+      .btn-prim { background: var(--text); color: var(--bg); padding: 15px 36px; font-size: 13px; }
+      .btn-sec { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 15px 22px; }
+      .btn-close { position: absolute; top: 18px; right: 18px; background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 9px 14px; font-size: 11px; letter-spacing: 1px; }
+      .sticky-start { position: fixed; bottom: 0; left: 0; right: 0; padding: 28px 20px 16px; background: linear-gradient(transparent, var(--bg) 30%); z-index: 50; }
+      .est-time { text-align: center; font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 2px; margin-bottom: 8px; }
+      .est-time span { color: var(--text); }
+      .est-time-bar { text-align: center; font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; padding: 8px 20px; border-bottom: 1px solid var(--border); min-height: 33px; }
+      .est-time-bar span { color: var(--text); }
+      .btn-start { width: 100%; background: var(--text); color: var(--bg); padding: 17px; border-radius: 12px; font-family: "Bebas Neue", sans-serif; font-size: 19px; letter-spacing: 4px; cursor: pointer; border: none; }
+      .progress-bar { height: 2px; background: var(--border); }
+      .progress-fill { height: 100%; background: var(--text); transition: width 0.3s; }
+      .done-screen { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px; text-align: center; min-height: 60vh; }
+      .done-screen.show { display: flex; }
+      .done-icon { font-size: 60px; animation: bounce 0.6s ease; }
+      @keyframes bounce { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+      .done-title { font-family: "Bebas Neue", sans-serif; font-size: 46px; letter-spacing: 4px; }
+      .done-sub { color: var(--muted); font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 2px; }
+      .no-content { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 60px 20px; text-align: center; color: var(--muted); }
+      .no-content-icon { font-size: 48px; opacity: 0.3; }
+      .no-content-title { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 2px; color: #333; }
+      .no-content-sub { font-family: "DM Mono", monospace; font-size: 11px; }
 
-      /* COUNTDOWN */
-      .countdown-overlay {
-        position: fixed;
-        inset: 0;
-        background: var(--bg);
-        z-index: 250;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-      }
-      .countdown-overlay.show {
-        display: flex;
-      }
-      .countdown-num {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: clamp(120px, 30vw, 200px);
-        line-height: 1;
-        letter-spacing: -4px;
-        color: var(--text);
-        animation: pulse 0.5s ease-in-out infinite;
-      }
-      .countdown-lbl {
-        font-family: "DM Mono", monospace;
-        font-size: 13px;
-        letter-spacing: 4px;
-        color: var(--muted);
-        text-transform: uppercase;
-      }
-
-      /* preview mode */
-      .preview-note {
-        display: none;
-      }
+      .countdown-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 250; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+      .countdown-overlay.show { display: flex; }
+      .countdown-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(120px, 30vw, 200px); line-height: 1; letter-spacing: -4px; color: var(--text); animation: pulse 0.5s ease-in-out infinite; }
+      .countdown-lbl { font-family: "DM Mono", monospace; font-size: 13px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+      .preview-note { display: none; }
     </style>
   </head>
   <body>
@@ -882,18 +222,11 @@
       </div>
       <div class="header-right">
         <div class="day-badge" id="dateBadge"></div>
-        <button class="btn-calendar" id="btnCalendar" onclick="openCalendar()">
-          📅
-        </button>
+        <button class="btn-calendar" id="btnCalendar" onclick="openCalendar()">📅</button>
       </div>
     </div>
 
-    <!-- CALENDAR MODAL -->
-    <div
-      class="cal-overlay"
-      id="calOverlay"
-      onclick="handleOverlayClick(event)"
-    >
+    <div class="cal-overlay" id="calOverlay" onclick="handleOverlayClick(event)">
       <div class="cal-modal" id="calModal">
         <div class="cal-header">
           <div class="cal-title" id="calMonthTitle">THÁNG 5 2026</div>
@@ -904,12 +237,9 @@
         </div>
         <div class="cal-weekdays">
           <div class="cal-wd sunday">CN</div>
-          <div class="cal-wd">T2</div>
-          <div class="cal-wd">T3</div>
-          <div class="cal-wd">T4</div>
-          <div class="cal-wd">T5</div>
-          <div class="cal-wd">T6</div>
-          <div class="cal-wd">T7</div>
+          <div class="cal-wd">T2</div><div class="cal-wd">T3</div>
+          <div class="cal-wd">T4</div><div class="cal-wd">T5</div>
+          <div class="cal-wd">T6</div><div class="cal-wd">T7</div>
         </div>
         <div class="cal-days" id="calDays"></div>
         <div class="cal-footer">
@@ -919,7 +249,6 @@
       </div>
     </div>
 
-    <!-- VIEWING BANNER -->
     <div class="viewing-banner" id="viewingBanner">
       <div class="viewing-info">XEM TRƯỚC: <span id="viewingDate"></span></div>
       <button class="btn-back-today" onclick="goToday()">← HÔM NAY</button>
@@ -929,19 +258,13 @@
       <div class="progress-fill" id="progressFill" style="width: 0%"></div>
     </div>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('morning')" id="tab-morning">
-        ☀️ SÁNG
-      </div>
-      <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">
-        🌆 CHIỀU
-      </div>
+      <div class="tab active" onclick="switchTab('morning')" id="tab-morning">☀️ SÁNG</div>
+      <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">🌆 CHIỀU</div>
     </div>
     <div class="est-time-bar" id="estTimebar"></div>
 
     <div class="content">
-      <div class="preview-note">
-        👁 CHẾ ĐỘ XEM TRƯỚC — không thể bấm BẮT ĐẦU
-      </div>
+      <div class="preview-note">👁 CHẾ ĐỘ XEM TRƯỚC — không thể bấm BẮT ĐẦU</div>
       <div class="session active" id="session-morning">
         <div class="schedule" id="schedule-morning"></div>
         <div class="done-screen" id="done-morning">
@@ -965,7 +288,6 @@
       <button class="btn-start" onclick="startSession()">BẮT ĐẦU</button>
     </div>
 
-    <!-- COUNTDOWN -->
     <div class="countdown-overlay" id="countdownOverlay">
       <div class="countdown-lbl">CHUẨN BỊ</div>
       <div class="countdown-num" id="countdownNum">5</div>
@@ -981,16 +303,8 @@
         <div class="ring-container" id="ringContainer">
           <svg class="ring-svg" viewBox="0 0 100 100">
             <circle class="ring-bg" cx="50" cy="50" r="44" />
-            <circle
-              class="ring-progress"
-              id="ringProgress"
-              cx="50"
-              cy="50"
-              r="44"
-              stroke-dasharray="276.46"
-              stroke-dashoffset="0"
-              stroke="#f0f0f0"
-            />
+            <circle class="ring-progress" id="ringProgress" cx="50" cy="50" r="44"
+              stroke-dasharray="276.46" stroke-dashoffset="0" stroke="#f0f0f0" />
           </svg>
           <div class="ring-center">
             <div class="t-sec" id="tSec">30</div>
@@ -1010,406 +324,134 @@
       </div>
       <div class="t-controls" id="tControls">
         <button class="btn btn-sec" onclick="skipRound()">SKIP ⏭</button>
-        <button class="btn btn-prim" id="btnPR" onclick="togglePause()">
-          PAUSE
-        </button>
+        <button class="btn btn-prim" id="btnPR" onclick="togglePause()">PAUSE</button>
       </div>
     </div>
 
     <script>
-      // ══════════════════════════════════
-      // PHASE META
-      // ══════════════════════════════════
       const PH_COLOR = {
-        warmup: "#666",
-        shadow: "#6366f1",
-        trigger: "#3b82f6",
-        "trigger-fast": "#ef4444",
-        defend: "#f97316",
-        freestyle: "#a855f7",
-        speed: "#06b6d4",
-        footwork: "#0ea5e9",
-        core: "#84cc16",
-        strength: "#22c55e",
-        build: "#3b82f6",
-        peak: "#ef4444",
-        survive: "#f59e0b",
-        aerobic: "#22d3ee",
+        warmup:"#666", shadow:"#6366f1", trigger:"#3b82f6", "trigger-fast":"#ef4444",
+        defend:"#f97316", freestyle:"#a855f7", speed:"#06b6d4", footwork:"#0ea5e9",
+        core:"#84cc16", strength:"#22c55e", build:"#3b82f6", peak:"#ef4444",
+        survive:"#f59e0b", aerobic:"#22d3ee",
       };
       const PH_LABEL = {
-        warmup: "WARMUP",
-        shadow: "SHADOW",
-        trigger: "TRIGGER",
-        "trigger-fast": "TRIGGER ⭐",
-        defend: "DEFEND",
-        freestyle: "FREESTYLE",
-        speed: "SPEED",
-        footwork: "FOOTWORK",
-        core: "CORE",
-        strength: "STRENGTH",
-        build: "BUILD",
-        peak: "PEAK ⭐",
-        survive: "SURVIVE",
-        aerobic: "AEROBIC",
+        warmup:"WARMUP", shadow:"SHADOW", trigger:"TRIGGER", "trigger-fast":"TRIGGER ⭐",
+        defend:"DEFEND", freestyle:"FREESTYLE", speed:"SPEED", footwork:"FOOTWORK",
+        core:"CORE", strength:"STRENGTH", build:"BUILD", peak:"PEAK ⭐",
+        survive:"SURVIVE", aerobic:"AEROBIC",
       };
 
-      // ══════════════════════════════════
-      // DATE STATE
-      // ══════════════════════════════════
-      const DAYS_VI = [
-        "Chủ nhật",
-        "Thứ 2",
-        "Thứ 3",
-        "Thứ 4",
-        "Thứ 5",
-        "Thứ 6",
-        "Thứ 7",
-      ];
-      const DAYS_EN = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      const MONTHS_VI = [
-        "Tháng 1",
-        "Tháng 2",
-        "Tháng 3",
-        "Tháng 4",
-        "Tháng 5",
-        "Tháng 6",
-        "Tháng 7",
-        "Tháng 8",
-        "Tháng 9",
-        "Tháng 10",
-        "Tháng 11",
-        "Tháng 12",
-      ];
+      const DAYS_VI = ["Chủ nhật","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"];
+      const DAYS_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      const MONTHS_VI = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
 
-      const realNow = new Date(
-        new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }),
-      );
-      const TODAY_Y = realNow.getFullYear();
-      const TODAY_M = realNow.getMonth();
-      const TODAY_D = realNow.getDate();
-
+      const realNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
+      const TODAY_Y = realNow.getFullYear(), TODAY_M = realNow.getMonth(), TODAY_D = realNow.getDate();
       let viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
-      let calYear = TODAY_Y,
-        calMonth = TODAY_M;
+      let calYear = TODAY_Y, calMonth = TODAY_M;
 
-      function isToday(d) {
-        return (
-          d.getFullYear() === TODAY_Y &&
-          d.getMonth() === TODAY_M &&
-          d.getDate() === TODAY_D
-        );
-      }
-      function isViewDate(d) {
-        return (
-          d.getFullYear() === viewDate.getFullYear() &&
-          d.getMonth() === viewDate.getMonth() &&
-          d.getDate() === viewDate.getDate()
-        );
-      }
-      function isPreviewMode() {
-        return !isToday(viewDate);
-      }
+      function isToday(d) { return d.getFullYear()===TODAY_Y && d.getMonth()===TODAY_M && d.getDate()===TODAY_D; }
+      function isViewDate(d) { return d.getFullYear()===viewDate.getFullYear() && d.getMonth()===viewDate.getMonth() && d.getDate()===viewDate.getDate(); }
+      function isPreviewMode() { return !isToday(viewDate); }
 
-      // ══════════════════════════════════
-      // WEEK CALC
-      // ══════════════════════════════════
       function weekNumFrom(startDateStr, refDate) {
-        const s = new Date(startDateStr);
-        s.setHours(0, 0, 0, 0);
-        const t = new Date(refDate);
-        t.setHours(0, 0, 0, 0);
+        const s = new Date(startDateStr); s.setHours(0,0,0,0);
+        const t = new Date(refDate); t.setHours(0,0,0,0);
         const diff = t - s;
         if (diff < 0) return 0;
-        return Math.max(1, Math.floor(diff / (7 * 24 * 60 * 60 * 1000)) + 1);
+        return Math.max(1, Math.floor(diff / (7*24*60*60*1000)) + 1);
       }
-
-      function getWkBoxing() {
-        return weekNumFrom("2026-04-20", viewDate);
-      }
-      function getWkStrength() {
-        return weekNumFrom("2026-04-13", viewDate);
-      }
-      function getWkCardio() {
-        return weekNumFrom("2026-05-04", viewDate);
-      }
+      function getWkBoxing()   { return weekNumFrom("2026-04-20", viewDate); }
+      function getWkStrength() { return weekNumFrom("2026-04-13", viewDate); }
+      function getWkCardio()   { return weekNumFrom("2026-05-04", viewDate); }
 
       function getBoxingPhase() {
         const w = getWkBoxing();
-        if (w <= 2)
-          return { rounds: 4, roundMin: 2, restSec: 60, deload: false };
-        if (w <= 4)
-          return { rounds: 5, roundMin: 2, restSec: 45, deload: false };
-        if (w <= 6)
-          return { rounds: 6, roundMin: 3, restSec: 45, deload: false };
-        if (w === 7)
-          return { rounds: 3, roundMin: 2, restSec: 60, deload: true };
-        if (w <= 10)
-          return { rounds: 6, roundMin: 3, restSec: 45, deload: false };
-        return { rounds: 5, roundMin: 3, restSec: 45, deload: false };
+        if (w<=2)  return { rounds:4, roundMin:2, restSec:60, deload:false };
+        if (w<=4)  return { rounds:5, roundMin:2, restSec:45, deload:false };
+        if (w<=6)  return { rounds:6, roundMin:3, restSec:45, deload:false };
+        if (w===7) return { rounds:3, roundMin:2, restSec:60, deload:true  };
+        if (w<=10) return { rounds:6, roundMin:3, restSec:45, deload:false };
+        return             { rounds:5, roundMin:3, restSec:45, deload:false };
       }
       function getStrengthPhase() {
         const w = getWkStrength();
-        if (w <= 2)
-          return {
-            sets: 3,
-            pushRep: "6-8",
-            rowRep: "8-10",
-            chinup: false,
-            restSec: 90,
-            explosive: false,
-          };
-        if (w <= 4)
-          return {
-            sets: 3,
-            pushRep: "8-10",
-            rowRep: "10-12",
-            chinup: true,
-            chinupRep: "3",
-            restSec: 75,
-            explosive: false,
-          };
-        if (w <= 6)
-          return {
-            sets: 4,
-            pushRep: "8-12",
-            rowRep: "10-12",
-            chinup: true,
-            chinupRep: "4-5",
-            restSec: 60,
-            explosive: true,
-          };
-        if (w === 7)
-          return {
-            sets: 2,
-            pushRep: "6-8",
-            rowRep: "8-10",
-            chinup: false,
-            restSec: 90,
-            explosive: false,
-          };
-        if (w <= 10)
-          return {
-            sets: 4,
-            pushRep: "10-12",
-            rowRep: "12",
-            chinup: true,
-            chinupRep: "5-6",
-            restSec: 60,
-            explosive: true,
-          };
-        return {
-          sets: 4,
-          pushRep: "10-12",
-          rowRep: "12",
-          chinup: true,
-          chinupRep: "5-6",
-          restSec: 60,
-          explosive: true,
-        };
+        if (w<=2)  return { sets:3, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                    restSec:90, explosive:false };
+        if (w<=4)  return { sets:3, pushRep:"8-10",  rowRep:"10-12", chinup:true,  chinupRep:"3",      restSec:75, explosive:false };
+        if (w<=6)  return { sets:4, pushRep:"8-12",  rowRep:"10-12", chinup:true,  chinupRep:"4-5",    restSec:60, explosive:true  };
+        if (w===7) return { sets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                    restSec:90, explosive:false };
+        if (w<=10) return { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true,  chinupRep:"5-6",    restSec:60, explosive:true  };
+        return             { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true,  chinupRep:"5-6",    restSec:60, explosive:true  };
       }
       function getCardioPhase() {
         const w = getWkCardio();
-        if (w <= 0) return null;
-        if (w <= 2)
-          return { t3Rounds: 4, t3Min: 2, t3Rest: 90, hiitOn: 30, hiitOff: 30 };
-        if (w <= 4)
-          return { t3Rounds: 4, t3Min: 3, t3Rest: 75, hiitOn: 40, hiitOff: 20 };
-        if (w <= 6)
-          return { t3Rounds: 4, t3Min: 3, t3Rest: 60, hiitOn: 45, hiitOff: 15 };
-        if (w === 7)
-          return {
-            t3Rounds: 3,
-            t3Min: 2,
-            t3Rest: 90,
-            hiitOn: 30,
-            hiitOff: 30,
-            deload: true,
-          };
-        return { t3Rounds: 5, t3Min: 3, t3Rest: 60, hiitOn: 40, hiitOff: 20 };
+        if (w<=0)  return null;
+        if (w<=2)  return { t3Rounds:4, t3Min:2, t3Rest:90, hiitOn:30, hiitOff:30 };
+        if (w<=4)  return { t3Rounds:4, t3Min:3, t3Rest:75, hiitOn:40, hiitOff:20 };
+        if (w<=6)  return { t3Rounds:4, t3Min:3, t3Rest:60, hiitOn:45, hiitOff:15 };
+        if (w===7) return { t3Rounds:3, t3Min:2, t3Rest:90, hiitOn:30, hiitOff:30, deload:true };
+        return             { t3Rounds:5, t3Min:3, t3Rest:60, hiitOn:40, hiitOff:20 };
       }
 
-      // ══════════════════════════════════
-      // BUILDERS
-      // ══════════════════════════════════
+      // ── BUILDERS ──
       const isRep = (item) => !!item.reps;
+
+      // ✅ WARMUP: nhảy dây 1p → xoay khớp 2p → shadow nhẹ 1p
       const W3 = () => [
-        {
-          phase: "warmup",
-          name: "Khởi động",
-          detail: "Nhảy/bước chân nhẹ 2p",
-          onSec: 120,
-          offSec: 0,
-        },
-        {
-          phase: "warmup",
-          name: "Khởi động",
-          detail: "Xoay khớp vai, hông, gối",
-          onSec: 60,
-          offSec: 0,
-        },
-        {
-          phase: "warmup",
-          name: "Khởi động",
-          detail: "Shadow rất nhẹ 1p",
-          onSec: 60,
-          offSec: 0,
-        },
+        { phase:"warmup", name:"Xoay khớp",      detail:"2p — vai, hông, gối, cổ tay. Thả lỏng hoàn toàn", onSec:120, offSec:0 },
+        { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
+        { phase:"warmup", name:"Shadow nhẹ",     detail:"1p — di chuyển chân, tay ra rất nhẹ — 20-30% lực", onSec:60,  offSec:0 },
       ];
+
+      // ✅ SH2: thêm % lực
       const SH2 = () => [
-        {
-          phase: "shadow",
-          name: "Shadow H1",
-          detail: "Di chuyển nhẹ, không đánh nặng",
-          onSec: 120,
-          offSec: 0,
-        },
-        {
-          phase: "shadow",
-          name: "Shadow H2",
-          detail: "Di chuyển nhẹ, không đánh nặng",
-          onSec: 120,
-          offSec: 0,
-        },
+        { phase:"shadow", name:"Shadow H1", detail:"Di chuyển nhẹ, tay ra rất nhẹ — 40% lực", onSec:120, offSec:0 },
+        { phase:"shadow", name:"Shadow H2", detail:"Tăng nhẹ chân, tay vẫn nhẹ — 50% lực",   onSec:120, offSec:0 },
       ];
+
+      // ✅ SH3: thêm % lực
       const SH3 = (cue, bp) => {
         const rest = bp.restSec;
         return [
-          {
-            phase: "shadow",
-            name: "Shadow H1",
-            detail: cue,
-            onSec: bp.roundMin * 60,
-            offSec: rest,
-          },
-          {
-            phase: "shadow",
-            name: "Shadow H2",
-            detail: "Cue xuất hiện → action ngay, không nghĩ",
-            onSec: bp.roundMin * 60,
-            offSec: rest,
-          },
-          {
-            phase: "shadow",
-            name: "Shadow H3",
-            detail: "70-80% tốc độ",
-            onSec: bp.roundMin * 60,
-            offSec: rest,
-          },
+          { phase:"shadow", name:"Shadow H1", detail:cue + " — 40-50% lực",                           onSec:bp.roundMin*60, offSec:rest },
+          { phase:"shadow", name:"Shadow H2", detail:"Cue xuất hiện → action ngay, không nghĩ — 50% lực", onSec:bp.roundMin*60, offSec:rest },
+          { phase:"shadow", name:"Shadow H3", detail:"70-80% tốc độ — não đọc cue, tay tự theo",      onSec:bp.roundMin*60, offSec:rest },
         ];
       };
+
+      // ✅ TRIG: thêm % lực từng loại hiệp
       function TRIG(bp, d1, d2, d3) {
-        const t = bp.roundMin * 60,
-          r = bp.restSec,
-          total = bp.rounds;
+        const t = bp.roundMin*60, r = bp.restSec, total = bp.rounds;
         const items = [
-          {
-            phase: "trigger",
-            name: "Trigger H1",
-            detail: d1,
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "trigger",
-            name: "Trigger H2",
-            detail: d2 || d1,
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "trigger-fast",
-            name: "Trigger H3 ⭐",
-            detail: d3,
-            onSec: t,
-            offSec: r,
-          },
-          {
-            phase: "trigger-fast",
-            name: "Trigger H4 FREESTYLE ⭐",
-            detail: "Mắt đọc → tay tự chạy → lui ngay",
-            onSec: t,
-            offSec: r,
-          },
+          { phase:"trigger",      name:"Trigger H1",           detail:d1 + " — 50-60% lực",                          onSec:t, offSec:r },
+          { phase:"trigger",      name:"Trigger H2",           detail:(d2||d1) + " — 50-60% lực",                    onSec:t, offSec:r },
+          { phase:"trigger-fast", name:"Trigger H3 ⭐",        detail:d3 + " — 70-75% lực",                          onSec:t, offSec:r },
+          { phase:"trigger-fast", name:"Trigger H4 FREESTYLE ⭐", detail:"Mắt đọc → tay tự chạy → lui ngay — 80-85% lực", onSec:t, offSec:r },
         ];
         for (let i = 5; i <= total; i++) {
-          items.push({
-            phase: "trigger-fast",
-            name: `Trigger H${i} ⭐`,
-            detail: "Mắt đọc → tay tự chạy → lui ngay",
-            onSec: t,
-            offSec: r,
-          });
+          items.push({ phase:"trigger-fast", name:`Trigger H${i} ⭐`, detail:"Mắt đọc → tay tự chạy → lui ngay — 80-85% lực", onSec:t, offSec:r });
         }
         return items;
       }
+
+      // ✅ DEF: thêm % lực
       const DEF = () => [
-        {
-          phase: "defend",
-          name: "Defend H1",
-          detail:
-            "Slip — vai giật→slip | Duck — khuỷu vòng→duck | Pull back — người lao→pull back",
-          onSec: 120,
-          offSec: 40,
-        },
-        {
-          phase: "defend",
-          name: "Defend H2",
-          detail: "Tự do — slip/duck/pull tùy cue",
-          onSec: 120,
-          offSec: 40,
-        },
+        { phase:"defend", name:"Defend H1", detail:"Slip / Duck / Pull back tùy cue — 40-50% lực, cần CHÍNH XÁC không cần mạnh", onSec:120, offSec:40 },
+        { phase:"defend", name:"Defend H2", detail:"Tự do — slip/duck/pull tùy cue — 40-50% lực", onSec:120, offSec:40 },
       ];
+
+      // ✅ FREE: thêm % lực
       const FREE = (bp) => [
-        {
-          phase: "freestyle",
-          name: "Freestyle H1",
-          detail: "Mắt đọc → tay tự chạy. Không nghĩ trước",
-          onSec: bp.roundMin * 60,
-          offSec: bp.restSec,
-        },
-        {
-          phase: "freestyle",
-          name: "Freestyle H2",
-          detail: "Thấy cue → phản xạ ngay. Xong → lui",
-          onSec: bp.roundMin * 60,
-          offSec: 0,
-        },
+        { phase:"freestyle", name:"Freestyle H1", detail:"Mắt đọc → tay tự chạy. Không nghĩ trước — 80-85% lực", onSec:bp.roundMin*60, offSec:bp.restSec },
+        { phase:"freestyle", name:"Freestyle H2", detail:"Thấy cue → phản xạ ngay. Xong → lui — 80-85% lực",     onSec:bp.roundMin*60, offSec:0 },
       ];
+
       const CORE = () => [
-        {
-          phase: "core",
-          name: "Leg Raises SET 1",
-          detail: "Hạ chân chậm, không thả rơi",
-          reps: 12,
-        },
-        {
-          phase: "core",
-          name: "Leg Raises SET 2",
-          detail: "Hạ chân chậm, không thả rơi",
-          reps: 12,
-        },
-        {
-          phase: "core",
-          name: "Plank SET 1",
-          detail: "Giữ thân thẳng, thở đều",
-          onSec: 40,
-          offSec: 20,
-        },
-        {
-          phase: "core",
-          name: "Plank SET 2",
-          detail: "Giữ thân thẳng, thở đều",
-          onSec: 40,
-          offSec: 0,
-        },
+        { phase:"core", name:"Leg Raises SET 1", detail:"Hạ chân chậm, không thả rơi", reps:12 },
+        { phase:"core", name:"Leg Raises SET 2", detail:"Hạ chân chậm, không thả rơi", reps:12 },
+        { phase:"core", name:"Plank SET 1",       detail:"Giữ thân thẳng, thở đều", onSec:40, offSec:20 },
+        { phase:"core", name:"Plank SET 2",       detail:"Giữ thân thẳng, thở đều", onSec:40, offSec:0  },
       ];
 
       function buildMonday_M() {
@@ -1417,131 +459,38 @@
         return [
           ...W3(),
           ...SH3("Nhận ra cue T0: tay họ thả → vào ngay, không do dự", bp),
-          ...TRIG(
-            bp,
-            "Chậm — tay thả → T0 ngay, không vội",
-            "Chậm — bắt đúng cue, không vội",
-            "Tăng tốc — cue xuất hiện → vào thẳng ngay",
-          ),
-          ...DEF(),
-          ...FREE(bp),
+          ...TRIG(bp, "Chậm — tay thả → T0 ngay, không vội", "Chậm — bắt đúng cue, không vội", "Tăng tốc — cue xuất hiện → vào thẳng ngay"),
+          ...DEF(), ...FREE(bp),
         ];
       }
 
-      // ✅ buildTuesday_M theo tuần — 5 đòn thủ: Slip, Duck, Pull back, Block, Deflect
       function buildTuesday_M() {
         const bp = getBoxingPhase();
         const w = getWkBoxing();
         const base = [...W3(), ...SH2()];
 
         if (w <= 2) {
-          // Tuần 1-2: 3 đòn né cơ bản
-          return [
-            ...base,
-            {
-              phase: "defend",
-              name: "Drill H1 — Slip",
-              detail:
-                "Vai giật → slip trái | Vai xoay → slip phải. Đầu lệch, chân không nhấc",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H2 — Duck",
-              detail:
-                "Khuỷu vòng rộng → gập GỐI xuống thấp, lưng thẳng, không cúi đầu",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H3 — Pull Back",
-              detail:
-                "Người lao tới → rút toàn thân ra sau → chờ hụt → phản ngay",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H4 — Tự do",
-              detail: "3 đòn trên tùy cue — defend xong dừng, không thêm combo",
-              onSec: 120,
-              offSec: 40,
-            },
+          return [...base,
+            { phase:"defend", name:"Drill H1 — Slip",      detail:"Vai giật→slip trái | Vai xoay→slip phải. Đầu lệch, chân không nhấc — 40-50% lục", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H2 — Duck",      detail:"Khuỷu vòng rộng → gập GỐI xuống thấp, lưng thẳng, không cúi đầu — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H3 — Pull Back", detail:"Người lao tới → rút toàn thân ra sau → chờ hụt → phản ngay — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H4 — Tự do",    detail:"3 đòn trên tùy cue — defend xong dừng, không thêm combo — 40-50% lực", onSec:120, offSec:40 },
             ...CORE(),
           ];
         } else if (w <= 4) {
-          // Tuần 3-4: thêm Block + Deflect, tập từng cái riêng
-          return [
-            ...base,
-            {
-              phase: "defend",
-              name: "Drill H1 — Slip + Duck",
-              detail: "Đòn thẳng → slip | Đòn vòng → duck gối. Xen kẽ 2 cue",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H2 — Pull Back",
-              detail:
-                "Bất kỳ đòn nào → rút toàn thân → chờ hụt → bước vào phản",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H3 — Block",
-              detail:
-                "Đòn tới → khuỷu/cánh tay áp vào chặn → hấp thụ lực → phản ngay",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H4 — Deflect",
-              detail:
-                "Đòn tới → khuỷu/cánh tay hướng lệch góc → lực trượt qua → phản ngay",
-              onSec: 120,
-              offSec: 40,
-            },
+          return [...base,
+            { phase:"defend", name:"Drill H1 — Slip + Duck",    detail:"Đòn thẳng→slip | Đòn vòng→duck gối. Xen kẽ 2 cue — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H2 — Pull Back",      detail:"Bất kỳ đòn nào → rút toàn thân → chờ hụt → bước vào phản — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H3 — Block",          detail:"Đòn tới → khuỷu/cánh tay chặn → hấp thụ lực → phản ngay — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H4 — Deflect",        detail:"Đòn tới → khuỷu hướng lệch góc → lực trượt qua → phản ngay — 40-50% lực", onSec:120, offSec:40 },
             ...CORE(),
           ];
         } else {
-          // Tuần 5+: mix, tăng tốc
-          return [
-            ...base,
-            {
-              phase: "defend",
-              name: "Drill H1 — Slip + Duck",
-              detail:
-                "Đòn thẳng → slip | Đòn vòng → duck. Phản xạ ngay, không nghĩ",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H2 — Pull Back + Block",
-              detail:
-                "Khoảng cách xa → pull back | Khoảng cách gần → block → phản",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H3 — Deflect",
-              detail: "Cảm nhận góc đòn → hướng lệch bằng khuỷu → counter liền",
-              onSec: 120,
-              offSec: 40,
-            },
-            {
-              phase: "defend",
-              name: "Drill H4 — Tự do cả 5",
-              detail: "Mắt đọc cue → tay tự chọn defend → phản → lui ngay",
-              onSec: 120,
-              offSec: 40,
-            },
+          return [...base,
+            { phase:"defend", name:"Drill H1 — Slip + Duck",    detail:"Đòn thẳng→slip | Đòn vòng→duck. Phản xạ ngay — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H2 — Pull Back + Block", detail:"Khoảng cách xa→pull back | Khoảng cách gần→block→phản — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H3 — Deflect",        detail:"Cảm nhận góc đòn → hướng lệch bằng khuỷu → counter liền — 40-50% lực", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H4 — Tự do cả 5",    detail:"Mắt đọc cue → tay tự chọn defend → phản → lui ngay — 40-50% lực", onSec:120, offSec:40 },
             ...CORE(),
           ];
         }
@@ -1552,1350 +501,489 @@
         return [
           ...W3(),
           ...SH3("Thử jab fake VÀ shoulder feint — cái nào tự nhiên hơn", bp),
-          ...TRIG(
-            bp,
-            "Chậm — guard cao → feint → cúi gối → đánh thân",
-            "Không cắn feint → chuyển T0 ngay",
-            "Tăng tốc — guard cao → T1 ngay",
-          ),
-          ...DEF(),
-          ...FREE(bp),
+          ...TRIG(bp, "Chậm — guard cao → feint → cúi gối → đánh thân", "Không cắn feint → chuyển T0 ngay", "Tăng tốc — guard cao → T1 ngay"),
+          ...DEF(), ...FREE(bp),
         ];
       }
+
       function buildThursday_M() {
         const bp = getBoxingPhase();
         const w = getWkBoxing();
-        const t = 60,
-          r = 45;
+        const t = 60, r = 45;
         const base = [...W3(), ...SH2()];
-
         let speedRounds = [];
+
         if (w <= 2) {
           speedRounds = [
-            {
-              phase: "speed",
-              name: "Speed H1 — T0 MAX",
-              detail: "Tay thả → vào thẳng MAX SPEED ngay",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H2 — T0 MAX",
-              detail: "Giữ tốc độ tối đa, không do dự",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H3 — T3 Slip",
-              detail: "Vai giật → slip trái/phải → đánh thân → Hook ngay",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H4 — T3 Duck",
-              detail: "Khuỷu vòng → duck gối → vào sát → đánh thân",
-              onSec: t,
-              offSec: r,
-            },
+            { phase:"speed", name:"Speed H1 — T0 MAX",    detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",        onSec:t, offSec:r },
+            { phase:"speed", name:"Speed H2 — T0 MAX",    detail:"Giữ tốc độ tối đa, không do dự — 85-90% lực",             onSec:t, offSec:r },
+            { phase:"speed", name:"Speed H3 — T3 Slip",   detail:"Vai giật → slip → đánh thân → Hook ngay — 70-80% lực",    onSec:t, offSec:r },
+            { phase:"speed", name:"Speed H4 — T3 Duck",   detail:"Khuỷu vòng → duck gối → vào sát → đánh thân — 70-80% lực", onSec:t, offSec:r },
           ];
         } else if (w <= 4) {
           speedRounds = [
-            {
-              phase: "speed",
-              name: "Speed H1 — T0 MAX",
-              detail: "Tay thả → vào thẳng MAX SPEED ngay",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H2 — T0 MAX",
-              detail: "Giữ tốc độ tối đa, không do dự",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H3 — T3 Slip + Duck",
-              detail: "Đòn thẳng → slip → phản | Đòn vòng → duck gối → phản",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H4 — T3 Pull back + Block",
-              detail:
-                "Người lao → pull back → chờ hụt → phản | Đòn gần → block → phản",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "trigger-fast",
-              name: "Speed H5 — FREESTYLE ⭐",
-              detail: "T0 hoặc T3 tùy cue — mắt đọc → tay tự chạy",
-              onSec: t,
-              offSec: r,
-            },
+            { phase:"speed",         name:"Speed H1 — T0 MAX",             detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",                           onSec:t, offSec:r },
+            { phase:"speed",         name:"Speed H2 — T0 MAX",             detail:"Giữ tốc độ tối đa, không do dự — 85-90% lực",                               onSec:t, offSec:r },
+            { phase:"speed",         name:"Speed H3 — T3 Slip + Duck",     detail:"Đòn thẳng→slip→phản | Đòn vòng→duck gối→phản — 70-80% lực",                 onSec:t, offSec:r },
+            { phase:"speed",         name:"Speed H4 — T3 Pull back + Block", detail:"Người lao→pull back→phản | Đòn gần→block→phản — 70-80% lực",               onSec:t, offSec:r },
+            { phase:"trigger-fast",  name:"Speed H5 — FREESTYLE ⭐",        detail:"T0 hoặc T3 tùy cue — mắt đọc → tay tự chạy — 75-85% lực",                  onSec:t, offSec:r },
           ];
         } else {
           speedRounds = [
-            {
-              phase: "speed",
-              name: "Speed H1 — T0 MAX",
-              detail: "Tay thả → vào thẳng MAX SPEED ngay",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H2 — T3 Slip + Duck",
-              detail: "Đòn thẳng → slip → phản | Đòn vòng → duck gối → phản",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H3 — T3 Pull back + Block",
-              detail: "Người lao → pull back → phản | Đòn gần → block → phản",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "speed",
-              name: "Speed H4 — T3 Deflect",
-              detail:
-                "Đòn tới → khuỷu hướng lệch góc → lực trượt qua → counter liền",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "trigger-fast",
-              name: "Speed H5 — T0 + T3 xen kẽ ⭐",
-              detail: "Tay thả → T0 | Họ ra đòn → T3. Xen kẽ liên tục",
-              onSec: t,
-              offSec: r,
-            },
-            {
-              phase: "trigger-fast",
-              name: "Speed H6 — FREESTYLE ⭐",
-              detail:
-                "Mắt đọc → tay tự chạy. Không nghĩ trước. Xong → lui ngay",
-              onSec: t,
-              offSec: r,
-            },
+            { phase:"speed",        name:"Speed H1 — T0 MAX",             detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",                           onSec:t, offSec:r },
+            { phase:"speed",        name:"Speed H2 — T3 Slip + Duck",     detail:"Đòn thẳng→slip→phản | Đòn vòng→duck gối→phản — 70-80% lực",                 onSec:t, offSec:r },
+            { phase:"speed",        name:"Speed H3 — T3 Pull back + Block", detail:"Người lao→pull back→phản | Đòn gần→block→phản — 70-80% lực",               onSec:t, offSec:r },
+            { phase:"speed",        name:"Speed H4 — T3 Deflect",         detail:"Đòn tới→khuỷu hướng lệch góc→lực trượt qua→counter liền — 70-80% lực",      onSec:t, offSec:r },
+            { phase:"trigger-fast", name:"Speed H5 — T0+T3 xen kẽ ⭐",    detail:"Tay thả→T0 | Họ ra đòn→T3. Xen kẽ liên tục — 75-85% lực",                  onSec:t, offSec:r },
+            { phase:"trigger-fast", name:"Speed H6 — FREESTYLE ⭐",        detail:"Mắt đọc → tay tự chạy. Không nghĩ trước. Xong → lui ngay — 80-85% lực",    onSec:t, offSec:r },
           ];
         }
 
         return [
           ...base,
           ...speedRounds,
-          {
-            phase: "footwork",
-            name: "Footwork H1",
-            detail: "Tiến-lùi giữ balance, không đứng yên",
-            onSec: 120,
-            offSec: 0,
-          },
-          {
-            phase: "footwork",
-            name: "Footwork H2",
-            detail: "Bước ngang + T0 — bước tiến → vào thẳng ngay",
-            onSec: 120,
-            offSec: 0,
-          },
-          ...DEF(),
-          ...CORE(),
+          { phase:"footwork", name:"Footwork H1", detail:"Tiến-lùi giữ balance, không đứng yên — 50% lực (chỉ tập chân)", onSec:120, offSec:0 },
+          { phase:"footwork", name:"Footwork H2", detail:"Bước ngang + T0 — bước tiến → vào thẳng ngay — 50% lực",        onSec:120, offSec:0 },
+          ...DEF(), ...CORE(),
         ];
       }
+
       function buildFriday_M() {
         const bp = getBoxingPhase();
         return [
           ...W3(),
           ...SH3("Xen kẽ T0 và T1 — cue nào xuất hiện thì dùng cái đó", bp),
-          ...TRIG(
-            bp,
-            "Chậm — guard thả → T0 | guard cao → T1",
-            "Chậm — tập đọc guard rõ rồi mới chọn",
-            "Tăng tốc — guard thấp/thả → T0 ngay | guard cao → T1 ngay",
-          ),
-          ...DEF(),
-          ...FREE(bp),
+          ...TRIG(bp, "Chậm — guard thả→T0 | guard cao→T1", "Chậm — tập đọc guard rõ rồi mới chọn", "Tăng tốc — guard thấp/thả→T0 ngay | guard cao→T1 ngay"),
+          ...DEF(), ...FREE(bp),
         ];
       }
+
       function buildSaturday_M() {
         const bp = getBoxingPhase();
         return [
-          ...W3(),
-          ...SH2(),
-          {
-            phase: "trigger",
-            name: "Focus — 10 rep CHẬM",
-            detail:
-              "Chọn trigger miss nhiều nhất tuần: T0/T1/T3. Cố tình để cue rõ rồi mới phản",
-            reps: 10,
-          },
-          {
-            phase: "trigger-fast",
-            name: "Focus — 10 rep 70% ⭐",
-            detail: "Tăng tốc dần, cue → phản ngay",
-            reps: 10,
-          },
-          {
-            phase: "trigger-fast",
-            name: "Focus — 10 rep 80% ⭐",
-            detail: "Form vỡ ở tốc độ nào → giảm xuống tốc độ đó",
-            reps: 10,
-          },
-          ...DEF(),
-          ...CORE(),
+          ...W3(), ...SH2(),
+          { phase:"trigger",      name:"Focus — 10 rep CHẬM",  detail:"Chọn trigger miss nhiều nhất tuần: T0/T1/T3. Cố tình để cue rõ rồi mới phản — 40-50% lực", reps:10 },
+          { phase:"trigger-fast", name:"Focus — 10 rep 70% ⭐", detail:"Tăng tốc dần, cue → phản ngay — 70% lực", reps:10 },
+          { phase:"trigger-fast", name:"Focus — 10 rep 80% ⭐", detail:"Form vỡ ở tốc độ nào → giảm xuống tốc độ đó — 80% lực", reps:10 },
+          ...DEF(), ...CORE(),
         ];
       }
+
       function buildAerobic() {
         const cp = getCardioPhase();
-        if (!cp)
-          return [
-            {
-              phase: "aerobic",
-              name: "Chưa bắt đầu",
-              detail: "Cardio chiều bắt đầu từ 04/05",
-              onSec: 5,
-              offSec: 0,
-            },
-          ];
+        if (!cp) return [{ phase:"aerobic", name:"Chưa bắt đầu", detail:"Cardio chiều bắt đầu từ 04/05", onSec:5, offSec:0 }];
         const items = [
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Nhảy dây nhẹ 1p",
-            onSec: 60,
-            offSec: 0,
-          },
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Xoay cổ tay, vai, hông, cổ chân",
-            onSec: 60,
-            offSec: 0,
-          },
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Footwork bước nhẹ tiến-lùi",
-            onSec: 60,
-            offSec: 0,
-          },
+          { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
+          { phase:"warmup", name:"Xoay khớp",      detail:"Cổ tay, vai, hông, cổ chân — thả lỏng",  onSec:60,  offSec:0 },
+          { phase:"warmup", name:"Footwork nhẹ",   detail:"Tiến-lùi nhẹ — 20-30% lực",              onSec:60,  offSec:0 },
         ];
         const rounds = [
-          {
-            name: "R1 — Nhảy dây nhịp điệu",
-            detail: "Nhảy đều không tăng tốc. Thở mũi suốt, vai thả",
-          },
-          {
-            name: "R2 — Footwork liên tục",
-            detail: "Tiến-lùi-chéo không ngừng. Không đánh đòn. Thở đều",
-          },
-          {
-            name: "R3 — Shadow combo nhẹ",
-            detail:
-              "Jab→Cross / Jab→Cross→Hook / Jab fake→Cross thân. 50-60% lực",
-          },
-          {
-            name: "R4 — Nhảy dây giữ nhịp",
-            detail: "Giữ nhịp như R1, không tăng tốc",
-          },
-          {
-            name: "R5 — Shadow tự do nhẹ",
-            detail: "Tự chọn combo quen, ra đòn chậm rõ form",
-          },
-          {
-            name: "R6 — Cool down shadow",
-            detail: "Giảm cường độ, bước chậm lại, thở sâu dần",
-          },
+          { name:"R1 — Nhảy dây nhịp điệu",  detail:"Nhảy đều không tăng tốc. Thở mũi suốt, vai thả — 60-70% lực" },
+          { name:"R2 — Footwork liên tục",    detail:"Tiến-lùi-chéo không ngừng. Không đánh đòn. Thở đều — 60-70% lực" },
+          { name:"R3 — Shadow combo nhẹ",     detail:"Jab→Cross / Jab→Cross→Hook / Jab fake→Cross thân — 50-60% lực" },
+          { name:"R4 — Nhảy dây giữ nhịp",   detail:"Giữ nhịp như R1, không tăng tốc — 60-70% lực" },
+          { name:"R5 — Shadow tự do nhẹ",     detail:"Tự chọn combo quen, ra đòn chậm rõ form — 50-60% lực" },
+          { name:"R6 — Cool down shadow",     detail:"Giảm cường độ, bước chậm lại, thở sâu dần — 40-50% lực" },
         ];
         for (let i = 0; i < cp.t3Rounds && i < rounds.length; i++) {
-          items.push({
-            phase: "aerobic",
-            name: rounds[i].name,
-            detail: rounds[i].detail,
-            onSec: cp.t3Min * 60,
-            offSec: i < cp.t3Rounds - 1 ? cp.t3Rest : 0,
-          });
+          items.push({ phase:"aerobic", name:rounds[i].name, detail:rounds[i].detail, onSec:cp.t3Min*60, offSec:i < cp.t3Rounds-1 ? cp.t3Rest : 0 });
         }
         return items;
       }
+
       function buildHIIT() {
         const cp = getCardioPhase();
-        if (!cp)
-          return [
-            {
-              phase: "build",
-              name: "Chưa bắt đầu",
-              detail: "Cardio chiều bắt đầu từ 04/05",
-              onSec: 5,
-              offSec: 0,
-            },
-          ];
-        const on = cp.hiitOn,
-          off = cp.hiitOff;
+        if (!cp) return [{ phase:"build", name:"Chưa bắt đầu", detail:"Cardio chiều bắt đầu từ 04/05", onSec:5, offSec:0 }];
+        const on = cp.hiitOn, off = cp.hiitOff;
         return [
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Nhảy dây nhẹ 1p",
-            onSec: 60,
-            offSec: 0,
-          },
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Xoay khớp vai, hông, cổ chân",
-            onSec: 60,
-            offSec: 0,
-          },
-          {
-            phase: "warmup",
-            name: "Khởi động",
-            detail: "Shadow nhẹ + footwork",
-            onSec: 60,
-            offSec: 0,
-          },
-          {
-            phase: "build",
-            name: "R1 — Footwork + Jab-Cross",
-            detail: `Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s]. "Người nóng lên, thở thoải mái"`,
-            onSec: on,
-            offSec: off,
-          },
-          {
-            phase: "build",
-            name: "R2 — Nhảy dây nhịp đều",
-            detail: `Không tăng tốc — bước đà cho PEAK [${on}s/${off}s]`,
-            onSec: on,
-            offSec: off,
-          },
-          {
-            phase: "peak",
-            name: "R3 — BURPEE MAX SPEED ⭐",
-            detail: `Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] "Muốn chậm → KHÔNG ĐƯỢC"`,
-            onSec: on,
-            offSec: off,
-          },
-          {
-            phase: "peak",
-            name: "R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐",
-            detail: `T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s]`,
-            onSec: on,
-            offSec: off,
-          },
-          {
-            phase: "survive",
-            name: "R5 — Footwork/Nhảy dây",
-            detail: `Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s]. "Chân nặng → không cho dừng"`,
-            onSec: on,
-            offSec: off,
-          },
-          {
-            phase: "survive",
-            name: "R6 — T1 + Combo nhẹ khi mệt",
-            detail: `T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s]. "Giữ form đến chuông"`,
-            onSec: on,
-            offSec: 0,
-          },
+          { phase:"warmup", name:"Nhảy dây nhẹ",   detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
+          { phase:"warmup", name:"Xoay khớp",       detail:"Vai, hông, cổ chân — thả lỏng",          onSec:60, offSec:0 },
+          { phase:"warmup", name:"Shadow + footwork", detail:"Di chuyển nhẹ — 20-30% lực",           onSec:60, offSec:0 },
+          { phase:"build",  name:"R1 — Footwork + Jab-Cross",   detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`,                              onSec:on, offSec:off },
+          { phase:"build",  name:"R2 — Nhảy dây nhịp đều",     detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`,                           onSec:on, offSec:off },
+          { phase:"peak",   name:"R3 — BURPEE MAX SPEED ⭐",    detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`,                   onSec:on, offSec:off },
+          { phase:"peak",   name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
+          { phase:"survive", name:"R5 — Footwork/Nhảy dây",    detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`,                       onSec:on, offSec:off },
+          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`,       onSec:on, offSec:0   },
         ];
       }
+
       function repSets(ph, name, detail, reps, sets, restSec, betweenSec) {
-        // restSec = nghỉ giữa các set cùng bài
-        // betweenSec = nghỉ sau set cuối trước khi sang bài mới (mặc định = restSec)
         const between = betweenSec !== undefined ? betweenSec : restSec;
         const items = [];
         for (let s = 1; s <= sets; s++)
-          items.push({
-            phase: ph,
-            name: `${name} SET ${s}`,
-            detail: s === 1 ? detail : `${reps} rep`,
-            reps,
-            restSec: s < sets ? restSec : between,
-          });
+          items.push({ phase:ph, name:`${name} SET ${s}`, detail:s===1?detail:`${reps} rep`, reps, restSec: s < sets ? restSec : between });
         return items;
       }
-      function repPairs(
-        ph,
-        nameL,
-        nameR,
-        detailL,
-        detailR,
-        reps,
-        sets,
-        restSec,
-        betweenSec,
-      ) {
-        // restSec = nghỉ sau mỗi cặp TRÁI+PHẢI
-        // betweenSec = nghỉ sau cặp cuối trước khi sang bài mới (mặc định = restSec)
+      function repPairs(ph, nameL, nameR, detailL, detailR, reps, sets, restSec, betweenSec) {
         const between = betweenSec !== undefined ? betweenSec : restSec;
         const items = [];
         for (let s = 1; s <= sets; s++) {
-          items.push({
-            phase: ph,
-            name: `${nameL} SET ${s}`,
-            detail: s === 1 ? detailL : `${reps} rep`,
-            reps,
-            restSec: 0,
-          });
-          items.push({
-            phase: ph,
-            name: `${nameR} SET ${s}`,
-            detail: s === 1 ? detailR : `${reps} rep`,
-            reps,
-            restSec: s < sets ? restSec : between,
-          });
+          items.push({ phase:ph, name:`${nameL} SET ${s}`, detail:s===1?detailL:`${reps} rep`, reps, restSec:0 });
+          items.push({ phase:ph, name:`${nameR} SET ${s}`, detail:s===1?detailR:`${reps} rep`, reps, restSec: s < sets ? restSec : between });
         }
         return items;
       }
       function timerSets(ph, name, detail, onSec, offSec, sets) {
         const items = [];
         for (let s = 1; s <= sets; s++)
-          items.push({
-            phase: ph,
-            name: `${name} SET ${s}`,
-            detail: s === 1 ? detail : "",
-            onSec,
-            offSec: s < sets ? offSec : 0,
-          });
+          items.push({ phase:ph, name:`${name} SET ${s}`, detail:s===1?detail:"", onSec, offSec: s < sets ? offSec : 0 });
         return items;
       }
+
       function buildStrengthA() {
-        const sp = getStrengthPhase();
-        const rs = sp.restSec;
+        const sp = getStrengthPhase(); const rs = sp.restSec;
         const items = [
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 1",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 2",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 3",
-            detail: "2p nhảy đều",
-            onSec: 120,
-            offSec: 0,
-          },
-          ...repSets(
-            "strength",
-            "Push-up",
-            `${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`,
-            parseInt(sp.pushRep),
-            sp.sets,
-            rs,
-          ),
-          ...repPairs(
-            "strength",
-            "Row 1 tay TRÁI 10kg",
-            "Row 1 tay PHẢI 10kg",
-            `${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`,
-            `${sp.rowRep} rep`,
-            parseInt(sp.rowRep),
-            sp.sets,
-            rs,
-          ),
+          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
+          ...repSets("strength","Push-up",`${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`,parseInt(sp.pushRep),sp.sets,rs),
+          ...repPairs("strength","Row 1 tay TRÁI 10kg","Row 1 tay PHẢI 10kg",`${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
         ];
-        if (sp.chinup)
-          items.push(
-            ...repSets(
-              "strength",
-              "Chin-up",
-              `${sp.chinupRep} rep | Dừng trước khi fail`,
-              parseInt(sp.chinupRep) || 3,
-              2,
-              rs,
-            ),
-          );
-        items.push(
-          ...repSets(
-            "strength",
-            "Shoulder Tap Plank",
-            "10 rep mỗi bên | Hông không lắc, kiểm soát",
-            20,
-            sp.sets,
-            45,
-          ),
-        );
-        items.push(
-          ...repPairs(
-            "strength",
-            "Step-up CHÂN TRÁI",
-            "Step-up CHÂN PHẢI",
-            "8-10 rep | Làm chậm, không nhảy",
-            "8-10 rep",
-            10,
-            sp.sets,
-            45,
-          ),
-        );
-        items.push(
-          ...repSets(
-            "core",
-            "Leg Raise",
-            "10-12 rep | Hạ chân chậm, không thả rơi",
-            12,
-            sp.sets,
-            45,
-          ),
-        );
+        if (sp.chinup) items.push(...repSets("strength","Chin-up",`${sp.chinupRep} rep | Dừng trước khi fail`,parseInt(sp.chinupRep)||3,2,rs));
+        items.push(...repSets("strength","Shoulder Tap Plank","10 rep mỗi bên | Hông không lắc, kiểm soát",20,sp.sets,45));
+        items.push(...repPairs("strength","Step-up CHÂN TRÁI","Step-up CHÂN PHẢI","8-10 rep | Làm chậm, không nhảy","8-10 rep",10,sp.sets,45));
+        items.push(...repSets("core","Leg Raise","10-12 rep | Hạ chân chậm, không thả rơi",12,sp.sets,45));
         return items;
       }
+
       function buildStrengthB() {
-        const sp = getStrengthPhase();
-        const rs = sp.restSec;
+        const sp = getStrengthPhase(); const rs = sp.restSec;
         const items = [
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 1",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 2",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 3",
-            detail: "2p nhảy đều",
-            onSec: 120,
-            offSec: 0,
-          },
-          ...repSets(
-            "strength",
-            "Pike Push-up",
-            `${sp.pushRep} rep | Train vai trước → guard không bị drop`,
-            parseInt(sp.pushRep),
-            sp.sets,
-            rs,
-          ),
-          ...repPairs(
-            "strength",
-            "Row 1 tay TRÁI tempo chậm",
-            "Row 1 tay PHẢI tempo chậm",
-            `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`,
-            `${sp.rowRep} rep`,
-            parseInt(sp.rowRep),
-            sp.sets,
-            rs,
-          ),
-          ...repSets(
-            "strength",
-            "Rear Delt Fly 5kg",
-            "12-15 rep | Vai sau → giữ guard cả trận không mỏi",
-            15,
-            sp.sets,
-            45,
-          ),
-          ...repPairs(
-            "strength",
-            "Glute Bridge CHÂN TRÁI",
-            "Glute Bridge CHÂN PHẢI",
-            "10-12 rep | Hông sau mạnh → kick power",
-            "10-12 rep",
-            12,
-            sp.sets,
-            45,
-          ),
+          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
+          ...repSets("strength","Pike Push-up",`${sp.pushRep} rep | Train vai trước → guard không bị drop`,parseInt(sp.pushRep),sp.sets,rs),
+          ...repPairs("strength","Row 1 tay TRÁI tempo chậm","Row 1 tay PHẢI tempo chậm",`${sp.rowRep} rep | Kéo chậm, tập lưng giữa`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
+          ...repSets("strength","Rear Delt Fly 5kg","12-15 rep | Vai sau → giữ guard cả trận không mỏi",15,sp.sets,45),
+          ...repPairs("strength","Glute Bridge CHÂN TRÁI","Glute Bridge CHÂN PHẢI","10-12 rep | Hông sau mạnh → kick power","10-12 rep",12,sp.sets,45),
         ];
         for (let s = 1; s <= sp.sets; s++) {
-          items.push({
-            phase: "strength",
-            name: `Side Plank TRÁI SET ${s}`,
-            detail:
-              s === 1 ? "30s | Core bên → chống bị quật khi áp sát" : "30s",
-            onSec: 30,
-            offSec: 10,
-          });
-          items.push({
-            phase: "strength",
-            name: `Side Plank PHẢI SET ${s}`,
-            detail: "30s",
-            onSec: 30,
-            offSec: s < sp.sets ? 30 : 0,
-          });
+          items.push({ phase:"strength", name:`Side Plank TRÁI SET ${s}`, detail:s===1?"30s | Core bên → chống bị quật khi áp sát":"30s", onSec:30, offSec:10 });
+          items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < sp.sets ? 30 : 0 });
         }
-        items.push(
-          ...repPairs(
-            "strength",
-            "Dead Bug TRÁI",
-            "Dead Bug PHẢI",
-            "8 rep | Lưng dán sàn, thở đều",
-            "8 rep",
-            8,
-            sp.sets,
-            30,
-          ),
-        );
+        items.push(...repPairs("strength","Dead Bug TRÁI","Dead Bug PHẢI","8 rep | Lưng dán sàn, thở đều","8 rep",8,sp.sets,30));
         return items;
       }
+
       function buildStrengthC() {
-        const sp = getStrengthPhase();
-        const rs = sp.restSec;
+        const sp = getStrengthPhase(); const rs = sp.restSec;
         const items = [
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 1",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 2",
-            detail: "2p nhảy đều, nghỉ 30s",
-            onSec: 120,
-            offSec: 30,
-          },
-          {
-            phase: "warmup",
-            name: "Nhảy dây SET 3",
-            detail: "2p nhảy đều",
-            onSec: 120,
-            offSec: 0,
-          },
-          ...repSets(
-            "strength",
-            "Diamond Push-up",
-            `${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`,
-            parseInt(sp.pushRep),
-            sp.sets,
-            rs,
-          ),
-          ...repPairs(
-            "strength",
-            "Row 1 tay TRÁI 10kg",
-            "Row 1 tay PHẢI 10kg",
-            `${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`,
-            `${sp.rowRep} rep`,
-            parseInt(sp.rowRep),
-            sp.sets,
-            rs,
-          ),
+          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
+          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
+          ...repSets("strength","Diamond Push-up",`${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`,parseInt(sp.pushRep),sp.sets,rs),
+          ...repPairs("strength","Row 1 tay TRÁI 10kg","Row 1 tay PHẢI 10kg",`${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
         ];
-        if (sp.chinup)
-          items.push(
-            ...repSets(
-              "strength",
-              "Chin-up",
-              `${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`,
-              parseInt(sp.chinupRep) || 3,
-              sp.sets,
-              rs,
-            ),
-          );
-        items.push(
-          ...repSets(
-            "strength",
-            "Russian Twist 5kg",
-            "16 rep | Core xoay → power từ hông truyền lên tay",
-            16,
-            sp.sets,
-            45,
-          ),
-        );
+        if (sp.chinup) items.push(...repSets("strength","Chin-up",`${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`,parseInt(sp.chinupRep)||3,sp.sets,rs));
+        items.push(...repSets("strength","Russian Twist 5kg","16 rep | Core xoay → power từ hông truyền lên tay",16,sp.sets,45));
         if (sp.explosive) {
-          items.push(
-            ...repSets(
-              "strength",
-              "Jump Squat",
-              "6-8 rep | Bùng nổ bước vào áp sát",
-              8,
-              sp.sets,
-              60,
-            ),
-          );
+          items.push(...repSets("strength","Jump Squat","6-8 rep | Bùng nổ bước vào áp sát",8,sp.sets,60));
         } else {
-          items.push(
-            ...repPairs(
-              "strength",
-              "Split Squat CHÂN TRÁI",
-              "Split Squat CHÂN PHẢI",
-              "8-10 rep | Chân trụ khi đánh combo dài",
-              "8-10 rep",
-              10,
-              sp.sets,
-              45,
-            ),
-          );
+          items.push(...repPairs("strength","Split Squat CHÂN TRÁI","Split Squat CHÂN PHẢI","8-10 rep | Chân trụ khi đánh combo dài","8-10 rep",10,sp.sets,45));
         }
-        items.push(
-          ...timerSets(
-            "core",
-            "Plank",
-            "40s | Giữ thân thẳng, thở đều",
-            40,
-            30,
-            sp.sets,
-          ),
-        );
+        items.push(...timerSets("core","Plank","40s | Giữ thân thẳng, thở đều",40,30,sp.sets));
         return items;
       }
+
       function buildRecovery() {
         return [
-          {
-            phase: "aerobic",
-            name: "Giãn ngực",
-            detail: "Mở tay ra sau, giữ 20-30s",
-            onSec: 30,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Giãn vai sau",
-            detail: "Kéo tay qua ngực, 20s mỗi bên",
-            onSec: 40,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Giãn lưng trên",
-            detail: "Ôm gối ngồi cúi người, 20s",
-            onSec: 20,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Giãn đùi trước",
-            detail: "Kéo gót về phía mông, 20s mỗi chân",
-            onSec: 40,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Giãn gân kheo",
-            detail: "Ngồi duỗi thẳng chân cúi người, 30s",
-            onSec: 30,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Giãn lưng dưới",
-            detail: "Nằm co gối ôm ngực, 30s",
-            onSec: 30,
-            offSec: 10,
-          },
-          {
-            phase: "aerobic",
-            name: "Hít thở sâu",
-            detail: "5 nhịp, thả lỏng hoàn toàn",
-            onSec: 30,
-            offSec: 0,
-          },
+          { phase:"aerobic", name:"Giãn ngực",      detail:"Mở tay ra sau, giữ 20-30s",              onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Giãn vai sau",   detail:"Kéo tay qua ngực, 20s mỗi bên",          onSec:40, offSec:10 },
+          { phase:"aerobic", name:"Giãn lưng trên", detail:"Ôm gối ngồi cúi người, 20s",             onSec:20, offSec:10 },
+          { phase:"aerobic", name:"Giãn đùi trước", detail:"Kéo gót về phía mông, 20s mỗi chân",    onSec:40, offSec:10 },
+          { phase:"aerobic", name:"Giãn gân kheo",  detail:"Ngồi duỗi thẳng chân cúi người, 30s",   onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Giãn lưng dưới", detail:"Nằm co gối ôm ngực, 30s",               onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Hít thở sâu",    detail:"5 nhịp, thả lỏng hoàn toàn",            onSec:30, offSec:0  },
         ];
       }
+
       function buildScheduleFromDay(d) {
         const map = {
-          Monday: { morning: buildMonday_M(), afternoon: buildStrengthA() },
-          Tuesday: { morning: buildTuesday_M(), afternoon: buildAerobic() },
-          Wednesday: {
-            morning: buildWednesday_M(),
-            afternoon: buildStrengthB(),
-          },
-          Thursday: { morning: buildThursday_M(), afternoon: buildHIIT() },
-          Friday: { morning: buildFriday_M(), afternoon: buildStrengthC() },
-          Saturday: { morning: buildSaturday_M(), afternoon: buildRecovery() },
-          Sunday: { morning: [], afternoon: [] },
+          Monday:    { morning:buildMonday_M(),    afternoon:buildStrengthA() },
+          Tuesday:   { morning:buildTuesday_M(),   afternoon:buildAerobic()   },
+          Wednesday: { morning:buildWednesday_M(), afternoon:buildStrengthB() },
+          Thursday:  { morning:buildThursday_M(),  afternoon:buildHIIT()      },
+          Friday:    { morning:buildFriday_M(),    afternoon:buildStrengthC() },
+          Saturday:  { morning:buildSaturday_M(),  afternoon:buildRecovery()  },
+          Sunday:    { morning:[],                 afternoon:[]               },
         };
-        return map[d] || { morning: [], afternoon: [] };
+        return map[d] || { morning:[], afternoon:[] };
       }
 
-      // ══════════════════════════════════
-      // CALENDAR
-      // ══════════════════════════════════
-      function openCalendar() {
-        calYear = viewDate.getFullYear();
-        calMonth = viewDate.getMonth();
-        renderCalendar();
-        document.getElementById("calOverlay").classList.add("show");
-      }
-      function closeCalendar() {
-        document.getElementById("calOverlay").classList.remove("show");
-      }
-      function handleOverlayClick(e) {
-        if (e.target === document.getElementById("calOverlay")) closeCalendar();
-      }
-      function calPrev() {
-        calMonth--;
-        if (calMonth < 0) {
-          calMonth = 11;
-          calYear--;
-        }
-        renderCalendar();
-      }
-      function calNext() {
-        calMonth++;
-        if (calMonth > 11) {
-          calMonth = 0;
-          calYear++;
-        }
-        renderCalendar();
-      }
-
+      // ── CALENDAR ──
+      function openCalendar() { calYear=viewDate.getFullYear(); calMonth=viewDate.getMonth(); renderCalendar(); document.getElementById("calOverlay").classList.add("show"); }
+      function closeCalendar() { document.getElementById("calOverlay").classList.remove("show"); }
+      function handleOverlayClick(e) { if (e.target===document.getElementById("calOverlay")) closeCalendar(); }
+      function calPrev() { calMonth--; if (calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+      function calNext() { calMonth++; if (calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
       function renderCalendar() {
-        document.getElementById("calMonthTitle").textContent =
-          `${MONTHS_VI[calMonth].toUpperCase()} ${calYear}`;
-        const firstDay = new Date(calYear, calMonth, 1).getDay();
-        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-        const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+        document.getElementById("calMonthTitle").textContent = `${MONTHS_VI[calMonth].toUpperCase()} ${calYear}`;
+        const firstDay = new Date(calYear,calMonth,1).getDay();
+        const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
+        const daysInPrev = new Date(calYear,calMonth,0).getDate();
         let html = "";
-        for (let i = firstDay - 1; i >= 0; i--)
-          html += `<div class="cal-day other-month">${daysInPrev - i}</div>`;
-        for (let d = 1; d <= daysInMonth; d++) {
-          const date = new Date(calYear, calMonth, d);
-          const dow = date.getDay();
-          const isSun = dow === 0;
-          const isTod =
-            date.getFullYear() === TODAY_Y &&
-            date.getMonth() === TODAY_M &&
-            date.getDate() === TODAY_D;
-          const isSel = isViewDate(date);
-          const hasTrain = !isSun;
-          let cls = "cal-day";
-          if (isSun) cls += " sunday";
-          if (isTod) cls += " is-today";
-          if (isSel) cls += " selected";
-          if (hasTrain) cls += " has-training";
-          html += `<div class="${cls}" onclick="selectDate(${calYear},${calMonth},${d})">${d}</div>`;
+        for (let i=firstDay-1;i>=0;i--) html+=`<div class="cal-day other-month">${daysInPrev-i}</div>`;
+        for (let d=1;d<=daysInMonth;d++) {
+          const date=new Date(calYear,calMonth,d); const dow=date.getDay();
+          const isSun=dow===0;
+          const isTod=date.getFullYear()===TODAY_Y&&date.getMonth()===TODAY_M&&date.getDate()===TODAY_D;
+          const isSel=isViewDate(date); const hasTrain=!isSun;
+          let cls="cal-day";
+          if(isSun) cls+=" sunday"; if(isTod) cls+=" is-today"; if(isSel) cls+=" selected"; if(hasTrain) cls+=" has-training";
+          html+=`<div class="${cls}" onclick="selectDate(${calYear},${calMonth},${d})">${d}</div>`;
         }
-        const total = firstDay + daysInMonth;
-        const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
-        for (let d = 1; d <= remaining; d++)
-          html += `<div class="cal-day other-month">${d}</div>`;
-        document.getElementById("calDays").innerHTML = html;
-        const selDow = viewDate.getDay();
-        const selStr = `${DAYS_VI[selDow].toUpperCase()} ${viewDate.getDate().toString().padStart(2, "0")}/${(viewDate.getMonth() + 1).toString().padStart(2, "0")}/${viewDate.getFullYear()}`;
-        document.getElementById("calFooterInfo").textContent =
-          `ĐÃ CHỌN: ${selStr}`;
+        const total=firstDay+daysInMonth; const remaining=total%7===0?0:7-(total%7);
+        for (let d=1;d<=remaining;d++) html+=`<div class="cal-day other-month">${d}</div>`;
+        document.getElementById("calDays").innerHTML=html;
+        const selDow=viewDate.getDay();
+        const selStr=`${DAYS_VI[selDow].toUpperCase()} ${viewDate.getDate().toString().padStart(2,"0")}/${(viewDate.getMonth()+1).toString().padStart(2,"0")}/${viewDate.getFullYear()}`;
+        document.getElementById("calFooterInfo").textContent=`ĐÃ CHỌN: ${selStr}`;
       }
-      function selectDate(y, m, d) {
-        viewDate = new Date(y, m, d);
-        closeCalendar();
-        loadViewDate();
-      }
-      function goToday() {
-        viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
-        closeCalendar();
-        loadViewDate();
-      }
+      function selectDate(y,m,d) { viewDate=new Date(y,m,d); closeCalendar(); loadViewDate(); }
+      function goToday() { viewDate=new Date(TODAY_Y,TODAY_M,TODAY_D); closeCalendar(); loadViewDate(); }
 
-      // ══════════════════════════════════
-      // LOAD VIEW DATE
-      // ══════════════════════════════════
+      // ── LOAD VIEW DATE ──
       function loadViewDate() {
-        const dayIdx = viewDate.getDay();
-        const dayEnView = DAYS_EN[dayIdx];
-        const preview = isPreviewMode();
-        document.getElementById("dayBadge").textContent =
-          DAYS_VI[dayIdx].toUpperCase();
-        document.getElementById("dateBadge").textContent =
-          viewDate.toLocaleDateString("vi-VN");
-        const banner = document.getElementById("viewingBanner");
+        const dayIdx=viewDate.getDay(); const dayEnView=DAYS_EN[dayIdx]; const preview=isPreviewMode();
+        document.getElementById("dayBadge").textContent=DAYS_VI[dayIdx].toUpperCase();
+        document.getElementById("dateBadge").textContent=viewDate.toLocaleDateString("vi-VN");
+        const banner=document.getElementById("viewingBanner");
         if (preview) {
-          document.getElementById("viewingDate").textContent =
-            `${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2, "0")}/${(viewDate.getMonth() + 1).toString().padStart(2, "0")}/${viewDate.getFullYear()}`;
+          document.getElementById("viewingDate").textContent=`${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2,"0")}/${(viewDate.getMonth()+1).toString().padStart(2,"0")}/${viewDate.getFullYear()}`;
           banner.classList.add("show");
-        } else {
-          banner.classList.remove("show");
-        }
-        document.body.classList.toggle("preview-mode", preview);
-        document
-          .getElementById("btnCalendar")
-          .classList.toggle("today-active", !preview);
-        ["morning", "afternoon"].forEach((s) => {
+        } else { banner.classList.remove("show"); }
+        document.body.classList.toggle("preview-mode",preview);
+        document.getElementById("btnCalendar").classList.toggle("today-active",!preview);
+        ["morning","afternoon"].forEach(s=>{
           document.getElementById(`done-${s}`).classList.remove("show");
-          document.getElementById(`schedule-${s}`).style.display = "";
+          document.getElementById(`schedule-${s}`).style.display="";
         });
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
+        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
         document.getElementById("timerOverlay").classList.remove("show");
-        document.getElementById("progressFill").style.width = "0%";
-        if (dayEnView === "Sunday") {
-          ["morning", "afternoon"].forEach((s) => {
-            document.getElementById(`schedule-${s}`).innerHTML =
-              '<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ ngơi hoàn toàn 🛌</div></div>';
-          });
-          document.getElementById("stickyStart").style.display = "none";
-          sessData = { morning: [], afternoon: [] };
+        document.getElementById("progressFill").style.width="0%";
+        if (dayEnView==="Sunday") {
+          ["morning","afternoon"].forEach(s=>{ document.getElementById(`schedule-${s}`).innerHTML='<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ ngơi hoàn toàn 🛌</div></div>'; });
+          document.getElementById("stickyStart").style.display="none";
+          sessData={morning:[],afternoon:[]};
           return;
         }
-        const data = buildScheduleFromDay(dayEnView);
-        sessData = data;
-        renderSchedule(data.morning, "schedule-morning");
-        renderSchedule(data.afternoon, "schedule-afternoon");
-        document.getElementById("stickyStart").style.display = "block";
+        const data=buildScheduleFromDay(dayEnView);
+        sessData=data;
+        renderSchedule(data.morning,"schedule-morning");
+        renderSchedule(data.afternoon,"schedule-afternoon");
+        document.getElementById("stickyStart").style.display="block";
         switchTab("morning");
         updateEstTime();
       }
 
-      // ══════════════════════════════════
-      // RENDER
-      // ══════════════════════════════════
+      // ── RENDER ──
       function fmtDur(item) {
-        if (item.reps) {
-          return item.restSec && item.restSec > 0
-            ? item.reps + " REP + " + item.restSec + "s"
-            : item.reps + " REP";
-        }
-        if (item.offSec > 0) return item.onSec + "s+" + item.offSec + "s";
-        const s = item.onSec;
-        return s >= 60
-          ? Math.floor(s / 60) + "m" + (s % 60 > 0 ? (s % 60) + "s" : "")
-          : s + "s";
+        if (item.reps) return item.restSec&&item.restSec>0 ? item.reps+" REP + "+item.restSec+"s" : item.reps+" REP";
+        if (item.offSec>0) return item.onSec+"s+"+item.offSec+"s";
+        const s=item.onSec;
+        return s>=60 ? Math.floor(s/60)+"m"+(s%60>0?(s%60)+"s":"") : s+"s";
       }
       function calcEstTime(items) {
-        if (!items || !items.length) return null;
-        let total = 0;
-        items.forEach((item) => {
-          if (!isRep(item)) total += (item.onSec || 0) + (item.offSec || 0);
-        });
-        if (total === 0) return null;
-        const m = Math.floor(total / 60),
-          s = total % 60;
-        return m > 0 ? (s > 0 ? `~${m} phút ${s}s` : `~${m} phút`) : `~${s}s`;
+        if (!items||!items.length) return null;
+        let total=0;
+        items.forEach(item=>{ if(!isRep(item)) total+=(item.onSec||0)+(item.offSec||0); });
+        if (total===0) return null;
+        const m=Math.floor(total/60),s=total%60;
+        return m>0?(s>0?`~${m} phút ${s}s`:`~${m} phút`):`~${s}s`;
       }
       function updateEstTime() {
-        const el = document.getElementById("estTimebar");
+        const el=document.getElementById("estTimebar");
         if (!el) return;
-        const est = calcEstTime(sessData[curSess]);
-        el.innerHTML = est ? `⏱ ước tính timer: <span>${est}</span>` : "";
+        const est=calcEstTime(sessData[curSess]);
+        el.innerHTML=est?`⏱ ước tính timer: <span>${est}</span>`:"";
       }
-      function renderSchedule(items, cid) {
-        const el = document.getElementById(cid);
-        if (!items || !items.length) {
-          el.innerHTML =
-            '<div class="no-content"><div class="no-content-icon">📭</div><div class="no-content-title">KHÔNG CÓ LỊCH</div><div class="no-content-sub">hôm nay nghỉ 🛌</div></div>';
-          return;
-        }
-        let html = "",
-          lastPh = "";
-        items.forEach((item, i) => {
-          const ph = item.phase;
-          if (ph !== lastPh) {
-            html += `<div class="phase-label ${ph}">${PH_LABEL[ph] || ph}</div>`;
-            lastPh = ph;
-          }
-          const durHtml = item.reps
-            ? `<div class="rep-badge">${item.reps} REP</div>`
-            : `<div class="round-dur">${fmtDur(item)}</div>`;
-          html += `<div class="round-item ${ph}" id="item-${cid}-${i}" onclick="jumpToRound(${i},'${cid}')">
-            <div class="round-num">${i + 1}</div>
+      function renderSchedule(items,cid) {
+        const el=document.getElementById(cid);
+        if (!items||!items.length) { el.innerHTML='<div class="no-content"><div class="no-content-icon">📭</div><div class="no-content-title">KHÔNG CÓ LỊCH</div><div class="no-content-sub">hôm nay nghỉ 🛌</div></div>'; return; }
+        let html="",lastPh="";
+        items.forEach((item,i)=>{
+          const ph=item.phase;
+          if (ph!==lastPh) { html+=`<div class="phase-label ${ph}">${PH_LABEL[ph]||ph}</div>`; lastPh=ph; }
+          const durHtml=item.reps ? `<div class="rep-badge">${item.reps} REP</div>` : `<div class="round-dur">${fmtDur(item)}</div>`;
+          html+=`<div class="round-item ${ph}" id="item-${cid}-${i}" onclick="jumpToRound(${i},'${cid}')">
+            <div class="round-num">${i+1}</div>
             <div class="round-info"><div class="round-name">${item.name}</div><div class="round-detail">${item.detail}</div></div>
             ${durHtml}</div>`;
         });
-        el.innerHTML = html;
+        el.innerHTML=html;
       }
 
-      // ══════════════════════════════════
-      // TIMER ENGINE
-      // ══════════════════════════════════
-      let curSess = "morning",
-        sessData = { morning: [], afternoon: [] };
-      let ts = {
-        items: [],
-        idx: 0,
-        isOn: true,
-        rem: 0,
-        paused: false,
-        iv: null,
-        isResting: false,
-        restRem: 0,
-      };
-      const CIRC = 2 * Math.PI * 44;
-      const synth = window.speechSynthesis;
-      let lastSpoken = -1;
+      // ── TIMER ENGINE ──
+      let curSess="morning", sessData={morning:[],afternoon:[]};
+      let ts={items:[],idx:0,isOn:true,rem:0,paused:false,iv:null,isResting:false,restRem:0};
+      const CIRC=2*Math.PI*44;
+      const synth=window.speechSynthesis;
+      let lastSpoken=-1;
 
       function showRing(show) {
-        document.getElementById("timerMode").style.display = show
-          ? "block"
-          : "none";
-        document.getElementById("repMode").classList.toggle("show", !show);
-        document.getElementById("tControls").style.display = show
-          ? "flex"
-          : "none";
+        document.getElementById("timerMode").style.display=show?"block":"none";
+        document.getElementById("repMode").classList.toggle("show",!show);
+        document.getElementById("tControls").style.display=show?"flex":"none";
       }
-      function speak(txt) {
-        if (!synth) return;
-        synth.cancel();
-        const u = new SpeechSynthesisUtterance(txt);
-        u.lang = "vi-VN";
-        u.rate = 1.1;
-        synth.speak(u);
-      }
-      function updateRing(prog, ph) {
-        const r = document.getElementById("ringProgress");
-        r.style.strokeDashoffset = CIRC * (1 - prog);
-        r.style.stroke = PH_COLOR[ph] || "#f0f0f0";
+      function speak(txt) { if(!synth)return; synth.cancel(); const u=new SpeechSynthesisUtterance(txt); u.lang="vi-VN"; u.rate=1.1; synth.speak(u); }
+      function updateRing(prog,ph) {
+        const r=document.getElementById("ringProgress");
+        r.style.strokeDashoffset=CIRC*(1-prog);
+        r.style.stroke=PH_COLOR[ph]||"#f0f0f0";
       }
       function updateUI() {
-        const item = ts.items[ts.idx];
+        const item=ts.items[ts.idx];
         if (!item) return;
         if (ts.isResting) {
           showRing(true);
-          document.getElementById("tPhase").textContent =
-            PH_LABEL[item.phase] || item.phase;
-          document.getElementById("tName").textContent = "NGHỈ";
-          document.getElementById("tDetail").textContent =
-            "Thở đều, chuẩn bị set tiếp theo";
-          const total = item.restSec,
-            rem = ts.restRem;
-          const prog = total > 0 ? rem / total : 0;
-          const warn = rem <= 10 && rem > 0;
-          document.getElementById("tSec").textContent = rem;
-          document.getElementById("tLbl").textContent = "NGHỈ";
-          document.getElementById("tSec").style.color = "var(--muted)";
-          updateRing(prog, "warmup");
-          document
-            .getElementById("ringContainer")
-            .classList.toggle("warn", warn);
-          const ni = document.getElementById("nextName");
-          const nd = document.getElementById("nextDetail");
-          const nx = ts.idx + 1;
-          ni.textContent =
-            nx < ts.items.length ? ts.items[nx].name : "🏁 KẾT THÚC";
-          nd.textContent =
-            nx < ts.items.length ? ts.items[nx].detail || "" : "";
-          ni.className = "next-name";
-          document
-            .querySelectorAll(`#schedule-${curSess} .round-item`)
-            .forEach((el, i) => {
-              el.classList.toggle("current", i === ts.idx);
-              el.classList.toggle("done", i < ts.idx);
-            });
-          document.getElementById("progressFill").style.width =
-            (ts.idx / ts.items.length) * 100 + "%";
+          document.getElementById("tPhase").textContent=PH_LABEL[item.phase]||item.phase;
+          document.getElementById("tName").textContent="NGHỈ";
+          document.getElementById("tDetail").textContent="Thở đều, chuẩn bị set tiếp theo";
+          const total=item.restSec,rem=ts.restRem;
+          const prog=total>0?rem/total:0,warn=rem<=10&&rem>0;
+          document.getElementById("tSec").textContent=rem;
+          document.getElementById("tLbl").textContent="NGHỈ";
+          document.getElementById("tSec").style.color="var(--muted)";
+          updateRing(prog,"warmup");
+          document.getElementById("ringContainer").classList.toggle("warn",warn);
+          const ni=document.getElementById("nextName"),nd=document.getElementById("nextDetail"),nx=ts.idx+1;
+          ni.textContent=nx<ts.items.length?ts.items[nx].name:"🏁 KẾT THÚC";
+          nd.textContent=nx<ts.items.length?ts.items[nx].detail||"":"";
+          ni.className="next-name";
+          document.querySelectorAll(`#schedule-${curSess} .round-item`).forEach((el,i)=>{ el.classList.toggle("current",i===ts.idx); el.classList.toggle("done",i<ts.idx); });
+          document.getElementById("progressFill").style.width=(ts.idx/ts.items.length)*100+"%";
           return;
         }
-        document.getElementById("tPhase").textContent =
-          PH_LABEL[item.phase] || item.phase;
-        document.getElementById("tName").textContent = item.name;
-        document.getElementById("tDetail").textContent = item.detail;
+        document.getElementById("tPhase").textContent=PH_LABEL[item.phase]||item.phase;
+        document.getElementById("tName").textContent=item.name;
+        document.getElementById("tDetail").textContent=item.detail;
         if (isRep(item)) {
           showRing(false);
-          document.getElementById("repNum").textContent = item.reps;
-          // Fix nextName/nextDetail cho rep items
-          const niRep = document.getElementById("nextName");
-          const ndRep = document.getElementById("nextDetail");
-          const nxRep = ts.idx + 1;
-          if (nxRep < ts.items.length) {
-            niRep.textContent = ts.items[nxRep].name;
-            ndRep.textContent = ts.items[nxRep].detail || "";
-          } else {
-            niRep.textContent = "🏁 KẾT THÚC";
-            ndRep.textContent = "";
-          }
-          niRep.className = "next-name";
+          document.getElementById("repNum").textContent=item.reps;
+          const niRep=document.getElementById("nextName"),ndRep=document.getElementById("nextDetail"),nxRep=ts.idx+1;
+          if (nxRep<ts.items.length){niRep.textContent=ts.items[nxRep].name;ndRep.textContent=ts.items[nxRep].detail||"";}
+          else{niRep.textContent="🏁 KẾT THÚC";ndRep.textContent="";}
+          niRep.className="next-name";
         } else {
           showRing(true);
-          const { isOn, rem } = ts,
-            total = isOn ? item.onSec : item.offSec,
-            prog = total > 0 ? rem / total : 0,
-            warn = rem <= 10 && rem > 0;
-          document.getElementById("tSec").textContent = rem;
-          document.getElementById("tLbl").textContent = isOn ? "ON" : "NGHỈ";
-          document.getElementById("tSec").style.color = warn
-            ? "var(--survive)"
-            : !isOn
-              ? "var(--muted)"
-              : "var(--text)";
-          updateRing(prog, isOn ? item.phase : "warmup");
-          document
-            .getElementById("ringContainer")
-            .classList.toggle("warn", warn);
-          const ni = document.getElementById("nextName");
-          let nxt,
-            nxtWarn = false;
-          if (isOn && item.offSec > 0) {
-            nxt = `NGHỈ ${item.offSec}s`;
-          } else {
-            const nx = ts.idx + 1;
-            nxt = nx < ts.items.length ? ts.items[nx].name : "🏁 KẾT THÚC";
-            if (warn) nxtWarn = true;
-          }
-          ni.textContent = nxt;
-          ni.className = "next-name" + (nxtWarn ? " warn-txt" : "");
-          const nd2 = document.getElementById("nextDetail");
-          if (isOn && item.offSec > 0) {
-            nd2.textContent = "";
-          } else {
-            const nx2 = ts.idx + 1;
-            nd2.textContent =
-              nx2 < ts.items.length ? ts.items[nx2].detail || "" : "";
-          }
+          const {isOn,rem}=ts,total=isOn?item.onSec:item.offSec,prog=total>0?rem/total:0,warn=rem<=10&&rem>0;
+          document.getElementById("tSec").textContent=rem;
+          document.getElementById("tLbl").textContent=isOn?"ON":"NGHỈ";
+          document.getElementById("tSec").style.color=warn?"var(--survive)":!isOn?"var(--muted)":"var(--text)";
+          updateRing(prog,isOn?item.phase:"warmup");
+          document.getElementById("ringContainer").classList.toggle("warn",warn);
+          const ni=document.getElementById("nextName");
+          let nxt,nxtWarn=false;
+          if (isOn&&item.offSec>0){nxt=`NGHỈ ${item.offSec}s`;}
+          else{const nx=ts.idx+1;nxt=nx<ts.items.length?ts.items[nx].name:"🏁 KẾT THÚC";if(warn)nxtWarn=true;}
+          ni.textContent=nxt; ni.className="next-name"+(nxtWarn?" warn-txt":"");
+          const nd2=document.getElementById("nextDetail");
+          if (isOn&&item.offSec>0){nd2.textContent="";}
+          else{const nx2=ts.idx+1;nd2.textContent=nx2<ts.items.length?ts.items[nx2].detail||"":"";}
         }
-        document
-          .querySelectorAll(`#schedule-${curSess} .round-item`)
-          .forEach((el, i) => {
-            el.classList.toggle("current", i === ts.idx);
-            el.classList.toggle("done", i < ts.idx);
-          });
-        document.getElementById("progressFill").style.width =
-          (ts.idx / ts.items.length) * 100 + "%";
+        document.querySelectorAll(`#schedule-${curSess} .round-item`).forEach((el,i)=>{ el.classList.toggle("current",i===ts.idx); el.classList.toggle("done",i<ts.idx); });
+        document.getElementById("progressFill").style.width=(ts.idx/ts.items.length)*100+"%";
       }
       function tick() {
         if (ts.paused) return;
         if (ts.isResting) {
           ts.restRem--;
-          if (ts.restRem <= 10 && ts.restRem !== lastSpoken && ts.restRem > 0) {
-            lastSpoken = ts.restRem;
-            speak(String(ts.restRem));
-          }
-          if (ts.restRem <= 0) {
-            ts.isResting = false;
-            advance();
-            return;
-          }
-          updateUI();
-          return;
+          if (ts.restRem<=10&&ts.restRem!==lastSpoken&&ts.restRem>0){lastSpoken=ts.restRem;speak(String(ts.restRem));}
+          if (ts.restRem<=0){ts.isResting=false;advance();return;}
+          updateUI(); return;
         }
-        const item = ts.items[ts.idx];
-        if (!item || isRep(item)) return;
+        const item=ts.items[ts.idx];
+        if (!item||isRep(item)) return;
         ts.rem--;
-        if (ts.rem <= 0) {
-          playBeep(ts.isOn ? "end" : "start");
-          if (ts.isOn && item.offSec > 0) {
-            ts.isOn = false;
-            ts.rem = item.offSec;
-            lastSpoken = -1;
-            speak("Nghỉ " + item.offSec + " giây");
-          } else {
-            advance();
-            return;
-          }
+        if (ts.rem<=0) {
+          playBeep(ts.isOn?"end":"start");
+          if (ts.isOn&&item.offSec>0){ts.isOn=false;ts.rem=item.offSec;lastSpoken=-1;speak("Nghỉ "+item.offSec+" giây");}
+          else{advance();return;}
         }
-        if (ts.rem <= 10 && ts.rem !== lastSpoken && ts.rem > 0) {
-          lastSpoken = ts.rem;
-          speak(String(ts.rem));
-        }
-        if (ts.rem === 10 && ts.isOn) playBeep("warning");
+        if (ts.rem<=10&&ts.rem!==lastSpoken&&ts.rem>0){lastSpoken=ts.rem;speak(String(ts.rem));}
+        if (ts.rem===10&&ts.isOn) playBeep("warning");
         updateUI();
       }
       function advance() {
         ts.idx++;
-        if (ts.idx >= ts.items.length) {
-          finishSession();
-          return;
-        }
-        ts.isOn = true;
-        ts.isResting = false;
-        ts.restRem = 0;
-        lastSpoken = -1;
-        const it = ts.items[ts.idx];
-        ts.rem = isRep(it) ? 0 : it.onSec;
-        speak(
-          isRep(it)
-            ? it.name + " — " + it.reps + " rep"
-            : it.detail
-              ? it.name + ". " + it.detail
-              : it.name,
-        );
-        startIv();
-        updateUI();
+        if (ts.idx>=ts.items.length){finishSession();return;}
+        ts.isOn=true;ts.isResting=false;ts.restRem=0;lastSpoken=-1;
+        const it=ts.items[ts.idx];
+        ts.rem=isRep(it)?0:it.onSec;
+        speak(isRep(it)?it.name+" — "+it.reps+" rep":it.detail?it.name+". "+it.detail:it.name);
+        startIv();updateUI();
       }
       function repDone() {
         playBeep("end");
-        const item = ts.items[ts.idx];
-        if (item && item.restSec && item.restSec > 0) {
-          ts.isResting = true;
-          ts.restRem = item.restSec;
-          lastSpoken = -1;
-          speak("Nghỉ " + item.restSec + " giây");
-          startIv();
-          updateUI();
-        } else {
-          advance();
-        }
+        const item=ts.items[ts.idx];
+        if (item&&item.restSec&&item.restSec>0){ts.isResting=true;ts.restRem=item.restSec;lastSpoken=-1;speak("Nghỉ "+item.restSec+" giây");startIv();updateUI();}
+        else{advance();}
       }
       function startIv() {
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
-        const item = ts.items[ts.idx];
-        if (ts.isResting || (item && !isRep(item)))
-          ts.iv = setInterval(tick, 1000);
+        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
+        const item=ts.items[ts.idx];
+        if (ts.isResting||(item&&!isRep(item))) ts.iv=setInterval(tick,1000);
       }
       function playBeep(type) {
         try {
-          const C = new (window.AudioContext || window.webkitAudioContext)(),
-            o = C.createOscillator(),
-            g = C.createGain();
-          o.connect(g);
-          g.connect(C.destination);
-          if (type === "warning") {
-            o.frequency.value = 880;
-            g.gain.setValueAtTime(0.3, C.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, C.currentTime + 0.15);
-            o.start();
-            o.stop(C.currentTime + 0.15);
-          } else if (type === "end") {
-            o.frequency.value = 660;
-            g.gain.setValueAtTime(0.5, C.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, C.currentTime + 0.2);
-            o.start();
-            o.stop(C.currentTime + 0.2);
-            setTimeout(() => {
-              const C2 = new (
-                  window.AudioContext || window.webkitAudioContext
-                )(),
-                o2 = C2.createOscillator(),
-                g2 = C2.createGain();
-              o2.connect(g2);
-              g2.connect(C2.destination);
-              o2.frequency.value = 880;
-              g2.gain.setValueAtTime(0.5, C2.currentTime);
-              g2.gain.exponentialRampToValueAtTime(0.01, C2.currentTime + 0.3);
-              o2.start();
-              o2.stop(C2.currentTime + 0.3);
-            }, 250);
-          } else {
-            o.frequency.value = 440;
-            g.gain.setValueAtTime(0.4, C.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, C.currentTime + 0.3);
-            o.start();
-            o.stop(C.currentTime + 0.3);
-          }
-        } catch (e) {}
+          const C=new(window.AudioContext||window.webkitAudioContext)(),o=C.createOscillator(),g=C.createGain();
+          o.connect(g);g.connect(C.destination);
+          if (type==="warning"){o.frequency.value=880;g.gain.setValueAtTime(0.3,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.15);o.start();o.stop(C.currentTime+0.15);}
+          else if (type==="end"){o.frequency.value=660;g.gain.setValueAtTime(0.5,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.2);o.start();o.stop(C.currentTime+0.2);setTimeout(()=>{const C2=new(window.AudioContext||window.webkitAudioContext)(),o2=C2.createOscillator(),g2=C2.createGain();o2.connect(g2);g2.connect(C2.destination);o2.frequency.value=880;g2.gain.setValueAtTime(0.5,C2.currentTime);g2.gain.exponentialRampToValueAtTime(0.01,C2.currentTime+0.3);o2.start();o2.stop(C2.currentTime+0.3);},250);}
+          else{o.frequency.value=440;g.gain.setValueAtTime(0.4,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.3);o.start();o.stop(C.currentTime+0.3);}
+        } catch(e){}
       }
-      function startSession() {
-        const items = sessData[curSess];
-        if (!items || !items.length) return;
-        startCountdown(items, 0);
-      }
-
-      function startCountdown(items, startIdx) {
-        let count = 5;
-        const overlay = document.getElementById("countdownOverlay");
-        const numEl = document.getElementById("countdownNum");
-        const nextEl = document.getElementById("countdownNext");
-        const firstItem = items[startIdx];
-        nextEl.textContent =
-          firstItem.name + (firstItem.detail ? " — " + firstItem.detail : "");
-        numEl.textContent = count;
-        overlay.classList.add("show");
-        speak("Chuẩn bị");
-        const iv = setInterval(() => {
+      function startSession() { const items=sessData[curSess]; if(!items||!items.length)return; startCountdown(items,0); }
+      function startCountdown(items,startIdx) {
+        let count=5;
+        const overlay=document.getElementById("countdownOverlay"),numEl=document.getElementById("countdownNum"),nextEl=document.getElementById("countdownNext");
+        const firstItem=items[startIdx];
+        nextEl.textContent=firstItem.name+(firstItem.detail?" — "+firstItem.detail:"");
+        numEl.textContent=count;overlay.classList.add("show");speak("Chuẩn bị");
+        const iv=setInterval(()=>{
           count--;
-          if (count <= 0) {
-            clearInterval(iv);
-            overlay.classList.remove("show");
-            ts = {
-              items,
-              idx: startIdx,
-              isOn: true,
-              rem: isRep(firstItem) ? 0 : firstItem.onSec,
-              paused: false,
-              iv: null,
-              isResting: false,
-              restRem: 0,
-            };
-            lastSpoken = -1;
-            document.getElementById("timerOverlay").classList.add("show");
-            document.getElementById("btnPR").textContent = "PAUSE";
-            speak(
-              firstItem.detail
-                ? firstItem.name + ". " + firstItem.detail
-                : firstItem.name,
-            );
-            startIv();
-            updateUI();
-          } else {
-            numEl.textContent = count;
-            speak(String(count));
-          }
-        }, 1000);
+          if (count<=0){
+            clearInterval(iv);overlay.classList.remove("show");
+            ts={items,idx:startIdx,isOn:true,rem:isRep(firstItem)?0:firstItem.onSec,paused:false,iv:null,isResting:false,restRem:0};
+            lastSpoken=-1;document.getElementById("timerOverlay").classList.add("show");
+            document.getElementById("btnPR").textContent="PAUSE";
+            speak(firstItem.detail?firstItem.name+". "+firstItem.detail:firstItem.name);
+            startIv();updateUI();
+          } else{numEl.textContent=count;speak(String(count));}
+        },1000);
       }
-      function jumpToRound(idx, sid) {
-        if (sid !== curSess) return;
-        const items = sessData[curSess];
-        if (!items || idx >= items.length) return;
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
-        startCountdown(items, idx);
+      function jumpToRound(idx,sid) {
+        if (sid!==curSess) return;
+        const items=sessData[curSess];
+        if (!items||idx>=items.length) return;
+        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
+        startCountdown(items,idx);
       }
-      function togglePause() {
-        ts.paused = !ts.paused;
-        document.getElementById("btnPR").textContent = ts.paused
-          ? "TIẾP"
-          : "PAUSE";
-        if (!ts.paused) startIv();
-      }
-      function skipRound() {
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
-        ts.isResting = false;
-        ts.restRem = 0;
-        advance();
-      }
-      function closeTimer() {
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
-        synth && synth.cancel();
-        document.getElementById("timerOverlay").classList.remove("show");
-      }
+      function togglePause() { ts.paused=!ts.paused; document.getElementById("btnPR").textContent=ts.paused?"TIẾP":"PAUSE"; if(!ts.paused)startIv(); }
+      function skipRound() { if(ts.iv){clearInterval(ts.iv);ts.iv=null;} ts.isResting=false;ts.restRem=0;advance(); }
+      function closeTimer() { if(ts.iv){clearInterval(ts.iv);ts.iv=null;} synth&&synth.cancel(); document.getElementById("timerOverlay").classList.remove("show"); }
       function finishSession() {
-        if (ts.iv) {
-          clearInterval(ts.iv);
-          ts.iv = null;
-        }
-        synth && synth.cancel();
+        if(ts.iv){clearInterval(ts.iv);ts.iv=null;} synth&&synth.cancel();
         document.getElementById("timerOverlay").classList.remove("show");
-        document.getElementById(`schedule-${curSess}`).style.display = "none";
+        document.getElementById(`schedule-${curSess}`).style.display="none";
         document.getElementById(`done-${curSess}`).classList.add("show");
-        document.getElementById("stickyStart").style.display = "none";
-        document.getElementById("progressFill").style.width = "100%";
-        playBeep("end");
-        setTimeout(() => playBeep("end"), 600);
-        speak("Hoàn thành! Tuyệt vời!");
+        document.getElementById("stickyStart").style.display="none";
+        document.getElementById("progressFill").style.width="100%";
+        playBeep("end");setTimeout(()=>playBeep("end"),600);speak("Hoàn thành! Tuyệt vời!");
       }
       function switchTab(s) {
-        curSess = s;
-        document
-          .querySelectorAll(".tab")
-          .forEach((t) => t.classList.remove("active"));
+        curSess=s;
+        document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
         document.getElementById(`tab-${s}`).classList.add("active");
-        document
-          .querySelectorAll(".session")
-          .forEach((el) => el.classList.remove("active"));
+        document.querySelectorAll(".session").forEach(el=>el.classList.remove("active"));
         document.getElementById(`session-${s}`).classList.add("active");
         if (!isPreviewMode()) {
-          document.getElementById("stickyStart").style.display = document
-            .getElementById(`done-${s}`)
-            .classList.contains("show")
-            ? "none"
-            : "block";
+          document.getElementById("stickyStart").style.display=document.getElementById(`done-${s}`).classList.contains("show")?"none":"block";
         }
         updateEstTime();
       }
 
-      // ── INIT ──
       loadViewDate();
     </script>
   </body>
