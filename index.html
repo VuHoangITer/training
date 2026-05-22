@@ -258,8 +258,8 @@
       <div class="progress-fill" id="progressFill" style="width: 0%"></div>
     </div>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('morning')" id="tab-morning">☀️ SÁNG</div>
-      <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">🌆 CHIỀU</div>
+      <div class="tab active" onclick="switchTab('morning')" id="tab-morning">🥊 BOXING</div>
+      <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">💪 STRENGTH</div>
     </div>
     <div class="est-time-bar" id="estTimebar"></div>
 
@@ -269,8 +269,8 @@
         <div class="schedule" id="schedule-morning"></div>
         <div class="done-screen" id="done-morning">
           <div class="done-icon">🥊</div>
-          <div class="done-title">SÁNG XONG!</div>
-          <div class="done-sub">chờ buổi chiều nhé 💪</div>
+          <div class="done-title">BOXING XONG!</div>
+          <div class="done-sub">nghỉ 30 phút rồi vào strength 💪</div>
         </div>
       </div>
       <div class="session" id="session-afternoon">
@@ -394,23 +394,17 @@
         return             { t3Rounds:5, t3Min:3, t3Rest:60, hiitOn:40, hiitOff:20 };
       }
 
-      // ── BUILDERS ──
-      const isRep = (item) => !!item.reps;
-
-      // ✅ WARMUP: nhảy dây 1p → xoay khớp 2p → shadow nhẹ 1p
       const W3 = () => [
         { phase:"warmup", name:"Xoay khớp",      detail:"2p — vai, hông, gối, cổ tay. Thả lỏng hoàn toàn", onSec:120, offSec:0 },
         { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
         { phase:"warmup", name:"Shadow nhẹ",     detail:"1p — di chuyển chân, tay ra rất nhẹ — 20-30% lực", onSec:60,  offSec:0 },
       ];
 
-      // ✅ SH2: thêm % lực
       const SH2 = () => [
         { phase:"shadow", name:"Shadow H1", detail:"Di chuyển nhẹ, tay ra rất nhẹ — 40% lực", onSec:120, offSec:0 },
         { phase:"shadow", name:"Shadow H2", detail:"Tăng nhẹ chân, tay vẫn nhẹ — 50% lực",   onSec:120, offSec:0 },
       ];
 
-      // ✅ SH3: thêm % lực
       const SH3 = (cue, bp) => {
         const rest = bp.restSec;
         return [
@@ -420,7 +414,6 @@
         ];
       };
 
-      // ✅ TRIG: thêm % lực từng loại hiệp
       function TRIG(bp, d1, d2, d3) {
         const t = bp.roundMin*60, r = bp.restSec, total = bp.rounds;
         const items = [
@@ -435,13 +428,11 @@
         return items;
       }
 
-      // ✅ DEF: thêm % lực
       const DEF = () => [
         { phase:"defend", name:"Defend H1", detail:"Slip / Duck / Pull back tùy cue — 40-50% lực, cần CHÍNH XÁC không cần mạnh", onSec:120, offSec:40 },
         { phase:"defend", name:"Defend H2", detail:"Tự do — slip/duck/pull tùy cue — 40-50% lực", onSec:120, offSec:40 },
       ];
 
-      // ✅ FREE: thêm % lực
       const FREE = (bp) => [
         { phase:"freestyle", name:"Freestyle H1", detail:"Mắt đọc → tay tự chạy. Không nghĩ trước — 80-85% lực", onSec:bp.roundMin*60, offSec:bp.restSec },
         { phase:"freestyle", name:"Freestyle H2", detail:"Thấy cue → phản xạ ngay. Xong → lui — 80-85% lực",     onSec:bp.roundMin*60, offSec:0 },
@@ -471,7 +462,7 @@
 
         if (w <= 2) {
           return [...base,
-            { phase:"defend", name:"Drill H1 — Slip",      detail:"Vai giật→slip trái | Vai xoay→slip phải. Đầu lệch, chân không nhấc — 40-50% lục", onSec:120, offSec:40 },
+            { phase:"defend", name:"Drill H1 — Slip",      detail:"Vai giật→slip trái | Vai xoay→slip phải. Đầu lệch, chân không nhấc — 40-50% lực", onSec:120, offSec:40 },
             { phase:"defend", name:"Drill H2 — Duck",      detail:"Khuỷu vòng rộng → gập GỐI xuống thấp, lưng thẳng, không cúi đầu — 40-50% lực", onSec:120, offSec:40 },
             { phase:"defend", name:"Drill H3 — Pull Back", detail:"Người lao tới → rút toàn thân ra sau → chờ hụt → phản ngay — 40-50% lực", onSec:120, offSec:40 },
             { phase:"defend", name:"Drill H4 — Tự do",    detail:"3 đòn trên tùy cue — defend xong dừng, không thêm combo — 40-50% lực", onSec:120, offSec:40 },
@@ -571,7 +562,7 @@
 
       function buildAerobic() {
         const cp = getCardioPhase();
-        if (!cp) return [{ phase:"aerobic", name:"Chưa bắt đầu", detail:"Cardio chiều bắt đầu từ 04/05", onSec:5, offSec:0 }];
+        if (!cp) return [{ phase:"aerobic", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
         const items = [
           { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
           { phase:"warmup", name:"Xoay khớp",      detail:"Cổ tay, vai, hông, cổ chân — thả lỏng",  onSec:60,  offSec:0 },
@@ -593,7 +584,7 @@
 
       function buildHIIT() {
         const cp = getCardioPhase();
-        if (!cp) return [{ phase:"build", name:"Chưa bắt đầu", detail:"Cardio chiều bắt đầu từ 04/05", onSec:5, offSec:0 }];
+        if (!cp) return [{ phase:"build", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
         const on = cp.hiitOn, off = cp.hiitOff;
         return [
           { phase:"warmup", name:"Nhảy dây nhẹ",   detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
@@ -711,7 +702,6 @@
         return map[d] || { morning:[], afternoon:[] };
       }
 
-      // ── CALENDAR ──
       function openCalendar() { calYear=viewDate.getFullYear(); calMonth=viewDate.getMonth(); renderCalendar(); document.getElementById("calOverlay").classList.add("show"); }
       function closeCalendar() { document.getElementById("calOverlay").classList.remove("show"); }
       function handleOverlayClick(e) { if (e.target===document.getElementById("calOverlay")) closeCalendar(); }
@@ -743,7 +733,6 @@
       function selectDate(y,m,d) { viewDate=new Date(y,m,d); closeCalendar(); loadViewDate(); }
       function goToday() { viewDate=new Date(TODAY_Y,TODAY_M,TODAY_D); closeCalendar(); loadViewDate(); }
 
-      // ── LOAD VIEW DATE ──
       function loadViewDate() {
         const dayIdx=viewDate.getDay(); const dayEnView=DAYS_EN[dayIdx]; const preview=isPreviewMode();
         document.getElementById("dayBadge").textContent=DAYS_VI[dayIdx].toUpperCase();
@@ -777,7 +766,6 @@
         updateEstTime();
       }
 
-      // ── RENDER ──
       function fmtDur(item) {
         if (item.reps) return item.restSec&&item.restSec>0 ? item.reps+" REP + "+item.restSec+"s" : item.reps+" REP";
         if (item.offSec>0) return item.onSec+"s+"+item.offSec+"s";
@@ -814,7 +802,6 @@
         el.innerHTML=html;
       }
 
-      // ── TIMER ENGINE ──
       let curSess="morning", sessData={morning:[],afternoon:[]};
       let ts={items:[],idx:0,isOn:true,rem:0,paused:false,iv:null,isResting:false,restRem:0};
       const CIRC=2*Math.PI*44;
@@ -984,6 +971,7 @@
         updateEstTime();
       }
 
+      const isRep = (item) => !!item.reps;
       loadViewDate();
     </script>
   </body>
