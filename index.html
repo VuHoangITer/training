@@ -362,27 +362,17 @@
         if (diff < 0) return 0;
         return Math.max(1, Math.floor(diff / (7*24*60*60*1000)) + 1);
       }
-      function getWkBoxing()   { return weekNumFrom("2026-04-20", viewDate); }
       function getWkStrength() { return weekNumFrom("2026-04-13", viewDate); }
       function getWkCardio()   { return weekNumFrom("2026-05-04", viewDate); }
 
-      function getBoxingPhase() {
-        const w = getWkBoxing();
-        if (w<=2)  return { rounds:4, roundMin:2, restSec:60, deload:false };
-        if (w<=4)  return { rounds:5, roundMin:2, restSec:45, deload:false };
-        if (w<=6)  return { rounds:6, roundMin:3, restSec:45, deload:false };
-        if (w===7) return { rounds:3, roundMin:2, restSec:60, deload:true  };
-        if (w<=10) return { rounds:6, roundMin:3, restSec:45, deload:false };
-        return             { rounds:5, roundMin:3, restSec:45, deload:false };
-      }
       function getStrengthPhase() {
         const w = getWkStrength();
-        if (w<=2)  return { sets:3, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                    restSec:90, explosive:false };
-        if (w<=4)  return { sets:3, pushRep:"8-10",  rowRep:"10-12", chinup:true,  chinupRep:"3",      restSec:75, explosive:false };
-        if (w<=6)  return { sets:4, pushRep:"8-12",  rowRep:"10-12", chinup:true,  chinupRep:"4-5",    restSec:60, explosive:true  };
-        if (w===7) return { sets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                    restSec:90, explosive:false };
-        if (w<=10) return { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true,  chinupRep:"5-6",    restSec:60, explosive:true  };
-        return             { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true,  chinupRep:"5-6",    restSec:60, explosive:true  };
+        if (w<=2)  return { sets:3, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                 restSec:90, explosive:false };
+        if (w<=4)  return { sets:3, pushRep:"8-10",  rowRep:"10-12", chinup:true, chinupRep:"3",    restSec:75, explosive:false };
+        if (w<=6)  return { sets:4, pushRep:"8-12",  rowRep:"10-12", chinup:true, chinupRep:"4-5",  restSec:60, explosive:true  };
+        if (w===7) return { sets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                 restSec:90, explosive:false };
+        if (w<=10) return { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6",  restSec:60, explosive:true  };
+        return             { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6",  restSec:60, explosive:true  };
       }
       function getCardioPhase() {
         const w = getWkCardio();
@@ -394,171 +384,51 @@
         return             { t3Rounds:5, t3Min:3, t3Rest:60, hiitOn:40, hiitOff:20 };
       }
 
-      const W3 = () => [
-        { phase:"warmup", name:"Xoay khớp",      detail:"2p — vai, hông, gối, cổ tay. Thả lỏng hoàn toàn", onSec:120, offSec:0 },
-        { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
-        { phase:"warmup", name:"Shadow nhẹ",     detail:"1p — di chuyển chân, tay ra rất nhẹ — 20-30% lực", onSec:60,  offSec:0 },
+      // ── BOXING MỚI ──────────────────────────────────────────────
+      const WARMUP = () => [
+        { phase:"warmup", name:"Xoay khớp", detail:"Vai, hông, gối, cổ tay — thả lỏng hoàn toàn", onSec:90, offSec:0 },
+        { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, giữ nhịp thở — 20-30% lực", onSec:90, offSec:0 },
       ];
 
-      const SH2 = () => [
-        { phase:"shadow", name:"Shadow H1", detail:"Di chuyển nhẹ, tay ra rất nhẹ — 40% lực", onSec:120, offSec:0 },
-        { phase:"shadow", name:"Shadow H2", detail:"Tăng nhẹ chân, tay vẫn nhẹ — 50% lực",   onSec:120, offSec:0 },
+      const SHADOW = () => [
+        { phase:"shadow", name:"Shadow Freestyle", detail:"Tự do hoàn toàn — mix T0/T1/T3, không nghĩ trước, tay tự chạy — 60-70% lực", onSec:180, offSec:0 },
       ];
 
-      const SH3 = (cue, bp) => {
-        const rest = bp.restSec;
-        return [
-          { phase:"shadow", name:"Shadow H1", detail:cue + " — 40-50% lực",                           onSec:bp.roundMin*60, offSec:rest },
-          { phase:"shadow", name:"Shadow H2", detail:"Cue xuất hiện → action ngay, không nghĩ — 50% lực", onSec:bp.roundMin*60, offSec:rest },
-          { phase:"shadow", name:"Shadow H3", detail:"70-80% tốc độ — não đọc cue, tay tự theo",      onSec:bp.roundMin*60, offSec:rest },
-        ];
-      };
-
-      function TRIG(bp, d1, d2, d3) {
-        const t = bp.roundMin*60, r = bp.restSec, total = bp.rounds;
-        const items = [
-          { phase:"trigger",      name:"Trigger H1",           detail:d1 + " — 50-60% lực",                          onSec:t, offSec:r },
-          { phase:"trigger",      name:"Trigger H2",           detail:(d2||d1) + " — 50-60% lực",                    onSec:t, offSec:r },
-          { phase:"trigger-fast", name:"Trigger H3 ⭐",        detail:d3 + " — 70-75% lực",                          onSec:t, offSec:r },
-          { phase:"trigger-fast", name:"Trigger H4 FREESTYLE ⭐", detail:"Mắt đọc → tay tự chạy → lui ngay — 80-85% lực", onSec:t, offSec:r },
-        ];
-        for (let i = 5; i <= total; i++) {
-          items.push({ phase:"trigger-fast", name:`Trigger H${i} ⭐`, detail:"Mắt đọc → tay tự chạy → lui ngay — 80-85% lực", onSec:t, offSec:r });
-        }
-        return items;
-      }
-
-      const DEF = () => [
-        { phase:"defend", name:"Defend H1", detail:"Slip / Duck / Pull back tùy cue — 40-50% lực, cần CHÍNH XÁC không cần mạnh", onSec:120, offSec:40 },
-        { phase:"defend", name:"Defend H2", detail:"Tự do — slip/duck/pull tùy cue — 40-50% lực", onSec:120, offSec:40 },
+      const DEFEND = () => [
+        { phase:"defend", name:"Defend H1", detail:"Slip / Duck / Pull back / Block / Deflect — cue nào tới defend đó, CHÍNH XÁC — 50% lực", onSec:120, offSec:30 },
+        { phase:"defend", name:"Defend H2 — Counter", detail:"Defend xong → phản công ngay, không dừng — 60% lực", onSec:120, offSec:0 },
       ];
 
-      const FREE = (bp) => [
-        { phase:"freestyle", name:"Freestyle H1", detail:"Mắt đọc → tay tự chạy. Không nghĩ trước — 80-85% lực", onSec:bp.roundMin*60, offSec:bp.restSec },
-        { phase:"freestyle", name:"Freestyle H2", detail:"Thấy cue → phản xạ ngay. Xong → lui — 80-85% lực",     onSec:bp.roundMin*60, offSec:0 },
+      const FREESTYLE = () => [
+        { phase:"freestyle", name:"Freestyle H1 ⭐", detail:"Mix T0/T1/T3 + defend tự do — mắt đọc cue, tay tự chạy — 85% lực", onSec:180, offSec:30 },
+        { phase:"freestyle", name:"Freestyle H2 FINISH ⭐", detail:"Full intensity — không nghĩ, chỉ phản xạ. Giữ đến chuông — 90% lực", onSec:180, offSec:0 },
       ];
 
-      const CORE = () => [
-        { phase:"core", name:"Leg Raises SET 1", detail:"Hạ chân chậm, không thả rơi", reps:12 },
-        { phase:"core", name:"Leg Raises SET 2", detail:"Hạ chân chậm, không thả rơi", reps:12 },
-        { phase:"core", name:"Plank SET 1",       detail:"Giữ thân thẳng, thở đều", onSec:40, offSec:20 },
-        { phase:"core", name:"Plank SET 2",       detail:"Giữ thân thẳng, thở đều", onSec:40, offSec:0  },
+      const WARMUP_LIGHT = () => [
+        { phase:"warmup", name:"Xoay khớp nhẹ", detail:"Cổ, vai, hông — thả lỏng, không vội", onSec:60, offSec:0 },
+        { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, 20-30% lực — active recovery", onSec:90, offSec:0 },
       ];
 
-      function buildMonday_M() {
-        const bp = getBoxingPhase();
-        return [
-          ...W3(),
-          ...SH3("Nhận ra cue T0: tay họ thả → vào ngay, không do dự", bp),
-          ...TRIG(bp, "Chậm — tay thả → T0 ngay, không vội", "Chậm — bắt đúng cue, không vội", "Tăng tốc — cue xuất hiện → vào thẳng ngay"),
-          ...DEF(), ...FREE(bp),
-        ];
+      const SHADOW_LIGHT = () => [
+        { phase:"shadow", name:"Footwork + Shadow nhẹ", detail:"Di chuyển chân là chính — tay ra nhẹ 40-50% lực, không push", onSec:180, offSec:0 },
+        { phase:"shadow", name:"Shadow nhẹ tự do", detail:"Thả lỏng hoàn toàn — tốc độ 50%, cảm nhận cơ thể", onSec:180, offSec:0 },
+      ];
+
+      function buildBoxingNormal() {
+        return [ ...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE() ];
       }
 
-      function buildTuesday_M() {
-        const bp = getBoxingPhase();
-        const w = getWkBoxing();
-        const base = [...W3(), ...SH2()];
-
-        if (w <= 2) {
-          return [...base,
-            { phase:"defend", name:"Drill H1 — Slip",      detail:"Vai giật→slip trái | Vai xoay→slip phải. Đầu lệch, chân không nhấc — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H2 — Duck",      detail:"Khuỷu vòng rộng → gập GỐI xuống thấp, lưng thẳng, không cúi đầu — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H3 — Pull Back", detail:"Người lao tới → rút toàn thân ra sau → chờ hụt → phản ngay — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H4 — Tự do",    detail:"3 đòn trên tùy cue — defend xong dừng, không thêm combo — 40-50% lực", onSec:120, offSec:40 },
-            ...CORE(),
-          ];
-        } else if (w <= 4) {
-          return [...base,
-            { phase:"defend", name:"Drill H1 — Slip + Duck",    detail:"Đòn thẳng→slip | Đòn vòng→duck gối. Xen kẽ 2 cue — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H2 — Pull Back",      detail:"Bất kỳ đòn nào → rút toàn thân → chờ hụt → bước vào phản — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H3 — Block",          detail:"Đòn tới → khuỷu/cánh tay chặn → hấp thụ lực → phản ngay — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H4 — Deflect",        detail:"Đòn tới → khuỷu hướng lệch góc → lực trượt qua → phản ngay — 40-50% lực", onSec:120, offSec:40 },
-            ...CORE(),
-          ];
-        } else {
-          return [...base,
-            { phase:"defend", name:"Drill H1 — Slip + Duck",    detail:"Đòn thẳng→slip | Đòn vòng→duck. Phản xạ ngay — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H2 — Pull Back + Block", detail:"Khoảng cách xa→pull back | Khoảng cách gần→block→phản — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H3 — Deflect",        detail:"Cảm nhận góc đòn → hướng lệch bằng khuỷu → counter liền — 40-50% lực", onSec:120, offSec:40 },
-            { phase:"defend", name:"Drill H4 — Tự do cả 5",    detail:"Mắt đọc cue → tay tự chọn defend → phản → lui ngay — 40-50% lực", onSec:120, offSec:40 },
-            ...CORE(),
-          ];
-        }
+      function buildBoxingSaturday() {
+        return [ ...WARMUP_LIGHT(), ...SHADOW_LIGHT() ];
       }
 
-      function buildWednesday_M() {
-        const bp = getBoxingPhase();
-        return [
-          ...W3(),
-          ...SH3("Thử jab fake VÀ shoulder feint — cái nào tự nhiên hơn", bp),
-          ...TRIG(bp, "Chậm — guard cao → feint → cúi gối → đánh thân", "Không cắn feint → chuyển T0 ngay", "Tăng tốc — guard cao → T1 ngay"),
-          ...DEF(), ...FREE(bp),
-        ];
-      }
-
-      function buildThursday_M() {
-        const bp = getBoxingPhase();
-        const w = getWkBoxing();
-        const t = 60, r = 45;
-        const base = [...W3(), ...SH2()];
-        let speedRounds = [];
-
-        if (w <= 2) {
-          speedRounds = [
-            { phase:"speed", name:"Speed H1 — T0 MAX",    detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",        onSec:t, offSec:r },
-            { phase:"speed", name:"Speed H2 — T0 MAX",    detail:"Giữ tốc độ tối đa, không do dự — 85-90% lực",             onSec:t, offSec:r },
-            { phase:"speed", name:"Speed H3 — T3 Slip",   detail:"Vai giật → slip → đánh thân → Hook ngay — 70-80% lực",    onSec:t, offSec:r },
-            { phase:"speed", name:"Speed H4 — T3 Duck",   detail:"Khuỷu vòng → duck gối → vào sát → đánh thân — 70-80% lực", onSec:t, offSec:r },
-          ];
-        } else if (w <= 4) {
-          speedRounds = [
-            { phase:"speed",         name:"Speed H1 — T0 MAX",             detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",                           onSec:t, offSec:r },
-            { phase:"speed",         name:"Speed H2 — T0 MAX",             detail:"Giữ tốc độ tối đa, không do dự — 85-90% lực",                               onSec:t, offSec:r },
-            { phase:"speed",         name:"Speed H3 — T3 Slip + Duck",     detail:"Đòn thẳng→slip→phản | Đòn vòng→duck gối→phản — 70-80% lực",                 onSec:t, offSec:r },
-            { phase:"speed",         name:"Speed H4 — T3 Pull back + Block", detail:"Người lao→pull back→phản | Đòn gần→block→phản — 70-80% lực",               onSec:t, offSec:r },
-            { phase:"trigger-fast",  name:"Speed H5 — FREESTYLE ⭐",        detail:"T0 hoặc T3 tùy cue — mắt đọc → tay tự chạy — 75-85% lực",                  onSec:t, offSec:r },
-          ];
-        } else {
-          speedRounds = [
-            { phase:"speed",        name:"Speed H1 — T0 MAX",             detail:"Tay thả → vào thẳng MAX SPEED ngay — 85-90% lực",                           onSec:t, offSec:r },
-            { phase:"speed",        name:"Speed H2 — T3 Slip + Duck",     detail:"Đòn thẳng→slip→phản | Đòn vòng→duck gối→phản — 70-80% lực",                 onSec:t, offSec:r },
-            { phase:"speed",        name:"Speed H3 — T3 Pull back + Block", detail:"Người lao→pull back→phản | Đòn gần→block→phản — 70-80% lực",               onSec:t, offSec:r },
-            { phase:"speed",        name:"Speed H4 — T3 Deflect",         detail:"Đòn tới→khuỷu hướng lệch góc→lực trượt qua→counter liền — 70-80% lực",      onSec:t, offSec:r },
-            { phase:"trigger-fast", name:"Speed H5 — T0+T3 xen kẽ ⭐",    detail:"Tay thả→T0 | Họ ra đòn→T3. Xen kẽ liên tục — 75-85% lực",                  onSec:t, offSec:r },
-            { phase:"trigger-fast", name:"Speed H6 — FREESTYLE ⭐",        detail:"Mắt đọc → tay tự chạy. Không nghĩ trước. Xong → lui ngay — 80-85% lực",    onSec:t, offSec:r },
-          ];
-        }
-
-        return [
-          ...base,
-          ...speedRounds,
-          { phase:"footwork", name:"Footwork H1", detail:"Tiến-lùi giữ balance, không đứng yên — 50% lực (chỉ tập chân)", onSec:120, offSec:0 },
-          { phase:"footwork", name:"Footwork H2", detail:"Bước ngang + T0 — bước tiến → vào thẳng ngay — 50% lực",        onSec:120, offSec:0 },
-          ...DEF(), ...CORE(),
-        ];
-      }
-
-      function buildFriday_M() {
-        const bp = getBoxingPhase();
-        return [
-          ...W3(),
-          ...SH3("Xen kẽ T0 và T1 — cue nào xuất hiện thì dùng cái đó", bp),
-          ...TRIG(bp, "Chậm — guard thả→T0 | guard cao→T1", "Chậm — tập đọc guard rõ rồi mới chọn", "Tăng tốc — guard thấp/thả→T0 ngay | guard cao→T1 ngay"),
-          ...DEF(), ...FREE(bp),
-        ];
-      }
-
-      function buildSaturday_M() {
-        const bp = getBoxingPhase();
-        return [
-          ...W3(), ...SH2(),
-          { phase:"trigger",      name:"Focus — 10 rep CHẬM",  detail:"Chọn trigger miss nhiều nhất tuần: T0/T1/T3. Cố tình để cue rõ rồi mới phản — 40-50% lực", reps:10 },
-          { phase:"trigger-fast", name:"Focus — 10 rep 70% ⭐", detail:"Tăng tốc dần, cue → phản ngay — 70% lực", reps:10 },
-          { phase:"trigger-fast", name:"Focus — 10 rep 80% ⭐", detail:"Form vỡ ở tốc độ nào → giảm xuống tốc độ đó — 80% lực", reps:10 },
-          ...DEF(), ...CORE(),
-        ];
-      }
+      function buildMonday_M()    { return buildBoxingNormal(); }
+      function buildTuesday_M()   { return buildBoxingNormal(); }
+      function buildWednesday_M() { return buildBoxingNormal(); }
+      function buildThursday_M()  { return buildBoxingNormal(); }
+      function buildFriday_M()    { return buildBoxingNormal(); }
+      function buildSaturday_M()  { return buildBoxingSaturday(); }
+      // ── END BOXING ───────────────────────────────────────────────
 
       function buildAerobic() {
         const cp = getCardioPhase();
@@ -590,12 +460,12 @@
           { phase:"warmup", name:"Nhảy dây nhẹ",   detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
           { phase:"warmup", name:"Xoay khớp",       detail:"Vai, hông, cổ chân — thả lỏng",          onSec:60, offSec:0 },
           { phase:"warmup", name:"Shadow + footwork", detail:"Di chuyển nhẹ — 20-30% lực",           onSec:60, offSec:0 },
-          { phase:"build",  name:"R1 — Footwork + Jab-Cross",   detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`,                              onSec:on, offSec:off },
-          { phase:"build",  name:"R2 — Nhảy dây nhịp đều",     detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`,                           onSec:on, offSec:off },
-          { phase:"peak",   name:"R3 — BURPEE MAX SPEED ⭐",    detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`,                   onSec:on, offSec:off },
+          { phase:"build",  name:"R1 — Footwork + Jab-Cross",   detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`, onSec:on, offSec:off },
+          { phase:"build",  name:"R2 — Nhảy dây nhịp đều",     detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`, onSec:on, offSec:off },
+          { phase:"peak",   name:"R3 — BURPEE MAX SPEED ⭐",    detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
           { phase:"peak",   name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
-          { phase:"survive", name:"R5 — Footwork/Nhảy dây",    detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`,                       onSec:on, offSec:off },
-          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`,       onSec:on, offSec:0   },
+          { phase:"survive", name:"R5 — Footwork/Nhảy dây",    detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`, onSec:on, offSec:off },
+          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`, onSec:on, offSec:0 },
         ];
       }
 
@@ -679,13 +549,13 @@
 
       function buildRecovery() {
         return [
-          { phase:"aerobic", name:"Giãn ngực",      detail:"Mở tay ra sau, giữ 20-30s",              onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Giãn vai sau",   detail:"Kéo tay qua ngực, 20s mỗi bên",          onSec:40, offSec:10 },
-          { phase:"aerobic", name:"Giãn lưng trên", detail:"Ôm gối ngồi cúi người, 20s",             onSec:20, offSec:10 },
-          { phase:"aerobic", name:"Giãn đùi trước", detail:"Kéo gót về phía mông, 20s mỗi chân",    onSec:40, offSec:10 },
-          { phase:"aerobic", name:"Giãn gân kheo",  detail:"Ngồi duỗi thẳng chân cúi người, 30s",   onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Giãn lưng dưới", detail:"Nằm co gối ôm ngực, 30s",               onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Hít thở sâu",    detail:"5 nhịp, thả lỏng hoàn toàn",            onSec:30, offSec:0  },
+          { phase:"aerobic", name:"Giãn ngực",      detail:"Mở tay ra sau, giữ 20-30s",           onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Giãn vai sau",   detail:"Kéo tay qua ngực, 20s mỗi bên",       onSec:40, offSec:10 },
+          { phase:"aerobic", name:"Giãn lưng trên", detail:"Ôm gối ngồi cúi người, 20s",          onSec:20, offSec:10 },
+          { phase:"aerobic", name:"Giãn đùi trước", detail:"Kéo gót về phía mông, 20s mỗi chân", onSec:40, offSec:10 },
+          { phase:"aerobic", name:"Giãn gân kheo",  detail:"Ngồi duỗi thẳng chân cúi người, 30s",onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Giãn lưng dưới", detail:"Nằm co gối ôm ngực, 30s",            onSec:30, offSec:10 },
+          { phase:"aerobic", name:"Hít thở sâu",    detail:"5 nhịp, thả lỏng hoàn toàn",         onSec:30, offSec:0  },
         ];
       }
 
