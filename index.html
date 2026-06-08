@@ -10,68 +10,24 @@
     />
     <style>
       :root {
-        --bg: #0a0a0a;
-        --surface: #111;
-        --border: #222;
-        --text: #f0f0f0;
-        --muted: #555;
-        --warmup: #666;
-        --shadow: #6366f1;
-        --trigger: #3b82f6;
-        --trigger-fast: #ef4444;
-        --defend: #f97316;
-        --freestyle: #a855f7;
-        --speed: #06b6d4;
-        --footwork: #0ea5e9;
-        --core: #84cc16;
-        --strength: #22c55e;
-        --build: #3b82f6;
-        --peak: #ef4444;
-        --survive: #f59e0b;
-        --aerobic: #22d3ee;
-        --ring-size: min(270px, 68vw);
+        --bg: #0a0a0a; --surface: #111; --border: #222; --text: #f0f0f0; --muted: #555;
+        --warmup: #666; --shadow: #6366f1; --trigger: #3b82f6; --trigger-fast: #ef4444;
+        --defend: #f97316; --freestyle: #a855f7; --speed: #06b6d4; --footwork: #0ea5e9;
+        --core: #84cc16; --strength: #22c55e; --build: #3b82f6; --peak: #ef4444;
+        --survive: #f59e0b; --aerobic: #22d3ee; --ring-size: min(270px, 68vw);
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: "DM Sans", sans-serif;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow-x: hidden;
-      }
-      .header {
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        background: var(--bg);
-        z-index: 100;
-      }
+      body { background: var(--bg); color: var(--text); font-family: "DM Sans", sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+      .header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
       .header-title { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 3px; }
       .day-badge { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
       .header-right { display: flex; align-items: center; gap: 12px; }
-      .btn-calendar {
-        background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-        padding: 8px 12px; color: var(--muted); cursor: pointer; font-size: 16px;
-        display: flex; align-items: center; gap: 6px; transition: all 0.15s;
-      }
+      .btn-calendar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
       .btn-calendar:hover { border-color: #444; color: var(--text); }
       .btn-calendar.today-active { border-color: var(--text); color: var(--text); }
-
-      .cal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300;
-        display: none; align-items: flex-start; justify-content: center; padding-top: 80px;
-      }
+      .cal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; display: none; align-items: flex-start; justify-content: center; padding-top: 80px; }
       .cal-overlay.show { display: flex; }
-      .cal-modal {
-        background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 16px;
-        width: min(360px, calc(100vw - 32px)); overflow: hidden; animation: slideDown 0.2s ease;
-      }
+      .cal-modal { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 16px; width: min(360px, calc(100vw - 32px)); overflow: hidden; animation: slideDown 0.2s ease; }
       @keyframes slideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
       .cal-header { padding: 16px 20px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: space-between; }
       .cal-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 2px; }
@@ -82,11 +38,7 @@
       .cal-wd { text-align: center; font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; padding: 4px 0; }
       .cal-wd.sunday { color: #ef4444; opacity: 0.6; }
       .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 16px 16px; gap: 4px; }
-      .cal-day {
-        aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-        border-radius: 8px; font-family: "DM Mono", monospace; font-size: 13px;
-        cursor: pointer; transition: all 0.12s; position: relative; border: 1px solid transparent;
-      }
+      .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-family: "DM Mono", monospace; font-size: 13px; cursor: pointer; transition: all 0.12s; position: relative; border: 1px solid transparent; }
       .cal-day:hover { background: #1a1a1a; border-color: #333; }
       .cal-day.empty { cursor: default; pointer-events: none; }
       .cal-day.sunday { color: #ef4444; opacity: 0.5; }
@@ -100,14 +52,12 @@
       .cal-footer-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
       .btn-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 6px 12px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 1px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
       .btn-today:hover { border-color: var(--text); color: var(--text); }
-
       .viewing-banner { display: none; background: #161616; border-bottom: 1px solid #1e1e1e; padding: 8px 20px; align-items: center; justify-content: space-between; }
       .viewing-banner.show { display: flex; }
       .viewing-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
       .viewing-info span { color: var(--text); }
       .btn-back-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px; }
       .btn-back-today:hover { color: var(--text); border-color: #555; }
-
       .tabs { display: flex; border-bottom: 1px solid var(--border); }
       .tab { flex: 1; padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
       .tab.active { color: var(--text); border-bottom-color: var(--text); }
@@ -117,36 +67,22 @@
       .schedule { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
       .phase-label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; padding: 16px 0 8px; display: flex; align-items: center; gap: 10px; }
       .phase-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-      .phase-label.warmup { color: var(--warmup); }
-      .phase-label.shadow { color: var(--shadow); }
-      .phase-label.trigger { color: var(--trigger); }
-      .phase-label.trigger-fast { color: var(--trigger-fast); }
-      .phase-label.defend { color: var(--defend); }
-      .phase-label.freestyle { color: var(--freestyle); }
-      .phase-label.speed { color: var(--speed); }
-      .phase-label.footwork { color: var(--footwork); }
-      .phase-label.core { color: var(--core); }
-      .phase-label.strength { color: var(--strength); }
-      .phase-label.build { color: var(--build); }
-      .phase-label.peak { color: var(--peak); }
-      .phase-label.survive { color: var(--survive); }
-      .phase-label.aerobic { color: var(--aerobic); }
+      .phase-label.warmup { color: var(--warmup); } .phase-label.shadow { color: var(--shadow); }
+      .phase-label.trigger { color: var(--trigger); } .phase-label.trigger-fast { color: var(--trigger-fast); }
+      .phase-label.defend { color: var(--defend); } .phase-label.freestyle { color: var(--freestyle); }
+      .phase-label.speed { color: var(--speed); } .phase-label.footwork { color: var(--footwork); }
+      .phase-label.core { color: var(--core); } .phase-label.strength { color: var(--strength); }
+      .phase-label.build { color: var(--build); } .phase-label.peak { color: var(--peak); }
+      .phase-label.survive { color: var(--survive); } .phase-label.aerobic { color: var(--aerobic); }
       .round-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
       .round-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-      .round-item.warmup::before { background: var(--warmup); }
-      .round-item.shadow::before { background: var(--shadow); }
-      .round-item.trigger::before { background: var(--trigger); }
-      .round-item.trigger-fast::before { background: var(--trigger-fast); }
-      .round-item.defend::before { background: var(--defend); }
-      .round-item.freestyle::before { background: var(--freestyle); }
-      .round-item.speed::before { background: var(--speed); }
-      .round-item.footwork::before { background: var(--footwork); }
-      .round-item.core::before { background: var(--core); }
-      .round-item.strength::before { background: var(--strength); }
-      .round-item.build::before { background: var(--build); }
-      .round-item.peak::before { background: var(--peak); }
-      .round-item.survive::before { background: var(--survive); }
-      .round-item.aerobic::before { background: var(--aerobic); }
+      .round-item.warmup::before { background: var(--warmup); } .round-item.shadow::before { background: var(--shadow); }
+      .round-item.trigger::before { background: var(--trigger); } .round-item.trigger-fast::before { background: var(--trigger-fast); }
+      .round-item.defend::before { background: var(--defend); } .round-item.freestyle::before { background: var(--freestyle); }
+      .round-item.speed::before { background: var(--speed); } .round-item.footwork::before { background: var(--footwork); }
+      .round-item.core::before { background: var(--core); } .round-item.strength::before { background: var(--strength); }
+      .round-item.build::before { background: var(--build); } .round-item.peak::before { background: var(--peak); }
+      .round-item.survive::before { background: var(--survive); } .round-item.aerobic::before { background: var(--aerobic); }
       .round-item.current { border-color: #333; background: #161616; }
       .round-item.done { opacity: 0.35; }
       .round-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1; color: var(--muted); min-width: 36px; text-align: center; }
@@ -157,7 +93,6 @@
       .round-dur { font-family: "Bebas Neue", sans-serif; font-size: 17px; color: var(--muted); letter-spacing: 1px; text-align: right; white-space: nowrap; }
       .round-item.current .round-dur { color: var(--text); }
       .rep-badge { background: #1a2a1a; color: var(--core); border: 1px solid #2a4a2a; border-radius: 6px; padding: 4px 10px; font-family: "DM Mono", monospace; font-size: 11px; white-space: nowrap; }
-
       .timer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; }
       .timer-overlay.show { display: flex; }
       .t-phase { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
@@ -206,7 +141,6 @@
       .no-content-icon { font-size: 48px; opacity: 0.3; }
       .no-content-title { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 2px; color: #333; }
       .no-content-sub { font-family: "DM Mono", monospace; font-size: 11px; }
-
       .countdown-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 250; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
       .countdown-overlay.show { display: flex; }
       .countdown-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(120px, 30vw, 200px); line-height: 1; letter-spacing: -4px; color: var(--text); animation: pulse 0.5s ease-in-out infinite; }
@@ -225,11 +159,10 @@
         <button class="btn-calendar" id="btnCalendar" onclick="openCalendar()">📅</button>
       </div>
     </div>
-
     <div class="cal-overlay" id="calOverlay" onclick="handleOverlayClick(event)">
       <div class="cal-modal" id="calModal">
         <div class="cal-header">
-          <div class="cal-title" id="calMonthTitle">THÁNG 5 2026</div>
+          <div class="cal-title" id="calMonthTitle">THÁNG 6 2026</div>
           <div class="cal-nav">
             <button class="cal-nav-btn" onclick="calPrev()">◀</button>
             <button class="cal-nav-btn" onclick="calNext()">▶</button>
@@ -248,21 +181,16 @@
         </div>
       </div>
     </div>
-
     <div class="viewing-banner" id="viewingBanner">
       <div class="viewing-info">XEM TRƯỚC: <span id="viewingDate"></span></div>
       <button class="btn-back-today" onclick="goToday()">← HÔM NAY</button>
     </div>
-
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab('morning')" id="tab-morning">🥊 BOXING</div>
       <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">💪 STRENGTH</div>
     </div>
     <div class="est-time-bar" id="estTimebar"></div>
-
     <div class="content">
       <div class="preview-note">👁 CHẾ ĐỘ XEM TRƯỚC — không thể bấm BẮT ĐẦU</div>
       <div class="session active" id="session-morning">
@@ -282,18 +210,15 @@
         </div>
       </div>
     </div>
-
     <div class="sticky-start" id="stickyStart">
       <div class="est-time" id="estTime"></div>
       <button class="btn-start" onclick="startSession()">BẮT ĐẦU</button>
     </div>
-
     <div class="countdown-overlay" id="countdownOverlay">
       <div class="countdown-lbl">CHUẨN BỊ</div>
       <div class="countdown-num" id="countdownNum">5</div>
       <div class="countdown-lbl" id="countdownNext">—</div>
     </div>
-
     <div class="timer-overlay" id="timerOverlay">
       <button class="btn btn-close" onclick="closeTimer()">✕ ĐÓNG</button>
       <div class="t-phase" id="tPhase">WARMUP</div>
@@ -303,8 +228,7 @@
         <div class="ring-container" id="ringContainer">
           <svg class="ring-svg" viewBox="0 0 100 100">
             <circle class="ring-bg" cx="50" cy="50" r="44" />
-            <circle class="ring-progress" id="ringProgress" cx="50" cy="50" r="44"
-              stroke-dasharray="276.46" stroke-dashoffset="0" stroke="#f0f0f0" />
+            <circle class="ring-progress" id="ringProgress" cx="50" cy="50" r="44" stroke-dasharray="276.46" stroke-dashoffset="0" stroke="#f0f0f0" />
           </svg>
           <div class="ring-center">
             <div class="t-sec" id="tSec">30</div>
@@ -365,15 +289,18 @@
       function getWkStrength() { return weekNumFrom("2026-04-13", viewDate); }
       function getWkCardio()   { return weekNumFrom("2026-05-04", viewDate); }
 
+      // ── STRENGTH PHASE — main 3 set, phụ/core 2 set, rest 90s ──
       function getStrengthPhase() {
         const w = getWkStrength();
-        if (w<=2)  return { sets:3, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                 restSec:90, explosive:false };
-        if (w<=4)  return { sets:3, pushRep:"8-10",  rowRep:"10-12", chinup:true, chinupRep:"3",    restSec:75, explosive:false };
-        if (w<=6)  return { sets:4, pushRep:"8-12",  rowRep:"10-12", chinup:true, chinupRep:"4-5",  restSec:60, explosive:true  };
-        if (w===7) return { sets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                 restSec:90, explosive:false };
-        if (w<=10) return { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6",  restSec:60, explosive:true  };
-        return             { sets:4, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6",  restSec:60, explosive:true  };
+        // mainSets = bài chính, auxSets = bài phụ + core
+        if (w<=2)  return { mainSets:3, auxSets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                restSec:90, explosive:false };
+        if (w<=4)  return { mainSets:3, auxSets:2, pushRep:"8-10",  rowRep:"10-12", chinup:true, chinupRep:"3",   restSec:90, explosive:false };
+        if (w<=6)  return { mainSets:3, auxSets:2, pushRep:"8-12",  rowRep:"10-12", chinup:true, chinupRep:"4-5", restSec:90, explosive:true  };
+        if (w===7) return { mainSets:2, auxSets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                restSec:90, explosive:false };
+        if (w<=10) return { mainSets:3, auxSets:2, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6", restSec:90, explosive:true  };
+        return             { mainSets:3, auxSets:2, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6", restSec:90, explosive:true  };
       }
+
       function getCardioPhase() {
         const w = getWkCardio();
         if (w<=0)  return null;
@@ -384,59 +311,47 @@
         return             { t3Rounds:5, t3Min:3, t3Rest:60, hiitOn:40, hiitOff:20 };
       }
 
-      // ── BOXING MỚI ──────────────────────────────────────────────
+      // ── BOXING ──────────────────────────────────────────────────
       const WARMUP = () => [
         { phase:"warmup", name:"Xoay khớp", detail:"Vai, hông, gối, cổ tay — thả lỏng hoàn toàn", onSec:90, offSec:5 },
         { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, giữ nhịp thở — 20-30% lực", onSec:90, offSec:5 },
       ];
-
       const SHADOW = () => [
-        { phase:"shadow", name:"Shadow Freestyle", detail:"Tự do hoàn toàn — mix T0/T1/T3, không nghĩ trước, tay tự chạy — 60-70% lực", onSec:180, offSec:10 },
+        { phase:"shadow", name:"Shadow Freestyle", detail:"Tự do — mix T0/T1/T3, không nghĩ trước, tay tự chạy — 60-70% lực", onSec:180, offSec:10 },
       ];
-
       const DEFEND = () => [
-        { phase:"defend", name:"Defend H1", detail:"Slip / Duck / Pull back / Block / Deflect — cue nào tới defend đó, CHÍNH XÁC — 50% lực", onSec:120, offSec:30 },
+        { phase:"defend", name:"Defend H1", detail:"Slip/Duck/Pull back/Block/Deflect — cue nào tới defend đó, CHÍNH XÁC — 50% lực", onSec:120, offSec:30 },
         { phase:"defend", name:"Defend H2 — Counter", detail:"Defend xong → phản công ngay, không dừng — 60% lực", onSec:120, offSec:30 },
       ];
-
       const FREESTYLE = () => [
         { phase:"freestyle", name:"Freestyle H1 ⭐", detail:"Mix T0/T1/T3 + defend tự do — mắt đọc cue, tay tự chạy — 85% lực", onSec:180, offSec:30 },
         { phase:"freestyle", name:"Freestyle H2 FINISH ⭐", detail:"Full intensity — không nghĩ, chỉ phản xạ. Giữ đến chuông — 90% lực", onSec:180, offSec:0 },
       ];
-
       const WARMUP_LIGHT = () => [
         { phase:"warmup", name:"Xoay khớp nhẹ", detail:"Cổ, vai, hông — thả lỏng, không vội", onSec:60, offSec:5 },
         { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, 20-30% lực — active recovery", onSec:90, offSec:5 },
       ];
-
       const SHADOW_LIGHT = () => [
         { phase:"shadow", name:"Footwork + Shadow nhẹ", detail:"Di chuyển chân là chính — tay ra nhẹ 40-50% lực, không push", onSec:180, offSec:10 },
         { phase:"shadow", name:"Shadow nhẹ tự do", detail:"Thả lỏng hoàn toàn — tốc độ 50%, cảm nhận cơ thể", onSec:180, offSec:0 },
       ];
-
-      function buildBoxingNormal() {
-        return [ ...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE() ];
-      }
-
-      function buildBoxingSaturday() {
-        return [ ...WARMUP_LIGHT(), ...SHADOW_LIGHT() ];
-      }
-
+      function buildBoxingNormal() { return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE()]; }
+      function buildBoxingSaturday() { return [...WARMUP_LIGHT(), ...SHADOW_LIGHT()]; }
       function buildMonday_M()    { return buildBoxingNormal(); }
       function buildTuesday_M()   { return buildBoxingNormal(); }
       function buildWednesday_M() { return buildBoxingNormal(); }
       function buildThursday_M()  { return buildBoxingNormal(); }
       function buildFriday_M()    { return buildBoxingNormal(); }
       function buildSaturday_M()  { return buildBoxingSaturday(); }
-      // ── END BOXING ───────────────────────────────────────────────
 
+      // ── CARDIO ──────────────────────────────────────────────────
       function buildAerobic() {
         const cp = getCardioPhase();
         if (!cp) return [{ phase:"aerobic", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
         const items = [
-          { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60,  offSec:0 },
-          { phase:"warmup", name:"Xoay khớp",      detail:"Cổ tay, vai, hông, cổ chân — thả lỏng",  onSec:60,  offSec:0 },
-          { phase:"warmup", name:"Footwork nhẹ",   detail:"Tiến-lùi nhẹ — 20-30% lực",              onSec:60,  offSec:0 },
+          { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
+          { phase:"warmup", name:"Xoay khớp",      detail:"Cổ tay, vai, hông, cổ chân — thả lỏng",  onSec:60, offSec:0 },
+          { phase:"warmup", name:"Footwork nhẹ",   detail:"Tiến-lùi nhẹ — 20-30% lực",              onSec:60, offSec:0 },
         ];
         const rounds = [
           { name:"R1 — Nhảy dây nhịp điệu",  detail:"Nhảy đều không tăng tốc. Thở mũi suốt, vai thả — 60-70% lực" },
@@ -457,18 +372,19 @@
         if (!cp) return [{ phase:"build", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
         const on = cp.hiitOn, off = cp.hiitOff;
         return [
-          { phase:"warmup", name:"Nhảy dây nhẹ",   detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
-          { phase:"warmup", name:"Xoay khớp",       detail:"Vai, hông, cổ chân — thả lỏng",          onSec:60, offSec:0 },
-          { phase:"warmup", name:"Shadow + footwork", detail:"Di chuyển nhẹ — 20-30% lực",           onSec:60, offSec:0 },
-          { phase:"build",  name:"R1 — Footwork + Jab-Cross",   detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`, onSec:on, offSec:off },
-          { phase:"build",  name:"R2 — Nhảy dây nhịp đều",     detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`, onSec:on, offSec:off },
-          { phase:"peak",   name:"R3 — BURPEE MAX SPEED ⭐",    detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
-          { phase:"peak",   name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
-          { phase:"survive", name:"R5 — Footwork/Nhảy dây",    detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`, onSec:on, offSec:off },
-          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`, onSec:on, offSec:0 },
+          { phase:"warmup",  name:"Nhảy dây nhẹ",        detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực",                                                          onSec:60, offSec:0   },
+          { phase:"warmup",  name:"Xoay khớp",            detail:"Vai, hông, cổ chân — thả lỏng",                                                                   onSec:60, offSec:0   },
+          { phase:"warmup",  name:"Shadow + footwork",    detail:"Di chuyển nhẹ — 20-30% lực",                                                                      onSec:60, offSec:0   },
+          { phase:"build",   name:"R1 — Footwork + Jab-Cross",    detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`,                            onSec:on, offSec:off },
+          { phase:"build",   name:"R2 — Nhảy dây nhịp đều",       detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`,                        onSec:on, offSec:off },
+          { phase:"peak",    name:"R3 — BURPEE MAX SPEED ⭐",      detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`,                onSec:on, offSec:off },
+          { phase:"peak",    name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
+          { phase:"survive", name:"R5 — Footwork/Nhảy dây",       detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`,                   onSec:on, offSec:off },
+          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`,      onSec:on, offSec:0   },
         ];
       }
 
+      // ── HELPERS ─────────────────────────────────────────────────
       function repSets(ph, name, detail, reps, sets, restSec, betweenSec) {
         const between = betweenSec !== undefined ? betweenSec : restSec;
         const items = [];
@@ -492,58 +408,72 @@
         return items;
       }
 
+      // ── STRENGTH A — Push / Pull / Core ─────────────────────────
       function buildStrengthA() {
-        const sp = getStrengthPhase(); const rs = sp.restSec;
+        const sp = getStrengthPhase();
+        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
         const items = [
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength","Push-up",`${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`,parseInt(sp.pushRep),sp.sets,rs),
-          ...repPairs("strength","Row 1 tay TRÁI 10kg","Row 1 tay PHẢI 10kg",`${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
+          // MAIN
+          ...repSets("strength", "Push-up", `${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`, parseInt(sp.pushRep), ms, rs),
+          ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
         ];
-        if (sp.chinup) items.push(...repSets("strength","Chin-up",`${sp.chinupRep} rep | Dừng trước khi fail`,parseInt(sp.chinupRep)||3,2,rs));
-        items.push(...repSets("strength","Shoulder Tap Plank","10 rep mỗi bên | Hông không lắc, kiểm soát",20,sp.sets,45));
-        items.push(...repPairs("strength","Step-up CHÂN TRÁI","Step-up CHÂN PHẢI","8-10 rep | Làm chậm, không nhảy","8-10 rep",10,sp.sets,45));
-        items.push(...repSets("core","Leg Raise","10-12 rep | Hạ chân chậm, không thả rơi",12,sp.sets,45));
+        // Chin-up là main nếu có
+        if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail`, parseInt(sp.chinupRep)||3, ms, rs));
+        // PHỤ + CORE — 2 set
+        items.push(...repSets("strength", "Shoulder Tap Plank", "10 rep mỗi bên | Hông không lắc, kiểm soát", 20, as, 45));
+        items.push(...repPairs("strength", "Step-up CHÂN TRÁI", "Step-up CHÂN PHẢI", "8-10 rep | Làm chậm, không nhảy", "8-10 rep", 10, as, 45));
+        items.push(...repSets("core", "Leg Raise", "10-12 rep | Hạ chân chậm, không thả rơi", 12, as, 45));
         return items;
       }
 
+      // ── STRENGTH B — Shoulder / Back / Core ─────────────────────
       function buildStrengthB() {
-        const sp = getStrengthPhase(); const rs = sp.restSec;
+        const sp = getStrengthPhase();
+        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
         const items = [
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength","Pike Push-up",`${sp.pushRep} rep | Train vai trước → guard không bị drop`,parseInt(sp.pushRep),sp.sets,rs),
-          ...repPairs("strength","Row 1 tay TRÁI tempo chậm","Row 1 tay PHẢI tempo chậm",`${sp.rowRep} rep | Kéo chậm, tập lưng giữa`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
-          ...repSets("strength","Rear Delt Fly 5kg","12-15 rep | Vai sau → giữ guard cả trận không mỏi",15,sp.sets,45),
-          ...repPairs("strength","Glute Bridge CHÂN TRÁI","Glute Bridge CHÂN PHẢI","10-12 rep | Hông sau mạnh → kick power","10-12 rep",12,sp.sets,45),
+          // MAIN
+          ...repSets("strength", "Pike Push-up", `${sp.pushRep} rep | Train vai trước → guard không bị drop`, parseInt(sp.pushRep), ms, rs),
+          ...repPairs("strength", "Row 1 tay TRÁI tempo chậm", "Row 1 tay PHẢI tempo chậm", `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
+          // PHỤ — 2 set
+          ...repSets("strength", "Rear Delt Fly 5kg", "12-15 rep | Vai sau → giữ guard cả buổi không mỏi", 15, as, 45),
+          ...repPairs("strength", "Glute Bridge CHÂN TRÁI", "Glute Bridge CHÂN PHẢI", "10-12 rep | Hông sau mạnh → bước vào đòn có lực", "10-12 rep", 12, as, 45),
         ];
-        for (let s = 1; s <= sp.sets; s++) {
+        // Side Plank + Dead Bug — CORE 2 set
+        for (let s = 1; s <= as; s++) {
           items.push({ phase:"strength", name:`Side Plank TRÁI SET ${s}`, detail:s===1?"30s | Core bên → chống bị quật khi áp sát":"30s", onSec:30, offSec:10 });
-          items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < sp.sets ? 30 : 0 });
+          items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < as ? 30 : 0 });
         }
-        items.push(...repPairs("strength","Dead Bug TRÁI","Dead Bug PHẢI","8 rep | Lưng dán sàn, thở đều","8 rep",8,sp.sets,30));
+        items.push(...repPairs("strength", "Dead Bug TRÁI", "Dead Bug PHẢI", "8 rep | Lưng dán sàn, thở đều", "8 rep", 8, as, 30));
         return items;
       }
 
+      // ── STRENGTH C — Tricep / Pull / Core ───────────────────────
       function buildStrengthC() {
-        const sp = getStrengthPhase(); const rs = sp.restSec;
+        const sp = getStrengthPhase();
+        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
         const items = [
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength","Diamond Push-up",`${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`,parseInt(sp.pushRep),sp.sets,rs),
-          ...repPairs("strength","Row 1 tay TRÁI 10kg","Row 1 tay PHẢI 10kg",`${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`,`${sp.rowRep} rep`,parseInt(sp.rowRep),sp.sets,rs),
+          // MAIN
+          ...repSets("strength", "Diamond Push-up", `${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`, parseInt(sp.pushRep), ms, rs),
+          ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
         ];
-        if (sp.chinup) items.push(...repSets("strength","Chin-up",`${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`,parseInt(sp.chinupRep)||3,sp.sets,rs));
-        items.push(...repSets("strength","Russian Twist 5kg","16 rep | Core xoay → power từ hông truyền lên tay",16,sp.sets,45));
+        if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`, parseInt(sp.chinupRep)||3, ms, rs));
+        // PHỤ + CORE — 2 set
+        items.push(...repSets("strength", "Russian Twist 5kg", "16 rep | Core xoay → power từ hông lên tay", 16, as, 45));
         if (sp.explosive) {
-          items.push(...repSets("strength","Jump Squat","6-8 rep | Bùng nổ bước vào áp sát",8,sp.sets,60));
+          items.push(...repSets("strength", "Jump Squat", "6-8 rep | Bùng nổ bước vào áp sát", 8, as, 60));
         } else {
-          items.push(...repPairs("strength","Split Squat CHÂN TRÁI","Split Squat CHÂN PHẢI","8-10 rep | Chân trụ khi đánh combo dài","8-10 rep",10,sp.sets,45));
+          items.push(...repPairs("strength", "Split Squat CHÂN TRÁI", "Split Squat CHÂN PHẢI", "8-10 rep | Chân trụ khi đánh combo dài", "8-10 rep", 10, as, 45));
         }
-        items.push(...timerSets("core","Plank","40s | Giữ thân thẳng, thở đều",40,30,sp.sets));
+        items.push(...timerSets("core", "Plank", "40s | Giữ thân thẳng, thở đều", 40, 30, as));
         return items;
       }
 
