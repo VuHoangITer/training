@@ -364,6 +364,13 @@
         for (let i = 0; i < cp.t3Rounds && i < rounds.length; i++) {
           items.push({ phase:"aerobic", name:rounds[i].name, detail:rounds[i].detail, onSec:cp.t3Min*60, offSec:i < cp.t3Rounds-1 ? cp.t3Rest : 0 });
         }
+        // CORE BỤNG — thêm vào cuối
+        items.push(...[
+          { phase:"core", name:"Sit-up SET 1", detail:"Gập bụng chậm, thở ra khi lên — cảm nhận bụng co lại, không kéo cổ", reps:15, restSec:30 },
+          { phase:"core", name:"Sit-up SET 2", detail:"15 rep", reps:15, restSec:30 },
+          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân", onSec:30, offSec:20 },
+          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:0 },
+        ]);
         return items;
       }
 
@@ -381,6 +388,11 @@
           { phase:"peak",    name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
           { phase:"survive", name:"R5 — Footwork/Nhảy dây",       detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`,                   onSec:on, offSec:off },
           { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`,      onSec:on, offSec:0   },
+          // CORE BỤNG — thêm vào cuối
+          { phase:"core", name:"Sit-up SET 1", detail:"Gập bụng chậm, thở ra khi lên — cảm nhận bụng co lại, không kéo cổ", reps:15, restSec:30 },
+          { phase:"core", name:"Sit-up SET 2", detail:"15 rep", reps:15, restSec:30 },
+          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân", onSec:30, offSec:20 },
+          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:0 },
         ];
       }
 
@@ -440,8 +452,8 @@
           // MAIN — đứng
           ...repSets("strength", "Pike Push-up", `${sp.pushRep} rep | Train vai trước → guard không bị drop`, parseInt(sp.pushRep), ms, rs),
           ...repPairs("strength", "Row 1 tay TRÁI tempo chậm", "Row 1 tay PHẢI tempo chậm", `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
-          // PHỤ ĐỨNG — bicep + vai sau
-          ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", "10-12 rep | Dừng trước khi vai nhún — bicep cho uppercut/hook", "10-12 rep", 12, as, 60),
+          // MAIN — bicep trực tiếp cho uppercut/hook
+          ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", "10-12 rep | Dừng trước khi vai nhún — bicep cho uppercut/hook", "10-12 rep", 12, ms, 60),
           ...repSets("strength", "Rear Delt Fly 5kg", "12-15 rep | Vai sau → giữ guard cả buổi không mỏi", 15, as, 45),
           // PHỤ XUỐNG SÀN — mông + core
           ...repPairs("strength", "Glute Bridge CHÂN TRÁI", "Glute Bridge CHÂN PHẢI", "10-12 rep | Hông sau mạnh → bước vào đòn có lực", "10-12 rep", 12, as, 45),
