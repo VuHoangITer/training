@@ -429,7 +429,7 @@
         return items;
       }
 
-      // ── STRENGTH B — Shoulder / Back / Core ─────────────────────
+      // ── STRENGTH B — Shoulder / Back / Bicep / Core ─────────────
       function buildStrengthB() {
         const sp = getStrengthPhase();
         const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
@@ -437,14 +437,16 @@
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          // MAIN
+          // MAIN — đứng
           ...repSets("strength", "Pike Push-up", `${sp.pushRep} rep | Train vai trước → guard không bị drop`, parseInt(sp.pushRep), ms, rs),
           ...repPairs("strength", "Row 1 tay TRÁI tempo chậm", "Row 1 tay PHẢI tempo chậm", `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
-          // PHỤ — 2 set
+          // PHỤ ĐỨNG — bicep + vai sau
+          ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", "10-12 rep | Dừng trước khi vai nhún — bicep cho uppercut/hook", "10-12 rep", 12, as, 60),
           ...repSets("strength", "Rear Delt Fly 5kg", "12-15 rep | Vai sau → giữ guard cả buổi không mỏi", 15, as, 45),
+          // PHỤ XUỐNG SÀN — mông + core
           ...repPairs("strength", "Glute Bridge CHÂN TRÁI", "Glute Bridge CHÂN PHẢI", "10-12 rep | Hông sau mạnh → bước vào đòn có lực", "10-12 rep", 12, as, 45),
         ];
-        // Side Plank + Dead Bug — CORE 2 set
+        // Side Plank + Dead Bug — CORE 2 set, nằm sàn cuối cùng
         for (let s = 1; s <= as; s++) {
           items.push({ phase:"strength", name:`Side Plank TRÁI SET ${s}`, detail:s===1?"30s | Core bên → chống bị quật khi áp sát":"30s", onSec:30, offSec:10 });
           items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < as ? 30 : 0 });
