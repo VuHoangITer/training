@@ -14,7 +14,7 @@
         --warmup: #666; --shadow: #6366f1; --trigger: #3b82f6; --trigger-fast: #ef4444;
         --defend: #f97316; --freestyle: #a855f7; --speed: #06b6d4; --footwork: #0ea5e9;
         --core: #84cc16; --strength: #22c55e; --build: #3b82f6; --peak: #ef4444;
-        --survive: #f59e0b; --aerobic: #22d3ee; --ring-size: min(270px, 68vw);
+        --survive: #f59e0b; --aerobic: #22d3ee; --transition: #14b8a6; --ring-size: min(270px, 68vw);
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { background: var(--bg); color: var(--text); font-family: "DM Sans", sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
@@ -58,9 +58,7 @@
       .viewing-info span { color: var(--text); }
       .btn-back-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px; }
       .btn-back-today:hover { color: var(--text); border-color: #555; }
-      .tabs { display: flex; border-bottom: 1px solid var(--border); }
-      .tab { flex: 1; padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-      .tab.active { color: var(--text); border-bottom-color: var(--text); }
+      .session-title-bar { padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text); border-bottom: 1px solid var(--border); }
       .content { flex: 1; padding: 0 0 100px; }
       .session { display: none; }
       .session.active { display: block; }
@@ -74,6 +72,7 @@
       .phase-label.core { color: var(--core); } .phase-label.strength { color: var(--strength); }
       .phase-label.build { color: var(--build); } .phase-label.peak { color: var(--peak); }
       .phase-label.survive { color: var(--survive); } .phase-label.aerobic { color: var(--aerobic); }
+      .phase-label.transition { color: var(--transition); }
       .round-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
       .round-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
       .round-item.warmup::before { background: var(--warmup); } .round-item.shadow::before { background: var(--shadow); }
@@ -83,6 +82,7 @@
       .round-item.core::before { background: var(--core); } .round-item.strength::before { background: var(--strength); }
       .round-item.build::before { background: var(--build); } .round-item.peak::before { background: var(--peak); }
       .round-item.survive::before { background: var(--survive); } .round-item.aerobic::before { background: var(--aerobic); }
+      .round-item.transition::before { background: var(--transition); }
       .round-item.current { border-color: #333; background: #161616; }
       .round-item.done { opacity: 0.35; }
       .round-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1; color: var(--muted); min-width: 36px; text-align: center; }
@@ -145,7 +145,6 @@
       .countdown-overlay.show { display: flex; }
       .countdown-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(120px, 30vw, 200px); line-height: 1; letter-spacing: -4px; color: var(--text); animation: pulse 0.5s ease-in-out infinite; }
       .countdown-lbl { font-family: "DM Mono", monospace; font-size: 13px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
-      .preview-note { display: none; }
     </style>
   </head>
   <body>
@@ -186,27 +185,15 @@
       <button class="btn-back-today" onclick="goToday()">← HÔM NAY</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('morning')" id="tab-morning">🥊 BOXING</div>
-      <div class="tab" onclick="switchTab('afternoon')" id="tab-afternoon">💪 STRENGTH</div>
-    </div>
+    <div class="session-title-bar" id="sessionTitleBar">🥊 BOXING + 💪 STRENGTH</div>
     <div class="est-time-bar" id="estTimebar"></div>
     <div class="content">
-      <div class="preview-note">👁 CHẾ ĐỘ XEM TRƯỚC — không thể bấm BẮT ĐẦU</div>
-      <div class="session active" id="session-morning">
-        <div class="schedule" id="schedule-morning"></div>
-        <div class="done-screen" id="done-morning">
-          <div class="done-icon">🥊</div>
-          <div class="done-title">BOXING XONG!</div>
-          <div class="done-sub">nghỉ 30 phút rồi vào strength 💪</div>
-        </div>
-      </div>
-      <div class="session" id="session-afternoon">
-        <div class="schedule" id="schedule-afternoon"></div>
-        <div class="done-screen" id="done-afternoon">
+      <div class="session active" id="session-main">
+        <div class="schedule" id="schedule-main"></div>
+        <div class="done-screen" id="done-main">
           <div class="done-icon">🔥</div>
           <div class="done-title">XONG NGÀY!</div>
-          <div class="done-sub">form còn giữ được không? ✅</div>
+          <div class="done-sub">cả boxing lẫn tạ trong 1 buổi — ngon ✅</div>
         </div>
       </div>
     </div>
@@ -257,18 +244,28 @@
         warmup:"#666", shadow:"#6366f1", trigger:"#3b82f6", "trigger-fast":"#ef4444",
         defend:"#f97316", freestyle:"#a855f7", speed:"#06b6d4", footwork:"#0ea5e9",
         core:"#84cc16", strength:"#22c55e", build:"#3b82f6", peak:"#ef4444",
-        survive:"#f59e0b", aerobic:"#22d3ee",
+        survive:"#f59e0b", aerobic:"#22d3ee", transition:"#14b8a6",
       };
       const PH_LABEL = {
         warmup:"WARMUP", shadow:"SHADOW", trigger:"TRIGGER", "trigger-fast":"TRIGGER ⭐",
         defend:"DEFEND", freestyle:"FREESTYLE", speed:"SPEED", footwork:"FOOTWORK",
         core:"CORE", strength:"STRENGTH", build:"BUILD", peak:"PEAK ⭐",
-        survive:"SURVIVE", aerobic:"AEROBIC",
+        survive:"SURVIVE", aerobic:"AEROBIC", transition:"CHUYỂN GIAO",
       };
 
       const DAYS_VI = ["Chủ nhật","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"];
       const DAYS_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
       const MONTHS_VI = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
+
+      const SESSION_TITLES = {
+        Monday:    "🥊 BOXING + 💪 STRENGTH A",
+        Tuesday:   "🥊 BOXING",
+        Wednesday: "🥊 BOXING + 💪 STRENGTH B",
+        Thursday:  "🥊 BOXING",
+        Friday:    "🥊 BOXING + 💪 STRENGTH C",
+        Saturday:  "🥊 NHẸ + 🧘 RECOVERY",
+        Sunday:    "😴 NGHỈ",
+      };
 
       const realNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
       const TODAY_Y = realNow.getFullYear(), TODAY_M = realNow.getMonth(), TODAY_D = realNow.getDate();
@@ -292,7 +289,6 @@
       // ── STRENGTH PHASE — main 3 set, phụ/core 2 set, rest 90s ──
       function getStrengthPhase() {
         const w = getWkStrength();
-        // mainSets = bài chính, auxSets = bài phụ + core
         if (w<=2)  return { mainSets:3, auxSets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                restSec:90, explosive:false };
         if (w<=4)  return { mainSets:3, auxSets:2, pushRep:"8-10",  rowRep:"10-12", chinup:true, chinupRep:"3",   restSec:90, explosive:false };
         if (w<=6)  return { mainSets:3, auxSets:2, pushRep:"8-12",  rowRep:"10-12", chinup:true, chinupRep:"4-5", restSec:90, explosive:true  };
@@ -337,12 +333,8 @@
       ];
       function buildBoxingNormal() { return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE()]; }
       function buildBoxingSaturday() { return [...WARMUP_LIGHT(), ...SHADOW_LIGHT()]; }
-      function buildMonday_M()    { return buildBoxingNormal(); }
-      function buildTuesday_M()   { return buildBoxingNormal(); }
-      function buildWednesday_M() { return buildBoxingNormal(); }
-      function buildThursday_M()  { return buildBoxingNormal(); }
-      function buildFriday_M()    { return buildBoxingNormal(); }
-      function buildSaturday_M()  { return buildBoxingSaturday(); }
+      // Thứ 5 gộp với HIIT → cắt freestyle finish 90% để dành sức cho HIIT
+      function buildBoxingThursday() { return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE().slice(0,1)]; }
 
       // ── CARDIO ──────────────────────────────────────────────────
       function buildAerobic() {
@@ -428,13 +420,10 @@
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          // MAIN
           ...repSets("strength", "Push-up", `${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`, parseInt(sp.pushRep), ms, rs),
           ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
         ];
-        // Chin-up là main nếu có
         if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail`, parseInt(sp.chinupRep)||3, ms, rs));
-        // PHỤ + CORE — 2 set
         items.push(...repSets("strength", "Shoulder Tap Plank", "10 rep mỗi bên | Hông không lắc, kiểm soát", 20, as, 45));
         items.push(...repPairs("strength", "Step-up CHÂN TRÁI", "Step-up CHÂN PHẢI", "8-10 rep | Làm chậm, không nhảy", "8-10 rep", 10, as, 45));
         items.push(...repSets("core", "Leg Raise", "10-12 rep | Hạ chân chậm, không thả rơi", 12, as, 45));
@@ -449,16 +438,12 @@
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          // MAIN — đứng
           ...repSets("strength", "Pike Push-up", `${sp.pushRep} rep | Train vai trước → guard không bị drop`, parseInt(sp.pushRep), ms, rs),
           ...repPairs("strength", "Row 1 tay TRÁI tempo chậm", "Row 1 tay PHẢI tempo chậm", `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
-          // MAIN — bicep trực tiếp cho uppercut/hook
           ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", "10-12 rep | Dừng trước khi vai nhún — bicep cho uppercut/hook", "10-12 rep", 12, ms, 60),
           ...repSets("strength", "Rear Delt Fly 5kg", "12-15 rep | Vai sau → giữ guard cả buổi không mỏi", 15, as, 45),
-          // PHỤ XUỐNG SÀN — mông + core
           ...repSets("strength", "Glute Bridge", "12-15 rep | Gót chân trụ, bóp mông ở đỉnh 2s — không dùng lưng đẩy", 15, as, 45),
         ];
-        // Side Plank + Dead Bug — CORE 2 set, nằm sàn cuối cùng
         for (let s = 1; s <= as; s++) {
           items.push({ phase:"strength", name:`Side Plank TRÁI SET ${s}`, detail:s===1?"30s | Core bên → chống bị quật khi áp sát":"30s", onSec:30, offSec:10 });
           items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < as ? 30 : 0 });
@@ -475,18 +460,13 @@
           { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
           { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          // MAIN
           ...repSets("strength", "Diamond Push-up", `${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`, parseInt(sp.pushRep), ms, rs),
           ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
         ];
         if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`, parseInt(sp.chinupRep)||3, ms, rs));
-        // PHỤ + CORE — 2 set
         items.push(...repSets("strength", "Russian Twist 5kg", "16 rep | Core xoay → power từ hông lên tay", 16, as, 45));
-        if (sp.explosive) {
-          items.push(...repSets("strength", "Jump Squat", "6-8 rep | Bùng nổ bước vào áp sát", 8, as, 60));
-        } else {
-          items.push(...repPairs("strength", "Split Squat CHÂN TRÁI", "Split Squat CHÂN PHẢI", "8-10 rep | Chân trụ khi đánh combo dài", "8-10 rep", 10, as, 45));
-        }
+        // Bài chân nặng chính — single-leg ôm tạ, nặng thật kể cả với tạ nhẹ ở nhà
+        items.push(...repPairs("strength", "Split Squat TRÁI", "Split Squat PHẢI", "8-10 rep | Chân sau bước ra sau chống mũi, ôm tạ 2 tay, xuống sâu — chân trước gánh chính, gối không vượt quá mũi chân", "8-10 rep", 10, 3, 60));
         items.push(...timerSets("core", "Plank", "40s | Giữ thân thẳng, thở đều", 40, 30, as));
         return items;
       }
@@ -503,17 +483,46 @@
         ];
       }
 
-      function buildScheduleFromDay(d) {
+      // ── BUILD AFTERNOON (strength/cardio) THEO NGÀY ─────────────
+      function buildAfternoon(dayEn) {
         const map = {
-          Monday:    { morning:buildMonday_M(),    afternoon:buildStrengthA() },
-          Tuesday:   { morning:buildTuesday_M(),   afternoon:buildAerobic()   },
-          Wednesday: { morning:buildWednesday_M(), afternoon:buildStrengthB() },
-          Thursday:  { morning:buildThursday_M(),  afternoon:buildHIIT()      },
-          Friday:    { morning:buildFriday_M(),    afternoon:buildStrengthC() },
-          Saturday:  { morning:buildSaturday_M(),  afternoon:buildRecovery()  },
-          Sunday:    { morning:[],                 afternoon:[]               },
+          Monday:    buildStrengthA,
+          Wednesday: buildStrengthB,
+          Friday:    buildStrengthC,
+          Saturday:  buildRecovery,
         };
-        return map[d] || { morning:[], afternoon:[] };
+        return map[dayEn] ? map[dayEn]() : [];
+      }
+
+      // ── BUILD BOXING THEO NGÀY (cho buổi gộp) ───────────────────
+      function buildBoxingForCombined(dayEn) {
+        if (dayEn === "Saturday") return buildBoxingSaturday();
+        if (dayEn === "Sunday")   return [];
+        // Ngày có tạ sau đó (T2/T4/T6) → 1 round freestyle để dành sức cho lift
+        if (dayEn === "Monday" || dayEn === "Wednesday" || dayEn === "Friday")
+          return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE().slice(0,1)];
+        // Ngày chỉ boxing (T3/T5) → đầy đủ 2 round freestyle
+        return buildBoxingNormal();
+      }
+
+      // bỏ các bài warmup (nhảy dây/xoay khớp) đầu phần strength vì boxing đã làm nóng người
+      function stripLeadingWarmup(items) {
+        let i = 0;
+        while (i < items.length && items[i].phase === "warmup") i++;
+        return items.slice(i);
+      }
+
+      // GỘP: boxing → 1 phút chuyển giao → strength/cardio (đã cắt warmup trùng)
+      function buildCombinedDay(dayEn) {
+        if (dayEn === "Sunday") return [];
+        const boxing = buildBoxingForCombined(dayEn);
+        const after  = stripLeadingWarmup(buildAfternoon(dayEn) || []);
+        const out = [...boxing];
+        if (after.length) {
+          out.push({ phase:"transition", name:"Chuyển sang STRENGTH", detail:"Uống nước, thở đều — 1 phút rồi vào tạ", onSec:60, offSec:0 });
+          out.push(...after);
+        }
+        return out;
       }
 
       function openCalendar() { calYear=viewDate.getFullYear(); calMonth=viewDate.getMonth(); renderCalendar(); document.getElementById("calOverlay").classList.add("show"); }
@@ -551,6 +560,7 @@
         const dayIdx=viewDate.getDay(); const dayEnView=DAYS_EN[dayIdx]; const preview=isPreviewMode();
         document.getElementById("dayBadge").textContent=DAYS_VI[dayIdx].toUpperCase();
         document.getElementById("dateBadge").textContent=viewDate.toLocaleDateString("vi-VN");
+        document.getElementById("sessionTitleBar").textContent=SESSION_TITLES[dayEnView]||"";
         const banner=document.getElementById("viewingBanner");
         if (preview) {
           document.getElementById("viewingDate").textContent=`${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2,"0")}/${(viewDate.getMonth()+1).toString().padStart(2,"0")}/${viewDate.getFullYear()}`;
@@ -558,25 +568,23 @@
         } else { banner.classList.remove("show"); }
         document.body.classList.toggle("preview-mode",preview);
         document.getElementById("btnCalendar").classList.toggle("today-active",!preview);
-        ["morning","afternoon"].forEach(s=>{
-          document.getElementById(`done-${s}`).classList.remove("show");
-          document.getElementById(`schedule-${s}`).style.display="";
-        });
+        document.getElementById("done-main").classList.remove("show");
+        document.getElementById("schedule-main").style.display="";
         if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
         document.getElementById("timerOverlay").classList.remove("show");
         document.getElementById("progressFill").style.width="0%";
         if (dayEnView==="Sunday") {
-          ["morning","afternoon"].forEach(s=>{ document.getElementById(`schedule-${s}`).innerHTML='<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ ngơi hoàn toàn 🛌</div></div>'; });
+          document.getElementById("schedule-main").innerHTML='<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ ngơi hoàn toàn 🛌</div></div>';
           document.getElementById("stickyStart").style.display="none";
-          sessData={morning:[],afternoon:[]};
+          sessData={main:[]};
+          document.getElementById("estTimebar").innerHTML="";
           return;
         }
-        const data=buildScheduleFromDay(dayEnView);
-        sessData=data;
-        renderSchedule(data.morning,"schedule-morning");
-        renderSchedule(data.afternoon,"schedule-afternoon");
+        const combined=buildCombinedDay(dayEnView);
+        sessData={main:combined};
+        curSess="main";
+        renderSchedule(combined,"schedule-main");
         document.getElementById("stickyStart").style.display="block";
-        switchTab("morning");
         updateEstTime();
       }
 
@@ -589,7 +597,10 @@
       function calcEstTime(items) {
         if (!items||!items.length) return null;
         let total=0;
-        items.forEach(item=>{ if(!isRep(item)) total+=(item.onSec||0)+(item.offSec||0); });
+        items.forEach(item=>{
+          if(isRep(item)) total += (item.reps||0)*3 + (item.restSec||0); // ~3s/rep
+          else total+=(item.onSec||0)+(item.offSec||0);
+        });
         if (total===0) return null;
         const m=Math.floor(total/60),s=total%60;
         return m>0?(s>0?`~${m} phút ${s}s`:`~${m} phút`):`~${s}s`;
@@ -597,8 +608,8 @@
       function updateEstTime() {
         const el=document.getElementById("estTimebar");
         if (!el) return;
-        const est=calcEstTime(sessData[curSess]);
-        el.innerHTML=est?`⏱ ước tính timer: <span>${est}</span>`:"";
+        const est=calcEstTime(sessData.main);
+        el.innerHTML=est?`⏱ ước tính cả buổi: <span>${est}</span>`:"";
       }
       function renderSchedule(items,cid) {
         const el=document.getElementById(cid);
@@ -608,7 +619,7 @@
           const ph=item.phase;
           if (ph!==lastPh) { html+=`<div class="phase-label ${ph}">${PH_LABEL[ph]||ph}</div>`; lastPh=ph; }
           const durHtml=item.reps ? `<div class="rep-badge">${item.reps} REP</div>` : `<div class="round-dur">${fmtDur(item)}</div>`;
-          html+=`<div class="round-item ${ph}" id="item-${cid}-${i}" onclick="jumpToRound(${i},'${cid}')">
+          html+=`<div class="round-item ${ph}" id="item-${cid}-${i}" onclick="jumpToRound(${i})">
             <div class="round-num">${i+1}</div>
             <div class="round-info"><div class="round-name">${item.name}</div><div class="round-detail">${item.detail}</div></div>
             ${durHtml}</div>`;
@@ -616,7 +627,7 @@
         el.innerHTML=html;
       }
 
-      let curSess="morning", sessData={morning:[],afternoon:[]};
+      let curSess="main", sessData={main:[]};
       let ts={items:[],idx:0,isOn:true,rem:0,paused:false,iv:null,isResting:false,restRem:0};
       const CIRC=2*Math.PI*44;
       const synth=window.speechSynthesis;
@@ -754,9 +765,8 @@
           } else{numEl.textContent=count;speak(String(count));}
         },1000);
       }
-      function jumpToRound(idx,sid) {
-        if (sid!==curSess) return;
-        const items=sessData[curSess];
+      function jumpToRound(idx) {
+        const items=sessData.main;
         if (!items||idx>=items.length) return;
         if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
         startCountdown(items,idx);
@@ -772,17 +782,6 @@
         document.getElementById("stickyStart").style.display="none";
         document.getElementById("progressFill").style.width="100%";
         playBeep("end");setTimeout(()=>playBeep("end"),600);speak("Hoàn thành! Tuyệt vời!");
-      }
-      function switchTab(s) {
-        curSess=s;
-        document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-        document.getElementById(`tab-${s}`).classList.add("active");
-        document.querySelectorAll(".session").forEach(el=>el.classList.remove("active"));
-        document.getElementById(`session-${s}`).classList.add("active");
-        if (!isPreviewMode()) {
-          document.getElementById("stickyStart").style.display=document.getElementById(`done-${s}`).classList.contains("show")?"none":"block";
-        }
-        updateEstTime();
       }
 
       const isRep = (item) => !!item.reps;
