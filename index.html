@@ -532,10 +532,15 @@
         const after  = stripLeadingWarmup(buildAfternoon(dayEn) || []);
         const out = [...boxing];
         if (after.length) {
+          const isStrength = (dayEn==="Monday"||dayEn==="Wednesday"||dayEn==="Friday");
           const labels = { Monday:"STRENGTH", Wednesday:"STRENGTH", Friday:"STRENGTH", Tuesday:"CORE", Thursday:"CORE", Saturday:"GIÃN CƠ" };
           const lbl = labels[dayEn] || "PHẦN SAU";
-          const short = (dayEn==="Tuesday"||dayEn==="Thursday"||dayEn==="Saturday");
-          out.push({ phase:"transition", name:`Chuyển sang ${lbl}`, detail: short ? "Thở đều 30s rồi tiếp tục" : "Uống nước, thở đều — 1 phút rồi vào tạ", onSec: short?30:60, offSec:0 });
+          if (isStrength) {
+            out.push({ phase:"transition", name:"Chuyển sang STRENGTH", detail:"Nghỉ 5 phút — uống nước, hạ nhịp tim cho ổn", onSec:300, offSec:0 });
+            out.push({ phase:"warmup", name:"Nhảy dây làm nóng lại", detail:"1 phút nhảy đều — gọi máu về cơ sau khi nghỉ, rồi vào tạ", onSec:60, offSec:0 });
+          } else {
+            out.push({ phase:"transition", name:`Chuyển sang ${lbl}`, detail:"Thở đều 30s rồi tiếp tục", onSec:30, offSec:0 });
+          }
           out.push(...after);
         }
         return out;
