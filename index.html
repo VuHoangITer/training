@@ -259,9 +259,9 @@
 
       const SESSION_TITLES = {
         Monday:    "🥊 BOXING + 💪 STRENGTH A",
-        Tuesday:   "🥊 BOXING",
+        Tuesday:   "🥊 BOXING + 🔥 CORE",
         Wednesday: "🥊 BOXING + 💪 STRENGTH B",
-        Thursday:  "🥊 BOXING",
+        Thursday:  "🥊 BOXING + 🔥 CORE",
         Friday:    "🥊 BOXING + 💪 STRENGTH C",
         Saturday:  "🥊 NHẸ + 🧘 RECOVERY",
         Sunday:    "😴 NGHỈ",
@@ -483,11 +483,23 @@
         ];
       }
 
-      // ── BUILD AFTERNOON (strength/cardio) THEO NGÀY ─────────────
+      // ── CORE FINISHER — cho ngày chỉ boxing (T3/T5) ─────────────
+      function buildCoreFinisher() {
+        return [
+          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân, lưng dán sàn", onSec:30, offSec:20 },
+          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:30 },
+          ...repSets("core", "Leg Raise", "12-15 rep | Hạ chân chậm, không thả rơi, lưng dán sàn", 15, 2, 30),
+          ...repSets("core", "Bicycle Crunch", "20 rep | Khuỷu chạm gối đối diện, xoay từ thân — không giật cổ", 20, 2, 30),
+        ];
+      }
+
+      // ── BUILD AFTERNOON (strength/core) THEO NGÀY ───────────────
       function buildAfternoon(dayEn) {
         const map = {
           Monday:    buildStrengthA,
+          Tuesday:   buildCoreFinisher,
           Wednesday: buildStrengthB,
+          Thursday:  buildCoreFinisher,
           Friday:    buildStrengthC,
           Saturday:  buildRecovery,
         };
@@ -512,14 +524,17 @@
         return items.slice(i);
       }
 
-      // GỘP: boxing → 1 phút chuyển giao → strength/cardio (đã cắt warmup trùng)
+      // GỘP: boxing → chuyển giao → strength/core/recovery (đã cắt warmup trùng)
       function buildCombinedDay(dayEn) {
         if (dayEn === "Sunday") return [];
         const boxing = buildBoxingForCombined(dayEn);
         const after  = stripLeadingWarmup(buildAfternoon(dayEn) || []);
         const out = [...boxing];
         if (after.length) {
-          out.push({ phase:"transition", name:"Chuyển sang STRENGTH", detail:"Uống nước, thở đều — 1 phút rồi vào tạ", onSec:60, offSec:0 });
+          const labels = { Monday:"STRENGTH", Wednesday:"STRENGTH", Friday:"STRENGTH", Tuesday:"CORE", Thursday:"CORE", Saturday:"GIÃN CƠ" };
+          const lbl = labels[dayEn] || "PHẦN SAU";
+          const short = (dayEn==="Tuesday"||dayEn==="Thursday"||dayEn==="Saturday");
+          out.push({ phase:"transition", name:`Chuyển sang ${lbl}`, detail: short ? "Thở đều 30s rồi tiếp tục" : "Uống nước, thở đều — 1 phút rồi vào tạ", onSec: short?30:60, offSec:0 });
           out.push(...after);
         }
         return out;
