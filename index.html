@@ -424,6 +424,7 @@
           ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
         ];
         if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail`, parseInt(sp.chinupRep)||3, ms, rs));
+        items.push(...repSets("strength", "Prone Y-T-W", "8 rep mỗi chữ (Y→T→W) | Nằm sấp, tay không hoặc tạ 2-3kg, nâng tay bóp vai sau + thang dưới — chống vai cuộn/gù", 8, as, 45));
         items.push(...repSets("strength", "Shoulder Tap Plank", "10 rep mỗi bên | Hông không lắc, kiểm soát", 20, as, 45));
         items.push(...repPairs("strength", "Step-up CHÂN TRÁI", "Step-up CHÂN PHẢI", "8-10 rep | Làm chậm, không nhảy", "8-10 rep", 10, as, 45));
         items.push(...repSets("core", "Leg Raise", "10-12 rep | Hạ chân chậm, không thả rơi", 12, as, 45));
