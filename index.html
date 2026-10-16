@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
     <title>Training Timer</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;600&display=swap"
@@ -10,21 +11,20 @@
     />
     <style>
       :root {
-        --bg: #0a0a0a; --surface: #111; --border: #222; --text: #f0f0f0; --muted: #555;
-        --warmup: #666; --shadow: #6366f1; --trigger: #3b82f6; --trigger-fast: #ef4444;
-        --defend: #f97316; --freestyle: #a855f7; --speed: #06b6d4; --footwork: #0ea5e9;
-        --core: #84cc16; --strength: #22c55e; --build: #3b82f6; --peak: #ef4444;
-        --survive: #f59e0b; --aerobic: #22d3ee; --transition: #14b8a6; --ring-size: min(270px, 68vw);
+        --bg: #0a0a0a; --surface: #111; --border: #222; --text: #f0f0f0; --muted: #666;
+        --warn: #f59e0b; --ring-size: min(270px, 68vw);
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { background: var(--bg); color: var(--text); font-family: "DM Sans", sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+
       .header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
       .header-title { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 3px; }
       .day-badge { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
       .header-right { display: flex; align-items: center; gap: 12px; }
-      .btn-calendar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+      .btn-calendar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--muted); cursor: pointer; font-size: 16px; transition: all 0.15s; }
       .btn-calendar:hover { border-color: #444; color: var(--text); }
       .btn-calendar.today-active { border-color: var(--text); color: var(--text); }
+
       .cal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; display: none; align-items: flex-start; justify-content: center; padding-top: 80px; }
       .cal-overlay.show { display: flex; }
       .cal-modal { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 16px; width: min(360px, calc(100vw - 32px)); overflow: hidden; animation: slideDown 0.2s ease; }
@@ -40,64 +40,76 @@
       .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 16px 16px; gap: 4px; }
       .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-family: "DM Mono", monospace; font-size: 13px; cursor: pointer; transition: all 0.12s; position: relative; border: 1px solid transparent; }
       .cal-day:hover { background: #1a1a1a; border-color: #333; }
-      .cal-day.empty { cursor: default; pointer-events: none; }
       .cal-day.sunday { color: #ef4444; opacity: 0.5; }
-      .cal-day.other-month { color: #333; }
+      .cal-day.other-month { color: #333; pointer-events: none; }
       .cal-day.has-training::after { content: ""; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--text); opacity: 0.4; }
+      .cal-day.done-day::after { background: #22c55e; opacity: 1; width: 6px; height: 6px; }
       .cal-day.selected { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 600; }
-      .cal-day.selected::after { background: var(--bg); opacity: 0.5; }
       .cal-day.is-today { border-color: #444; color: var(--text); }
       .cal-day.is-today:not(.selected) { background: #1a1a1a; }
-      .cal-footer { padding: 12px 16px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+      .cal-footer { padding: 12px 16px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
       .cal-footer-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
-      .btn-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 6px 12px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 1px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+      .btn-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 6px 12px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 1px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; white-space: nowrap; }
       .btn-today:hover { border-color: var(--text); color: var(--text); }
+
       .viewing-banner { display: none; background: #161616; border-bottom: 1px solid #1e1e1e; padding: 8px 20px; align-items: center; justify-content: space-between; }
       .viewing-banner.show { display: flex; }
       .viewing-info { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
       .viewing-info span { color: var(--text); }
-      .btn-back-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px; }
+      .btn-back-today { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; cursor: pointer; letter-spacing: 1px; }
       .btn-back-today:hover { color: var(--text); border-color: #555; }
-      .session-title-bar { padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text); border-bottom: 1px solid var(--border); }
-      .content { flex: 1; padding: 0 0 100px; }
-      .session { display: none; }
-      .session.active { display: block; }
+
+      .progress-bar { height: 2px; background: var(--border); }
+      .progress-fill { height: 100%; background: var(--text); transition: width 0.3s; }
+      .session-title-bar { padding: 14px; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+      .info-bar { padding: 10px 20px; border-bottom: 1px solid var(--border); font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; line-height: 1.8; text-align: center; }
+      .info-bar b { color: var(--text); font-weight: 500; }
+      .info-bar .ok { color: #22c55e; }
+      .info-bar .tip { display: block; letter-spacing: 0.5px; text-transform: none; font-family: "DM Sans", sans-serif; font-size: 12px; margin-top: 2px; }
+
+
+      .home-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 8px; }
+      #homeView { padding-bottom: 40px; }
+      #homeToday { margin: 8px 20px 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+      .ht-title { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 2px; }
+      .ht-sub { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; line-height: 1.7; }
+      .ht-tip { font-size: 12px; color: var(--muted); line-height: 1.5; }
+      .home-days .cal-day { aspect-ratio: auto; min-height: 66px; flex-direction: column; gap: 2px; padding: 4px 0; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+      .home-days .cal-day::after { display: none !important; }
+      .home-days .cal-day .dn { font-size: 12px; }
+      .home-days .cal-day .em { font-size: 20px; line-height: 1; }
+      .home-days .cal-day .tt { font-size: 7.5px; letter-spacing: 0.3px; color: var(--muted); text-align: center; line-height: 1.1; }
+      .home-days .cal-day .ck { position: absolute; top: 3px; right: 5px; font-size: 10px; color: #22c55e; }
+      .home-days .cal-day:active { background: #222; transform: scale(0.96); }
+      .home-days .cal-day.sunday { opacity: 0.55; }
+      .home-days .cal-day.is-today { border-color: var(--text); }
+      .home-days .cal-day.done-day { background: #0f1a0f; border-color: #1f3a1f; }
+      .home-hint { text-align: center; font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; padding: 4px 20px 12px; line-height: 1.7; }
+      .home-actions { display: flex; justify-content: center; padding: 0 20px; }
+      .countdown-overlay .btn-sec { margin-top: 12px; }
+
+      .content { flex: 1; padding: 0 0 110px; }
       .schedule { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
       .phase-label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; padding: 16px 0 8px; display: flex; align-items: center; gap: 10px; }
       .phase-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-      .phase-label.warmup { color: var(--warmup); } .phase-label.shadow { color: var(--shadow); }
-      .phase-label.trigger { color: var(--trigger); } .phase-label.trigger-fast { color: var(--trigger-fast); }
-      .phase-label.defend { color: var(--defend); } .phase-label.freestyle { color: var(--freestyle); }
-      .phase-label.speed { color: var(--speed); } .phase-label.footwork { color: var(--footwork); }
-      .phase-label.core { color: var(--core); } .phase-label.strength { color: var(--strength); }
-      .phase-label.build { color: var(--build); } .phase-label.peak { color: var(--peak); }
-      .phase-label.survive { color: var(--survive); } .phase-label.aerobic { color: var(--aerobic); }
-      .phase-label.transition { color: var(--transition); }
       .round-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
       .round-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-      .round-item.warmup::before { background: var(--warmup); } .round-item.shadow::before { background: var(--shadow); }
-      .round-item.trigger::before { background: var(--trigger); } .round-item.trigger-fast::before { background: var(--trigger-fast); }
-      .round-item.defend::before { background: var(--defend); } .round-item.freestyle::before { background: var(--freestyle); }
-      .round-item.speed::before { background: var(--speed); } .round-item.footwork::before { background: var(--footwork); }
-      .round-item.core::before { background: var(--core); } .round-item.strength::before { background: var(--strength); }
-      .round-item.build::before { background: var(--build); } .round-item.peak::before { background: var(--peak); }
-      .round-item.survive::before { background: var(--survive); } .round-item.aerobic::before { background: var(--aerobic); }
-      .round-item.transition::before { background: var(--transition); }
       .round-item.current { border-color: #333; background: #161616; }
       .round-item.done { opacity: 0.35; }
       .round-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1; color: var(--muted); min-width: 36px; text-align: center; }
       .round-item.current .round-num { color: var(--text); }
-      .round-info { flex: 1; }
+      .round-info { flex: 1; min-width: 0; }
       .round-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
-      .round-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); }
+      .round-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); line-height: 1.5; }
       .round-dur { font-family: "Bebas Neue", sans-serif; font-size: 17px; color: var(--muted); letter-spacing: 1px; text-align: right; white-space: nowrap; }
       .round-item.current .round-dur { color: var(--text); }
-      .rep-badge { background: #1a2a1a; color: var(--core); border: 1px solid #2a4a2a; border-radius: 6px; padding: 4px 10px; font-family: "DM Mono", monospace; font-size: 11px; white-space: nowrap; }
+      .rep-badge { background: #1a2a1a; color: #84cc16; border: 1px solid #2a4a2a; border-radius: 6px; padding: 4px 10px; font-family: "DM Mono", monospace; font-size: 11px; white-space: nowrap; }
+
       .timer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; }
       .timer-overlay.show { display: flex; }
       .t-phase { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
-      .t-name { font-family: "Bebas Neue", sans-serif; font-size: clamp(22px, 5.5vw, 36px); letter-spacing: 2px; text-align: center; line-height: 1.15; max-width: 320px; }
-      .t-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); text-align: center; max-width: 300px; line-height: 1.6; }
+      .t-name { font-family: "Bebas Neue", sans-serif; font-size: clamp(22px, 5.5vw, 36px); letter-spacing: 2px; text-align: center; line-height: 1.15; max-width: 340px; }
+      .t-detail { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); text-align: center; max-width: 320px; line-height: 1.6; max-height: 7.5em; overflow-y: auto; }
       .ring-container { position: relative; width: var(--ring-size); height: var(--ring-size); }
       .ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
       .ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
@@ -109,42 +121,40 @@
       .ring-container.warn .t-sec { animation: pulse 0.5s ease-in-out infinite; }
       .rep-display { display: none; flex-direction: column; align-items: center; gap: 14px; }
       .rep-display.show { display: flex; }
-      .rep-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(58px, 15vw, 88px); line-height: 1; color: var(--core); }
+      .rep-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(58px, 15vw, 88px); line-height: 1; color: #84cc16; }
       .rep-lbl { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
-      .btn-done { background: var(--core); color: #000; padding: 16px 48px; border-radius: 12px; font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 3px; border: none; cursor: pointer; }
+      .btn-done { background: #84cc16; color: #000; padding: 16px 48px; border-radius: 12px; font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 3px; border: none; cursor: pointer; }
       .btn-done:active { transform: scale(0.96); }
-      .next-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; text-align: center; width: calc(100% - 40px); max-width: 320px; }
+      .next-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; text-align: center; width: calc(100% - 40px); max-width: 340px; }
       .next-lbl { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; }
       .next-name { font-size: 13px; font-weight: 600; }
-      .next-name.warn-txt { color: var(--survive); animation: pulse 0.5s ease-in-out infinite; }
-      .next-detail { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
-      .t-controls { display: flex; gap: 12px; }
+      .next-detail { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); margin-top: 4px; line-height: 1.4; max-height: 4.2em; overflow: hidden; }
+      .t-controls { display: flex; gap: 10px; }
       .btn { border: none; border-radius: 10px; font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
-      .btn-prim { background: var(--text); color: var(--bg); padding: 15px 36px; font-size: 13px; }
-      .btn-sec { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 15px 22px; }
+      .btn-prim { background: var(--text); color: var(--bg); padding: 15px 32px; font-size: 13px; }
+      .btn-sec { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 15px 20px; }
       .btn-close { position: absolute; top: 18px; right: 18px; background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 9px 14px; font-size: 11px; letter-spacing: 1px; }
+
       .sticky-start { position: fixed; bottom: 0; left: 0; right: 0; padding: 28px 20px 16px; background: linear-gradient(transparent, var(--bg) 30%); z-index: 50; }
       .est-time { text-align: center; font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 2px; margin-bottom: 8px; }
       .est-time span { color: var(--text); }
-      .est-time-bar { text-align: center; font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; padding: 8px 20px; border-bottom: 1px solid var(--border); min-height: 33px; }
-      .est-time-bar span { color: var(--text); }
       .btn-start { width: 100%; background: var(--text); color: var(--bg); padding: 17px; border-radius: 12px; font-family: "Bebas Neue", sans-serif; font-size: 19px; letter-spacing: 4px; cursor: pointer; border: none; }
-      .progress-bar { height: 2px; background: var(--border); }
-      .progress-fill { height: 100%; background: var(--text); transition: width 0.3s; }
+
       .done-screen { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 20px; text-align: center; min-height: 60vh; }
       .done-screen.show { display: flex; }
       .done-icon { font-size: 60px; animation: bounce 0.6s ease; }
       @keyframes bounce { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
       .done-title { font-family: "Bebas Neue", sans-serif; font-size: 46px; letter-spacing: 4px; }
-      .done-sub { color: var(--muted); font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 2px; }
+      .done-sub { color: var(--muted); font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 2px; line-height: 1.7; }
       .no-content { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 60px 20px; text-align: center; color: var(--muted); }
       .no-content-icon { font-size: 48px; opacity: 0.3; }
-      .no-content-title { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 2px; color: #333; }
+      .no-content-title { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 2px; color: #444; }
       .no-content-sub { font-family: "DM Mono", monospace; font-size: 11px; }
-      .countdown-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 250; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+
+      .countdown-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 250; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; text-align: center; }
       .countdown-overlay.show { display: flex; }
-      .countdown-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(120px, 30vw, 200px); line-height: 1; letter-spacing: -4px; color: var(--text); animation: pulse 0.5s ease-in-out infinite; }
-      .countdown-lbl { font-family: "DM Mono", monospace; font-size: 13px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+      .countdown-num { font-family: "Bebas Neue", sans-serif; font-size: clamp(120px, 30vw, 200px); line-height: 1; letter-spacing: -4px; animation: pulse 0.5s ease-in-out infinite; }
+      .countdown-lbl { font-family: "DM Mono", monospace; font-size: 13px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; max-width: 340px; line-height: 1.6; }
     </style>
   </head>
   <body>
@@ -155,62 +165,68 @@
       </div>
       <div class="header-right">
         <div class="day-badge" id="dateBadge"></div>
-        <button class="btn-calendar" id="btnCalendar" onclick="openCalendar()">📅</button>
+        <button class="btn-calendar" id="btnCalendar" onclick="showHome()" style="display: none">← LỊCH</button>
       </div>
     </div>
-    <div class="cal-overlay" id="calOverlay" onclick="handleOverlayClick(event)">
-      <div class="cal-modal" id="calModal">
-        <div class="cal-header">
-          <div class="cal-title" id="calMonthTitle">THÁNG 6 2026</div>
-          <div class="cal-nav">
-            <button class="cal-nav-btn" onclick="calPrev()">◀</button>
-            <button class="cal-nav-btn" onclick="calNext()">▶</button>
-          </div>
-        </div>
-        <div class="cal-weekdays">
-          <div class="cal-wd sunday">CN</div>
-          <div class="cal-wd">T2</div><div class="cal-wd">T3</div>
-          <div class="cal-wd">T4</div><div class="cal-wd">T5</div>
-          <div class="cal-wd">T6</div><div class="cal-wd">T7</div>
-        </div>
-        <div class="cal-days" id="calDays"></div>
-        <div class="cal-footer">
-          <div class="cal-footer-info" id="calFooterInfo">CHỌN NGÀY ĐỂ XEM</div>
-          <button class="btn-today" onclick="goToday()">HÔM NAY</button>
-        </div>
+
+    <div id="homeView">
+      <div id="homeToday"></div>
+      <div class="home-head">
+        <button class="cal-nav-btn" onclick="calPrev()">◀</button>
+        <div class="cal-title" id="calMonthTitle"></div>
+        <button class="cal-nav-btn" onclick="calNext()">▶</button>
       </div>
+      <div class="cal-weekdays">
+        <div class="cal-wd sunday">CN</div>
+        <div class="cal-wd">T2</div><div class="cal-wd">T3</div>
+        <div class="cal-wd">T4</div><div class="cal-wd">T5</div>
+        <div class="cal-wd">T6</div><div class="cal-wd">T7</div>
+      </div>
+      <div class="cal-days home-days" id="calDays"></div>
+      <div class="home-hint">CHẠM VÀO NGÀY → CHẠY LUÔN<br />GIỮ NGÓN TAY → XEM DANH SÁCH BÀI</div>
+      <div class="home-actions"><button class="btn-today" onclick="goToday()">VỀ THÁNG NÀY</button></div>
     </div>
+
+    <div id="dayView" style="display: none">
     <div class="viewing-banner" id="viewingBanner">
       <div class="viewing-info">XEM TRƯỚC: <span id="viewingDate"></span></div>
       <button class="btn-back-today" onclick="goToday()">← HÔM NAY</button>
     </div>
+
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-    <div class="session-title-bar" id="sessionTitleBar">🥊 BOXING + 💪 STRENGTH</div>
-    <div class="est-time-bar" id="estTimebar"></div>
+    <div class="session-title-bar" id="sessionTitleBar"></div>
+    <div class="info-bar" id="infoBar"></div>
+
     <div class="content">
-      <div class="session active" id="session-main">
-        <div class="schedule" id="schedule-main"></div>
-        <div class="done-screen" id="done-main">
-          <div class="done-icon">🔥</div>
-          <div class="done-title">XONG NGÀY!</div>
-          <div class="done-sub">cả boxing lẫn tạ trong 1 buổi — ngon ✅</div>
-        </div>
+      <div class="schedule" id="schedule-main"></div>
+      <div class="done-screen" id="done-main">
+        <div class="done-icon">🔥</div>
+        <div class="done-title">XONG BUỔI TẬP!</div>
+        <div class="done-sub" id="doneSub">Uống nước, ăn đủ đạm, ngủ sớm — cơ thể phát triển lúc nghỉ ✅</div>
+        <button class="btn btn-prim" onclick="showHome()">← VỀ LỊCH</button>
       </div>
     </div>
+
     <div class="sticky-start" id="stickyStart">
       <div class="est-time" id="estTime"></div>
       <button class="btn-start" onclick="startSession()">BẮT ĐẦU</button>
     </div>
+
+    </div>
+
     <div class="countdown-overlay" id="countdownOverlay">
       <div class="countdown-lbl">CHUẨN BỊ</div>
       <div class="countdown-num" id="countdownNum">5</div>
       <div class="countdown-lbl" id="countdownNext">—</div>
+      <button class="btn btn-sec" onclick="cancelCountdown()">✕ HUỶ</button>
     </div>
+
     <div class="timer-overlay" id="timerOverlay">
       <button class="btn btn-close" onclick="closeTimer()">✕ ĐÓNG</button>
-      <div class="t-phase" id="tPhase">WARMUP</div>
+      <div class="t-phase" id="tPhase"></div>
       <div class="t-name" id="tName">...</div>
       <div class="t-detail" id="tDetail"></div>
+
       <div id="timerMode">
         <div class="ring-container" id="ringContainer">
           <svg class="ring-svg" viewBox="0 0 100 100">
@@ -223,590 +239,742 @@
           </div>
         </div>
       </div>
+
       <div class="rep-display" id="repMode">
         <div class="rep-num" id="repNum">12</div>
-        <div class="rep-lbl">rep cần làm</div>
+        <div class="rep-lbl">rep — làm chậm, kiểm soát</div>
         <button class="btn-done" onclick="repDone()">✓ HOÀN THÀNH</button>
       </div>
+
       <div class="next-box">
         <div class="next-lbl">TIẾP THEO</div>
         <div class="next-name" id="nextName">—</div>
         <div class="next-detail" id="nextDetail"></div>
       </div>
+
       <div class="t-controls" id="tControls">
+        <button class="btn btn-sec" id="btnMute" onclick="toggleMute()">🔊</button>
         <button class="btn btn-sec" onclick="skipRound()">SKIP ⏭</button>
         <button class="btn btn-prim" id="btnPR" onclick="togglePause()">PAUSE</button>
       </div>
     </div>
 
     <script>
+      /* ════════════════════════════════════════════════════════════
+         GIÁO ÁN KHỞI ĐỘNG LẠI — 12 TUẦN
+         Mục tiêu: giảm mỡ từ từ + tăng cơ + học kỹ thuật boxing/tự vệ
+         Lịch tuần:
+           T2  Sức mạnh A (đẩy + chân)
+           T3  Boxing kỹ thuật + cardio
+           T4  Cardio nhẹ tại nhà + giãn cơ
+           T5  Sức mạnh B (kéo + mông/chân)
+           T6  Cardio nhẹ tại nhà + giãn cơ
+           T7  Boxing tự vệ + ôn kỹ thuật
+           CN  Nghỉ hoàn toàn
+         Tuần thứ 4 của mỗi giai đoạn là TUẦN NHẸ (deload) để cơ thể hồi phục.
+         Muốn đổi ngày bắt đầu: sửa START_DATE (nên là thứ Hai).
+         ════════════════════════════════════════════════════════════ */
+      const START_DATE = "2026-10-19";
+
       const PH_COLOR = {
-        warmup:"#666", shadow:"#6366f1", trigger:"#3b82f6", "trigger-fast":"#ef4444",
-        defend:"#f97316", freestyle:"#a855f7", speed:"#06b6d4", footwork:"#0ea5e9",
-        core:"#84cc16", strength:"#22c55e", build:"#3b82f6", peak:"#ef4444",
-        survive:"#f59e0b", aerobic:"#22d3ee", transition:"#14b8a6",
+        warmup: "#777", drill: "#38bdf8", shadow: "#6366f1", defend: "#f97316",
+        selfdef: "#f43f5e", build: "#eab308", strength: "#22c55e", core: "#84cc16",
+        aerobic: "#14b8a6", easy: "#60a5fa", transition: "#a855f7",
       };
       const PH_LABEL = {
-        warmup:"WARMUP", shadow:"SHADOW", trigger:"TRIGGER", "trigger-fast":"TRIGGER ⭐",
-        defend:"DEFEND", freestyle:"FREESTYLE", speed:"SPEED", footwork:"FOOTWORK",
-        core:"CORE", strength:"STRENGTH", build:"BUILD", peak:"PEAK ⭐",
-        survive:"SURVIVE", aerobic:"AEROBIC", transition:"CHUYỂN GIAO",
+        warmup: "KHỞI ĐỘNG", drill: "KỸ THUẬT", shadow: "SHADOW", defend: "PHÒNG THỦ",
+        selfdef: "TỰ VỆ", build: "CARDIO ĐỐT MỠ", strength: "SỨC MẠNH", core: "CORE",
+        aerobic: "GIÃN CƠ / HỒI PHỤC", easy: "CARDIO NHẸ", transition: "CHUYỂN GIAO",
       };
+      (function () {
+        let css = "";
+        for (const k in PH_COLOR) css += `.phase-label.${k}{color:${PH_COLOR[k]}}.round-item.${k}::before{background:${PH_COLOR[k]}}`;
+        const s = document.createElement("style"); s.textContent = css; document.head.appendChild(s);
+      })();
 
       const DAYS_VI = ["Chủ nhật","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"];
       const DAYS_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
       const MONTHS_VI = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
-
       const SESSION_TITLES = {
-        Monday:    "🥊 BOXING + 💪 STRENGTH A",
-        Tuesday:   "🥊 BOXING + 🔥 CORE",
-        Wednesday: "🥊 BOXING + 💪 STRENGTH B",
-        Thursday:  "🥊 BOXING + 🔥 CORE",
-        Friday:    "🥊 BOXING + 💪 STRENGTH C",
-        Saturday:  "🥊 NHẸ + 🧘 RECOVERY",
-        Sunday:    "😴 NGHỈ",
+        Monday: "💪 SỨC MẠNH A — ĐẨY + CHÂN",
+        Tuesday: "🥊 BOXING — KỸ THUẬT + CARDIO",
+        Wednesday: "🧘 CARDIO NHẸ TẠI NHÀ + GIÃN CƠ",
+        Thursday: "💪 SỨC MẠNH B — KÉO + MÔNG/CHÂN",
+        Friday: "🧘 CARDIO NHẸ TẠI NHÀ + GIÃN CƠ",
+        Saturday: "🥊 BOXING — TỰ VỆ + ÔN KỸ THUẬT",
+        Sunday: "😴 NGHỈ HOÀN TOÀN",
       };
+      const DAY_TIPS = {
+        Monday: "Dừng set khi còn dư ~2 rep. Hạ chậm — tạ nhẹ thì kiểm soát nhịp để cơ vẫn phải làm việc.",
+        Tuesday: "Tuần này chỉ cần làm sạch form, chưa cần nhanh hay mạnh. Guard luôn về cằm sau mỗi đòn.",
+        Wednesday: "Cardio nhẹ ~60% sức: vừa tập vừa nói chuyện được. Mệt thì bỏ bớt hiệp, hoặc chỉ giãn cơ cũng được.",
+        Thursday: "Kéo là bài giúp lưng, vai sau, dáng đẹp và chống gù. Bóp bả vai ở đỉnh, hạ chậm.",
+        Friday: "Cardio nhẹ rồi giãn cơ. Ngủ đủ 7-8 tiếng — cơ lớn lên lúc nghỉ.",
+        Saturday: "Mục tiêu tự vệ: né, thoát thân trước; đánh chỉ để tạo cơ hội thoát. Luyện chậm, đúng form.",
+        Sunday: "",
+      };
+      const TRAIN_DOW = [1, 2, 4, 6]; // các ngày tính vào "buổi chính" mỗi tuần
 
+      /* ── Ngày & tuần ── */
       const realNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
       const TODAY_Y = realNow.getFullYear(), TODAY_M = realNow.getMonth(), TODAY_D = realNow.getDate();
       let viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
       let calYear = TODAY_Y, calMonth = TODAY_M;
 
-      function isToday(d) { return d.getFullYear()===TODAY_Y && d.getMonth()===TODAY_M && d.getDate()===TODAY_D; }
-      function isViewDate(d) { return d.getFullYear()===viewDate.getFullYear() && d.getMonth()===viewDate.getMonth() && d.getDate()===viewDate.getDate(); }
+      function isToday(d) { return d.getFullYear() === TODAY_Y && d.getMonth() === TODAY_M && d.getDate() === TODAY_D; }
+      function isViewDate(d) { return d.getFullYear() === viewDate.getFullYear() && d.getMonth() === viewDate.getMonth() && d.getDate() === viewDate.getDate(); }
       function isPreviewMode() { return !isToday(viewDate); }
+      function dkey(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+      const $ = (id) => document.getElementById(id);
 
-      function weekNumFrom(startDateStr, refDate) {
-        const s = new Date(startDateStr); s.setHours(0,0,0,0);
-        const t = new Date(refDate); t.setHours(0,0,0,0);
-        const diff = t - s;
-        if (diff < 0) return 0;
-        return Math.max(1, Math.floor(diff / (7*24*60*60*1000)) + 1);
-      }
-      function getWkStrength() { return weekNumFrom("2026-04-13", viewDate); }
-      function getWkCardio()   { return weekNumFrom("2026-05-04", viewDate); }
-
-      // ── STRENGTH PHASE — main 3 set, phụ/core 2 set, rest 90s ──
-      function getStrengthPhase() {
-        const w = getWkStrength();
-        if (w<=2)  return { mainSets:3, auxSets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                restSec:90, explosive:false };
-        if (w<=4)  return { mainSets:3, auxSets:2, pushRep:"8-10",  rowRep:"10-12", chinup:true, chinupRep:"3",   restSec:90, explosive:false };
-        if (w<=6)  return { mainSets:3, auxSets:2, pushRep:"8-12",  rowRep:"10-12", chinup:true, chinupRep:"4-5", restSec:90, explosive:true  };
-        if (w===7) return { mainSets:2, auxSets:2, pushRep:"6-8",   rowRep:"8-10",  chinup:false,                restSec:90, explosive:false };
-        if (w<=10) return { mainSets:3, auxSets:2, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6", restSec:90, explosive:true  };
-        return             { mainSets:3, auxSets:2, pushRep:"10-12", rowRep:"12",    chinup:true, chinupRep:"5-6", restSec:90, explosive:true  };
-      }
-
-      function getCardioPhase() {
-        const w = getWkCardio();
-        if (w<=0)  return null;
-        if (w<=2)  return { t3Rounds:4, t3Min:2, t3Rest:90, hiitOn:30, hiitOff:30 };
-        if (w<=4)  return { t3Rounds:4, t3Min:3, t3Rest:75, hiitOn:40, hiitOff:20 };
-        if (w<=6)  return { t3Rounds:4, t3Min:3, t3Rest:60, hiitOn:45, hiitOff:15 };
-        if (w===7) return { t3Rounds:3, t3Min:2, t3Rest:90, hiitOn:30, hiitOff:30, deload:true };
-        return             { t3Rounds:5, t3Min:3, t3Rest:60, hiitOn:40, hiitOff:20 };
-      }
-
-      // ── BOXING ──────────────────────────────────────────────────
-      const WARMUP = () => [
-        { phase:"warmup", name:"Xoay khớp", detail:"Vai, hông, gối, cổ tay — thả lỏng hoàn toàn", onSec:90, offSec:5 },
-        { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, giữ nhịp thở — 20-30% lực", onSec:90, offSec:5 },
-      ];
-      const SHADOW = () => [
-        { phase:"shadow", name:"Shadow Freestyle", detail:"Tự do — mix T0/T1/T3, không nghĩ trước, tay tự chạy — 60-70% lực", onSec:180, offSec:10 },
-      ];
-      const DEFEND = () => [
-        { phase:"defend", name:"Defend H1", detail:"Slip/Duck/Pull back/Block/Deflect — cue nào tới defend đó, CHÍNH XÁC — 50% lực", onSec:120, offSec:30 },
-        { phase:"defend", name:"Defend H2 — Counter", detail:"Defend xong → phản công ngay, không dừng — 60% lực", onSec:120, offSec:30 },
-      ];
-      const FREESTYLE = () => [
-        { phase:"freestyle", name:"Freestyle H1 ⭐", detail:"Mix T0/T1/T3 + defend tự do — mắt đọc cue, tay tự chạy — 85% lực", onSec:180, offSec:30 },
-        { phase:"freestyle", name:"Freestyle H2 FINISH ⭐", detail:"Full intensity — không nghĩ, chỉ phản xạ. Giữ đến chuông — 90% lực", onSec:180, offSec:0 },
-      ];
-      const WARMUP_LIGHT = () => [
-        { phase:"warmup", name:"Xoay khớp nhẹ", detail:"Cổ, vai, hông — thả lỏng, không vội", onSec:60, offSec:5 },
-        { phase:"warmup", name:"Nhảy dây nhẹ", detail:"Nhảy đều, 20-30% lực — active recovery", onSec:90, offSec:5 },
-      ];
-      const SHADOW_LIGHT = () => [
-        { phase:"shadow", name:"Footwork + Shadow nhẹ", detail:"Di chuyển chân là chính — tay ra nhẹ 40-50% lực, không push", onSec:180, offSec:10 },
-        { phase:"shadow", name:"Shadow nhẹ tự do", detail:"Thả lỏng hoàn toàn — tốc độ 50%, cảm nhận cơ thể", onSec:180, offSec:0 },
-      ];
-      function buildBoxingNormal() { return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE()]; }
-      function buildBoxingSaturday() { return [...WARMUP_LIGHT(), ...SHADOW_LIGHT()]; }
-      // Thứ 5 gộp với HIIT → cắt freestyle finish 90% để dành sức cho HIIT
-      function buildBoxingThursday() { return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE().slice(0,1)]; }
-
-      // ── CARDIO ──────────────────────────────────────────────────
-      function buildAerobic() {
-        const cp = getCardioPhase();
-        if (!cp) return [{ phase:"aerobic", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
-        const items = [
-          { phase:"warmup", name:"Nhảy dây nhẹ",  detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực", onSec:60, offSec:0 },
-          { phase:"warmup", name:"Xoay khớp",      detail:"Cổ tay, vai, hông, cổ chân — thả lỏng",  onSec:60, offSec:0 },
-          { phase:"warmup", name:"Footwork nhẹ",   detail:"Tiến-lùi nhẹ — 20-30% lực",              onSec:60, offSec:0 },
-        ];
-        const rounds = [
-          { name:"R1 — Nhảy dây nhịp điệu",  detail:"Nhảy đều không tăng tốc. Thở mũi suốt, vai thả — 60-70% lực" },
-          { name:"R2 — Footwork liên tục",    detail:"Tiến-lùi-chéo không ngừng. Không đánh đòn. Thở đều — 60-70% lực" },
-          { name:"R3 — Shadow combo nhẹ",     detail:"Jab→Cross / Jab→Cross→Hook / Jab fake→Cross thân — 50-60% lực" },
-          { name:"R4 — Nhảy dây giữ nhịp",   detail:"Giữ nhịp như R1, không tăng tốc — 60-70% lực" },
-          { name:"R5 — Shadow tự do nhẹ",     detail:"Tự chọn combo quen, ra đòn chậm rõ form — 50-60% lực" },
-          { name:"R6 — Cool down shadow",     detail:"Giảm cường độ, bước chậm lại, thở sâu dần — 40-50% lực" },
-        ];
-        for (let i = 0; i < cp.t3Rounds && i < rounds.length; i++) {
-          items.push({ phase:"aerobic", name:rounds[i].name, detail:rounds[i].detail, onSec:cp.t3Min*60, offSec:i < cp.t3Rounds-1 ? cp.t3Rest : 0 });
+      /* ── Lịch sử (localStorage) ── */
+      const LOG_KEY = "training_log_v2";
+      function loadLog() { try { return JSON.parse(localStorage.getItem(LOG_KEY) || "{}"); } catch (e) { return {}; } }
+      function saveLog(l) { try { localStorage.setItem(LOG_KEY, JSON.stringify(l)); } catch (e) {} }
+      function weekDoneCount() {
+        const log = loadLog();
+        const off = (viewDate.getDay() + 6) % 7;
+        let n = 0;
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(viewDate.getFullYear(), viewDate.getMonth(), viewDate.getDate() - off + i);
+          if (TRAIN_DOW.includes(d.getDay()) && log[dkey(d)]) n++;
         }
-        // CORE BỤNG — thêm vào cuối
-        items.push(...[
-          { phase:"core", name:"Sit-up SET 1", detail:"Gập bụng chậm, thở ra khi lên — cảm nhận bụng co lại, không kéo cổ", reps:15, restSec:30 },
-          { phase:"core", name:"Sit-up SET 2", detail:"15 rep", reps:15, restSec:30 },
-          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân", onSec:30, offSec:20 },
-          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:0 },
-        ]);
-        return items;
+        return n;
       }
 
-      function buildHIIT() {
-        const cp = getCardioPhase();
-        if (!cp) return [{ phase:"build", name:"Chưa bắt đầu", detail:"Cardio bắt đầu từ 04/05", onSec:5, offSec:0 }];
-        const on = cp.hiitOn, off = cp.hiitOff;
-        return [
-          { phase:"warmup",  name:"Nhảy dây nhẹ",        detail:"1p nhảy đều, giữ nhịp thở — 20-30% lực",                                                          onSec:60, offSec:0   },
-          { phase:"warmup",  name:"Xoay khớp",            detail:"Vai, hông, cổ chân — thả lỏng",                                                                   onSec:60, offSec:0   },
-          { phase:"warmup",  name:"Shadow + footwork",    detail:"Di chuyển nhẹ — 20-30% lực",                                                                      onSec:60, offSec:0   },
-          { phase:"build",   name:"R1 — Footwork + Jab-Cross",    detail:`Bước tiến-lùi + Jab-Cross nhẹ [${on}s/${off}s] — 60-70% lực`,                            onSec:on, offSec:off },
-          { phase:"build",   name:"R2 — Nhảy dây nhịp đều",       detail:`Không tăng tốc — bước đà cho PEAK [${on}s/${off}s] — 60-70% lực`,                        onSec:on, offSec:off },
-          { phase:"peak",    name:"R3 — BURPEE MAX SPEED ⭐",      detail:`Xuống→đẩy lên→nhảy lên. Đếm số burpee! [${on}s/${off}s] — 100% ALL OUT`,                onSec:on, offSec:off },
-          { phase:"peak",    name:"R4 — T0+T3 TỐC ĐỘ TỐI ĐA ⭐", detail:`T0: tay thả→MAX. T3: Slip→Counter. Ra nhiều đòn nhất! [${on}s/${off}s] — 100% ALL OUT`, onSec:on, offSec:off },
-          { phase:"survive", name:"R5 — Footwork/Nhảy dây",       detail:`Chọn 1 TRƯỚC, giữ nguyên [${on}s/${off}s] — 60% lực (thân đang mệt)`,                   onSec:on, offSec:off },
-          { phase:"survive", name:"R6 — T1 + Combo nhẹ khi mệt", detail:`T1: Feint→Cross thân. Jab→Cross→guard→lui [${on}s] — 60% lực, giữ form đến chuông`,      onSec:on, offSec:0   },
-          // CORE BỤNG — thêm vào cuối
-          { phase:"core", name:"Sit-up SET 1", detail:"Gập bụng chậm, thở ra khi lên — cảm nhận bụng co lại, không kéo cổ", reps:15, restSec:30 },
-          { phase:"core", name:"Sit-up SET 2", detail:"15 rep", reps:15, restSec:30 },
-          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân", onSec:30, offSec:20 },
-          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:0 },
-        ];
+      /* ── Tiến trình theo tuần ── */
+      function getPlan() {
+        const s = new Date(START_DATE + "T00:00:00");
+        const t = new Date(viewDate.getFullYear(), viewDate.getMonth(), viewDate.getDate());
+        const diff = Math.round((t - s) / 864e5);
+        const pre = diff < 0;
+        const w = pre ? 1 : Math.floor(diff / 7) + 1;
+        const phase = w <= 4 ? 1 : w <= 8 ? 2 : 3;
+        const wip = ((w - 1) % 4) + 1;
+        const deload = wip === 4;
+        const i = phase - 1;
+        const mainTbl = { 1: [2, 2, 3, 2], 2: [3, 3, 3, 2], 3: [3, 3, 4, 2] };
+        return {
+          w, pre, phase, wip, deload,
+          phaseName: ["KHỞI ĐỘNG LẠI", "XÂY NỀN", "TĂNG CƯỜNG"][i],
+          mainSets: mainTbl[phase][wip - 1],
+          auxSets: deload ? 1 : 2,
+          rest: phase === 3 ? 75 : 60,
+          tempo: ["hạ 2s", "hạ 3s", "hạ 4s, lên nhanh"][i],
+          hold: [20, 30, 40][i],
+          plank: [30, 40, 45][i],
+          rope: Math.max(1, [2, 3, 3][i] - (deload ? 1 : 0)),
+          cRounds: Math.max(3, [5, 6, 8][i] - (deload ? 2 : 0)),
+          cOn: [30, 40, 40][i],
+          cOff: [30, 20, 20][i],
+          drillOn: deload ? 120 : [120, 150, 180][i],
+          shadowRounds: deload ? 1 : [2, 2, 3][i],
+        };
       }
 
-      // ── HELPERS ─────────────────────────────────────────────────
-      function repSets(ph, name, detail, reps, sets, restSec, betweenSec) {
-        const between = betweenSec !== undefined ? betweenSec : restSec;
-        const items = [];
-        for (let s = 1; s <= sets; s++)
-          items.push({ phase:ph, name:`${name} SET ${s}`, detail:s===1?detail:`${reps} rep`, reps, restSec: s < sets ? restSec : between });
-        return items;
+      /* ── Chủ đề kỹ thuật boxing (vòng lặp 8 tuần) ── */
+      const THEMES = [
+        { title: "Tư thế & Jab",
+          drills: [
+            ["Tư thế đứng (stance)", "Chân trước lệch ~45°, chân sau nhấc gót nhẹ, gối hơi chùng, cằm cúi, hai tay guard cao ngang cằm, khuỷu khép. Bước tiến-lùi-trái-phải mà không bắt chéo chân. 50% lực."],
+            ["Jab thẳng chậm", "Tay trước đấm thẳng, úp nắm đấm khi chạm đích, thu về đúng đường cũ. Tay sau luôn che cằm. Tập trước gương nếu có."],
+            ["Jab + bước chân", "Bước chân trước đi trước rồi jab, lùi sau khi đánh. Jab → lùi, jab → xoay trái/phải. Đừng đứng yên sau khi ra đòn."],
+          ],
+          shadow: "Jab kết hợp footwork, thêm jab đôi (1-1). Giữ guard, thở ra mỗi đòn. 50-60% lực." },
+        { title: "Jab - Cross (1-2)",
+          drills: [
+            ["Cross đơn", "Đạp gót chân sau, xoay hông + vai, nắm đấm thẳng ra. Tay trước giữ guard. Thu tay về nhanh đúng đường."],
+            ["Combo 1-2 chậm", "Jab → Cross liền mạch, cross xoay trọn hông, hồi guard sau mỗi lần. Đếm nhịp 'một-hai'."],
+            ["1-2 rồi lùi/xoay", "Sau 1-2 lùi một bước hoặc xoay ra ngoài; đừng đứng yên trong tầm đánh."],
+          ],
+          shadow: "1-2, 1-1-2, jab giả rồi cross. Tăng dần tốc độ lên 60-70% lực." },
+        { title: "Hook trái & 1-2-3",
+          drills: [
+            ["Hook trái đơn", "Tay trước gập ~90°, xoay hông và gót chân trước, khuỷu ngang vai, quay về guard. Quay bằng hông, không vung bằng vai hay tay."],
+            ["1-2-3 (Jab-Cross-Hook)", "Hook xuất phát từ lực xoay của cross; tay sau che cằm. Tập chậm cho mượt."],
+            ["Hook thân & đầu", "Hạ gối (không cúi lưng) hook vào thân rồi hook đầu. Giữ trọng tâm thấp."],
+          ],
+          shadow: "1-2-3, 1-2-3-2, hook thân rồi hook đầu. 60-70% lực." },
+        { title: "Phòng thủ cơ bản",
+          drills: [
+            ["Block & Parry", "Parry: gạt nhẹ jab bằng tay sau. Block: nâng hai tay che đầu, khuỷu che sườn. Tưởng tượng đối thủ đánh jab/cross."],
+            ["Slip (né đầu)", "Xoay vai-hông nhẹ để đầu lệch khỏi trục đòn thẳng, mắt luôn nhìn đối thủ, không cúi lưng."],
+            ["Lùi bước & giữ cự ly", "Lùi ra khỏi tầm, giữ guard; chặn bằng jab khi đối thủ tiến."],
+          ],
+          shadow: "Tưởng tượng đối thủ: né/block rồi chặn bằng jab. Chậm, chuẩn." },
+        { title: "Uppercut & combo dài",
+          drills: [
+            ["Uppercut tay sau", "Hạ nhẹ gối, đẩy hông lên, tay đi lên gần người theo đường thẳng. Không vung rộng."],
+            ["Uppercut tay trước", "Ngắn hơn, dùng ở cự ly gần. Giữ tay còn lại che cằm."],
+            ["Combo 1-2-3-2", "Jab-Cross-Hook-Cross; xoay hông liên tục, hồi guard cuối combo."],
+          ],
+          shadow: "1-2-3-2, 1-2-5 (uppercut sau), combo yêu thích rồi lùi bước." },
+        { title: "Phản công",
+          drills: [
+            ["Slip → Cross", "Né jab (slip ngoài) rồi cross ngay, hông xoay ngược lại."],
+            ["Parry → Jab/Cross", "Gạt đòn rồi đánh thẳng trả lại. Gạt nhẹ chứ không đỡ cứng."],
+            ["Block → Hook", "Đỡ bằng guard cao rồi hook trả lại, kết hợp bước xoay."],
+          ],
+          shadow: "Mô phỏng đối thủ đánh trước: né/gạt/block rồi phản công 1-2 đòn, sau đó di chuyển." },
+        { title: "Đòn thân & xoay góc",
+          drills: [
+            ["Jab/Cross thân", "Hạ trọng tâm bằng gối (không cúi lưng) rồi đấm vào thân; thu guard nhanh."],
+            ["Pivot (xoay góc)", "Chân trước làm trụ, chân sau xoay ~90° ra góc, tìm góc đánh mới."],
+            ["Combo thân-đầu", "Jab thân → Cross đầu → Hook thân. Thay đổi tầng đánh."],
+          ],
+          shadow: "Đổi tầng thân-đầu, pivot ra góc sau mỗi combo." },
+        { title: "Tổng hợp & phản xạ",
+          drills: [
+            ["Combo tự chọn", "Chọn 3 combo yêu thích, đánh lần lượt, chú ý guard và hồi tay."],
+            ["Phản xạ theo số", "Tự gán số: 1=jab, 2=cross, 3=hook, 4=né trái, 5=block, 6=lùi. Gọi ngẫu nhiên khi đang di chuyển."],
+            ["Freestyle chậm", "Không kế hoạch, giữ form sạch, nhịp thở đều."],
+          ],
+          shadow: "Freestyle 70% lực, xen kẽ phòng thủ và ra đòn." },
+      ];
+
+      /* ── Bài tự vệ (xoay vòng) ── */
+      const SD = [
+        ["Tư thế rào chắn (fence)", "Hai tay mở trước ngực, lòng bàn tay hướng ra, đứng chéo chân, hô 'Dừng lại!'. Giữ khoảng cách, lùi từng bước, sẵn sàng đánh hoặc chạy."],
+        ["Bàn tay + gối", "Đẩy gốc bàn tay (palm strike) thẳng ra cằm/mũi rồi kéo xuống và gối lên vào thân. Tập chậm cả hai bên, giữ thăng bằng."],
+        ["Teep (đạp thẳng)", "Co gối rồi đạp thẳng bằng lòng bàn chân vào thân để đẩy đối thủ ra. Thu chân về đứng vững, không ngả người ra sau."],
+        ["Cùi chỏ ngắn", "Cùi chỏ ngang và chéo xuống ở cự ly gần, xoay hông. Luôn có một tay che đầu."],
+        ["Né → đánh → chạy", "Né/gạt đòn thẳng, ra MỘT đòn mạnh nhất (cross hoặc palm), rồi xoay người chạy thoát. Mục tiêu là thoát thân, không phải thắng."],
+        ["Đứng dậy an toàn (get-up)", "Từ nằm ngửa: chống một tay, nâng hông, quay chân ra sau, đứng lên với tay còn lại che đầu, mắt luôn nhìn về phía đối thủ tưởng tượng. Làm chậm."],
+      ];
+
+      /* ── Helpers tạo bài ── */
+      const SAME = "Giữ đúng form và nhịp như set trước";
+      function mx(label) { return Math.max(...String(label).match(/\d+/g).map(Number)); }
+      function R(ph, name, detail, label, rest) { return { phase: ph, name, detail, reps: mx(label), repTxt: label, restSec: rest }; }
+      function repSets(ph, name, detail, label, sets, rest) {
+        const a = [];
+        for (let s = 1; s <= sets; s++) a.push(R(ph, `${name} SET ${s}`, s === 1 ? detail : SAME, label, rest));
+        return a;
       }
-      function repPairs(ph, nameL, nameR, detailL, detailR, reps, sets, restSec, betweenSec) {
-        const between = betweenSec !== undefined ? betweenSec : restSec;
-        const items = [];
+      function repPairs(ph, nL, nR, detail, label, sets, rest) {
+        const a = [];
         for (let s = 1; s <= sets; s++) {
-          items.push({ phase:ph, name:`${nameL} SET ${s}`, detail:s===1?detailL:`${reps} rep`, reps, restSec:0 });
-          items.push({ phase:ph, name:`${nameR} SET ${s}`, detail:s===1?detailR:`${reps} rep`, reps, restSec: s < sets ? restSec : between });
+          a.push(R(ph, `${nL} SET ${s}`, s === 1 ? detail : SAME, label, 0));
+          a.push(R(ph, `${nR} SET ${s}`, SAME, label, rest));
         }
-        return items;
+        return a;
       }
-      function timerSets(ph, name, detail, onSec, offSec, sets) {
-        const items = [];
-        for (let s = 1; s <= sets; s++)
-          items.push({ phase:ph, name:`${name} SET ${s}`, detail:s===1?detail:"", onSec, offSec: s < sets ? offSec : 0 });
-        return items;
+      function timerSets(ph, name, detail, on, off, sets) {
+        const a = [];
+        for (let s = 1; s <= sets; s++) a.push({ phase: ph, name: `${name} SET ${s}`, detail: s === 1 ? detail : SAME, onSec: on, offSec: s < sets ? off : 10 });
+        return a;
       }
+      const pick = (p, arr) => arr[p.phase - 1];
 
-      // ── STRENGTH A — Push / Pull / Core ─────────────────────────
-      function buildStrengthA() {
-        const sp = getStrengthPhase();
-        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
-        const items = [
-          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength", "Push-up", `${sp.pushRep} rep | Giữ thân thẳng, không đổ hông`, parseInt(sp.pushRep), ms, rs),
-          ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo khuỷu lên cao, không xoay vai`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
+      /* ── Khởi động ── */
+      function warmupBoxing() {
+        const p = getPlan();
+        const a = [{ phase: "warmup", name: "Xoay khớp toàn thân", detail: "Cổ, vai, khuỷu, cổ tay, hông, gối, cổ chân — chậm, rộng, thả lỏng", onSec: 120, offSec: 10 }];
+        for (let i = 1; i <= p.rope; i++)
+          a.push({ phase: "warmup", name: `Nhảy dây nhẹ R${i}`, detail: "Nhảy đều, thở đều — 30-40% lực. Mệt thì dừng nghỉ rồi nối lại, không cố", onSec: 90, offSec: 30 });
+        return a;
+      }
+      function warmupStrength() {
+        return [
+          { phase: "warmup", name: "Xoay khớp vai - hông", detail: "Vòng tay lớn, xoay hông, gập-duỗi gối nhẹ", onSec: 60, offSec: 5 },
+          { phase: "warmup", name: "Nhảy dây nhẹ", detail: "Nhảy đều 30-40% lực để máu lưu thông", onSec: 120, offSec: 10 },
+          { phase: "warmup", name: "Squat không tạ + Push-up chậm", detail: "Làm nhẹ 5-8 rep mỗi bài để cơ quen chuyển động", onSec: 60, offSec: 10 },
         ];
-        if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail`, parseInt(sp.chinupRep)||3, ms, rs));
-        items.push(...repSets("strength", "Prone Y-T-W", "8 rep mỗi chữ (Y→T→W) | Nằm sấp, tay không hoặc tạ 2-3kg, nâng tay bóp vai sau + thang dưới — chống vai cuộn/gù", 8, as, 45));
-        items.push(...repSets("strength", "Shoulder Tap Plank", "10 rep mỗi bên | Hông không lắc, kiểm soát", 20, as, 45));
-        items.push(...repPairs("strength", "Step-up CHÂN TRÁI", "Step-up CHÂN PHẢI", "8-10 rep | Làm chậm, không nhảy", "8-10 rep", 10, as, 45));
-        items.push(...repSets("core", "Leg Raise", "10-12 rep | Hạ chân chậm, không thả rơi", 12, as, 45));
+      }
+
+      /* ── Cardio đốt mỡ ── */
+      function buildCardio(reduce) {
+        const p = getPlan();
+        const n = Math.max(2, p.cRounds - (reduce || 0));
+        const C = [
+          ["Nhảy dây", "Nhảy đều, tăng tốc nhẹ — 70% lực"],
+          ["Footwork + Jab-Cross", "Di chuyển liên tục, ra 1-2 mỗi 2-3 bước — 70% lực"],
+          ["Shadow tốc độ", "Combo 1-2-3-2 liên tục, thở ra mỗi đòn — 75% lực"],
+          ["Burpee không nhảy", "Xuống - bước chân ra sau - đứng lên, nhẹ nhàng — 70% lực"],
+        ];
+        const a = [];
+        for (let i = 0; i < n; i++) {
+          const c = C[i % C.length];
+          a.push({ phase: "build", name: `Cardio ${i + 1}/${n} — ${c[0]}`, detail: `${c[1]} [${p.cOn}s ON / ${p.cOff}s nghỉ]`, onSec: p.cOn, offSec: i < n - 1 ? p.cOff : 0 });
+        }
+        return a;
+      }
+
+      function coreFinisher() {
+        const p = getPlan(), n = p.deload ? 1 : 2;
+        return [
+          ...timerSets("core", "Hollow Body Hold", "Lưng dán sàn, vai + chân nhấc nhẹ, siết bụng, thở đều", p.hold, 20, n),
+          ...repSets("core", "Leg Raise", "Lưng dán sàn, hạ chân chậm, không thả rơi", "10-15", n, 30),
+          ...repSets("core", "Bicycle Crunch", "Khuỷu chạm gối đối diện, xoay từ thân, không giật cổ", "16-20", n, 30),
+        ];
+      }
+
+      /* ── Boxing kỹ thuật (T3) ── */
+      function buildBoxingTech() {
+        const p = getPlan(), th = THEMES[(p.w - 1) % THEMES.length];
+        const items = [...warmupBoxing()];
+        th.drills.forEach((d, i) =>
+          items.push({ phase: "drill", name: `Drill ${i + 1} — ${d[0]}`, detail: d[1], onSec: p.drillOn, offSec: 30 })
+        );
+        for (let i = 1; i <= p.shadowRounds; i++)
+          items.push({ phase: "shadow", name: `Shadow R${i} — ${th.title}`, detail: th.shadow, onSec: p.drillOn, offSec: 30 });
+        items.push(...buildCardio(0));
+        items.push(...coreFinisher());
         return items;
       }
 
-      // ── STRENGTH B — Shoulder / Back / Bicep / Core ─────────────
+      /* ── Boxing tự vệ (T7) ── */
+      function buildBoxingSelfDefense() {
+        const p = getPlan(), th = THEMES[(p.w - 1) % THEMES.length];
+        const rounds = p.deload ? 1 : 2;
+        const items = [...warmupBoxing()];
+        for (let i = 1; i <= rounds; i++)
+          items.push({ phase: "shadow", name: `Ôn kỹ thuật R${i} — ${th.title}`, detail: th.shadow, onSec: p.drillOn, offSec: 30 });
+        [0, 1, 2].map((k) => SD[((p.w - 1) * 3 + k) % SD.length]).forEach((d) => {
+          for (let r = 1; r <= rounds; r++)
+            items.push({ phase: "selfdef", name: `${d[0]} — hiệp ${r}`, detail: r === 1 ? d[1] : "Tăng dần tốc độ, vẫn giữ form và guard", onSec: 120, offSec: 30 });
+        });
+        items.push(...buildCardio(2));
+        items.push(...coreFinisher());
+        return items;
+      }
+
+      /* ── Sức mạnh A: đẩy + chân (T2) ── */
+      function buildStrengthA() {
+        const p = getPlan(), ms = p.mainSets, as = p.auxSets, rs = p.rest, t = p.tempo;
+        return [
+          ...warmupStrength(),
+          ...repSets("strength", "Goblet Squat 10kg", `Ôm tạ trước ngực, xuống sâu tới khi đùi song song sàn, gót đạp đất, lưng thẳng | ${t}`, pick(p, ["10-12", "12-15", "10-12"]), ms, rs),
+          ...repSets("strength", "Push-up", `Thân thẳng như tấm ván, ngực gần chạm sàn | ${t} | Nặng quá → chống tay lên ghế/bàn`, pick(p, ["6-10", "8-12", "10-15"]), ms, rs),
+          ...repSets("strength", "Romanian Deadlift 10kg", `Hai tay cầm tạ sát đùi, đẩy mông ra sau, lưng thẳng, cảm nhận căng gân kheo | ${t}`, pick(p, ["10-12", "12-15", "10-12"]), ms, rs),
+          ...repSets("strength", "Pike Push-up (vai)", `Hông cao thành chữ V, hạ đỉnh đầu xuống sàn | ${t}`, pick(p, ["5-8", "6-10", "8-12"]), as, rs),
+          ...repSets("strength", "Tricep Extension 8kg", `Hai tay giữ tạ sau đầu, khuỷu hướng lên trần, duỗi thẳng tay | ${t}`, pick(p, ["10-12", "12-15", "10-12"]), as, 45),
+          ...timerSets("core", "Plank", "Siết bụng + mông, thân thẳng, thở đều", p.plank, 30, as),
+        ];
+      }
+
+      /* ── Sức mạnh B: kéo + mông/chân (T5) ── */
       function buildStrengthB() {
-        const sp = getStrengthPhase();
-        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
+        const p = getPlan(), ms = p.mainSets, as = p.auxSets, rs = p.rest, t = p.tempo;
         const items = [
-          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength", "Pike Push-up", `${sp.pushRep} rep | Train vai trước → guard không bị drop`, parseInt(sp.pushRep), ms, rs),
-          ...repPairs("strength", "Row 1 tay TRÁI tempo chậm", "Row 1 tay PHẢI tempo chậm", `${sp.rowRep} rep | Kéo chậm, tập lưng giữa`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
-          ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", "10-12 rep | Dừng trước khi vai nhún — bicep cho uppercut/hook", "10-12 rep", 12, ms, 60),
-          ...repSets("strength", "Rear Delt Fly 5kg", "12-15 rep | Vai sau → giữ guard cả buổi không mỏi", 15, as, 45),
-          ...repSets("strength", "Glute Bridge", "12-15 rep | Gót chân trụ, bóp mông ở đỉnh 2s — không dùng lưng đẩy", 15, as, 45),
+          ...warmupStrength(),
+          ...repPairs("strength", "Row TRÁI 10kg", "Row PHẢI 10kg", `Chống tay-gối lên ghế, kéo khuỷu về hông, bóp bả vai 1s, hạ chậm | ${t}`, pick(p, ["10-12", "12-15", "10-12"]), ms, rs),
+          ...repSets("strength", "Chin-up", `Không có xà → bấm SKIP. Kéo cằm qua xà, hạ chậm 3s, dừng trước khi hết sức | ${t}`, pick(p, ["2-4", "3-6", "4-8"]), ms, rs),
+          ...repPairs("strength", "Split Squat TRÁI", "Split Squat PHẢI", `Ôm tạ 10kg, chân sau chống mũi, xuống sâu, chân trước gánh chính | ${t}`, pick(p, ["8-10", "10-12", "10-12"]), ms, rs),
+          ...repSets("strength", "Glute Bridge 10kg", "Đặt tạ lên hông, đẩy hông lên, bóp mông 2s ở đỉnh", pick(p, ["12-15", "15-20", "12-15"]), as, 45),
+          ...repPairs("strength", "Curl TRÁI 8kg", "Curl PHẢI 8kg", `Khuỷu cố định sát thân, không đung đưa | ${t}`, pick(p, ["10-12", "12-15", "10-12"]), as, 45),
+          ...repSets("strength", "Rear Delt Fly 5kg", "Cúi người, mở tay sang hai bên, bóp vai sau — giữ vai không cuộn", pick(p, ["12-15", "15", "15"]), as, 45),
         ];
         for (let s = 1; s <= as; s++) {
-          items.push({ phase:"strength", name:`Side Plank TRÁI SET ${s}`, detail:s===1?"30s | Core bên → chống bị quật khi áp sát":"30s", onSec:30, offSec:10 });
-          items.push({ phase:"strength", name:`Side Plank PHẢI SET ${s}`, detail:"30s", onSec:30, offSec: s < as ? 30 : 0 });
+          items.push({ phase: "core", name: `Side Plank TRÁI SET ${s}`, detail: s === 1 ? "Thân thẳng, hông không võng — core bên giúp chống bị quật khi áp sát" : SAME, onSec: Math.round(p.plank * 0.7), offSec: 10 });
+          items.push({ phase: "core", name: `Side Plank PHẢI SET ${s}`, detail: SAME, onSec: Math.round(p.plank * 0.7), offSec: s < as ? 30 : 10 });
         }
-        items.push(...repPairs("strength", "Dead Bug TRÁI", "Dead Bug PHẢI", "8 rep | Lưng dán sàn, thở đều", "8 rep", 8, as, 30));
+        items.push(...repSets("core", "Dead Bug", "Lưng dán sàn, duỗi tay-chân đối diện chậm, thở đều", "8-10", as, 30));
         return items;
       }
 
-      // ── STRENGTH C — Tricep / Pull / Core ───────────────────────
-      function buildStrengthC() {
-        const sp = getStrengthPhase();
-        const ms = sp.mainSets, as = sp.auxSets, rs = sp.restSec;
-        const items = [
-          { phase:"warmup", name:"Nhảy dây SET 1", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 2", detail:"2p nhảy đều, nghỉ 30s", onSec:120, offSec:30 },
-          { phase:"warmup", name:"Nhảy dây SET 3", detail:"2p nhảy đều",            onSec:120, offSec:0  },
-          ...repSets("strength", "Diamond Push-up", `${sp.pushRep} rep | Tricep mạnh → jab/cross sắc hơn`, parseInt(sp.pushRep), ms, rs),
-          ...repPairs("strength", "Row 1 tay TRÁI 10kg", "Row 1 tay PHẢI 10kg", `${sp.rowRep} rep | Kéo mạnh → clinch + giữ khoảng cách`, `${sp.rowRep} rep`, parseInt(sp.rowRep), ms, rs),
-        ];
-        if (sp.chinup) items.push(...repSets("strength", "Chin-up", `${sp.chinupRep} rep | Dừng trước khi fail, giữ form sạch`, parseInt(sp.chinupRep)||3, ms, rs));
-        items.push(...repSets("strength", "Russian Twist 5kg", "16 rep | Core xoay → power từ hông lên tay", 16, as, 45));
-        // Bài chân nặng chính — single-leg ôm tạ, nặng thật kể cả với tạ nhẹ ở nhà
-        items.push(...repPairs("strength", "Split Squat TRÁI", "Split Squat PHẢI", "8-10 rep | Chân sau bước ra sau chống mũi, ôm tạ 2 tay, xuống sâu — chân trước gánh chính, gối không vượt quá mũi chân", "8-10 rep", 10, 3, 60));
-        items.push(...timerSets("core", "Plank", "40s | Giữ thân thẳng, thở đều", 40, 30, as));
-        return items;
-      }
-
+      /* ── Nghỉ chủ động: giãn cơ (T4, T6) ── */
       function buildRecovery() {
         return [
-          { phase:"aerobic", name:"Giãn ngực",      detail:"Mở tay ra sau, giữ 20-30s",           onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Giãn vai sau",   detail:"Kéo tay qua ngực, 20s mỗi bên",       onSec:40, offSec:10 },
-          { phase:"aerobic", name:"Giãn lưng trên", detail:"Ôm gối ngồi cúi người, 20s",          onSec:20, offSec:10 },
-          { phase:"aerobic", name:"Giãn đùi trước", detail:"Kéo gót về phía mông, 20s mỗi chân", onSec:40, offSec:10 },
-          { phase:"aerobic", name:"Giãn gân kheo",  detail:"Ngồi duỗi thẳng chân cúi người, 30s",onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Giãn lưng dưới", detail:"Nằm co gối ôm ngực, 30s",            onSec:30, offSec:10 },
-          { phase:"aerobic", name:"Hít thở sâu",    detail:"5 nhịp, thả lỏng hoàn toàn",         onSec:30, offSec:0  },
+          { phase: "aerobic", name: "Giãn cổ & vai", detail: "Nghiêng đầu sang từng bên, kéo nhẹ — 20s mỗi bên", onSec: 40, offSec: 5 },
+          { phase: "aerobic", name: "Giãn ngực", detail: "Hai tay ra sau lưng hoặc đặt tay lên khung cửa, mở ngực", onSec: 30, offSec: 5 },
+          { phase: "aerobic", name: "Giãn vai sau", detail: "Kéo tay qua ngực, 20s mỗi bên", onSec: 40, offSec: 5 },
+          { phase: "aerobic", name: "Giãn lưng — tư thế em bé", detail: "Quỳ, mông ngồi lên gót, trải tay ra trước, thở sâu", onSec: 40, offSec: 5 },
+          { phase: "aerobic", name: "Giãn hông (bồ câu)", detail: "Mỗi bên 30s, giữ lưng thẳng, thở chậm", onSec: 60, offSec: 5 },
+          { phase: "aerobic", name: "Giãn đùi trước", detail: "Kéo gót về phía mông, 20s mỗi chân", onSec: 40, offSec: 5 },
+          { phase: "aerobic", name: "Giãn gân kheo", detail: "Ngồi duỗi thẳng chân, cúi người, 30s", onSec: 30, offSec: 5 },
+          { phase: "aerobic", name: "Giãn lưng dưới", detail: "Nằm co gối ôm ngực, lắc nhẹ", onSec: 30, offSec: 5 },
+          { phase: "aerobic", name: "Hít thở sâu", detail: "Hít 4s — thở ra 6s, thả lỏng hoàn toàn", onSec: 45, offSec: 0 },
         ];
       }
 
-      // ── CORE FINISHER — cho ngày chỉ boxing (T3/T5) ─────────────
-      function buildCoreFinisher() {
-        return [
-          { phase:"core", name:"Hollow Body Hold SET 1", detail:"Nâng vai + chân cách sàn 15cm, tay duỗi qua đầu — giữ tension toàn thân, lưng dán sàn", onSec:30, offSec:20 },
-          { phase:"core", name:"Hollow Body Hold SET 2", detail:"Giữ thân thẳng, không để lưng võng", onSec:30, offSec:30 },
-          ...repSets("core", "Leg Raise", "12-15 rep | Hạ chân chậm, không thả rơi, lưng dán sàn", 15, 2, 30),
-          ...repSets("core", "Bicycle Crunch", "20 rep | Khuỷu chạm gối đối diện, xoay từ thân — không giật cổ", 20, 2, 30),
+      /* ── Nghỉ chủ động (T4, T6): cardio nhẹ tại nhà + giãn cơ ── */
+      function buildRestDay() {
+        const p = getPlan();
+        const n = Math.max(2, [3, 4, 4][p.phase - 1] - (p.deload ? 1 : 0));
+        const C = [
+          ["Nhảy dây chậm", "Nhảy đều, nhịp thấp, thở bằng mũi — ~60% sức, nói chuyện được"],
+          ["Footwork nhẹ", "Tiến-lùi-trái-phải trong tư thế boxing, tay guard thả lỏng — ~60% sức"],
+          ["Shadow nhẹ", "Jab-Cross-Hook chậm, tập trung form và thở đều — ~50-60% sức"],
         ];
+        const items = [{ phase: "warmup", name: "Xoay khớp nhẹ", detail: "Cổ, vai, hông, gối — thả lỏng", onSec: 90, offSec: 10 }];
+        for (let i = 0; i < n; i++) {
+          const c = C[i % C.length];
+          items.push({ phase: "easy", name: `Cardio nhẹ ${i + 1}/${n} — ${c[0]}`, detail: c[1], onSec: 180, offSec: i < n - 1 ? 30 : 0 });
+        }
+        return [...items, ...buildRecovery()];
       }
 
-      // ── BUILD AFTERNOON (strength/core) THEO NGÀY ───────────────
-      function buildAfternoon(dayEn) {
+      function buildDay(dayEn) {
         const map = {
-          Monday:    buildStrengthA,
-          Tuesday:   buildCoreFinisher,
-          Wednesday: buildStrengthB,
-          Thursday:  buildCoreFinisher,
-          Friday:    buildStrengthC,
-          Saturday:  buildRecovery,
+          Monday: buildStrengthA, Tuesday: buildBoxingTech, Wednesday: buildRestDay,
+          Thursday: buildStrengthB, Friday: buildRestDay, Saturday: buildBoxingSelfDefense,
         };
         return map[dayEn] ? map[dayEn]() : [];
       }
 
-      // ── BUILD BOXING THEO NGÀY (cho buổi gộp) ───────────────────
-      function buildBoxingForCombined(dayEn) {
-        if (dayEn === "Saturday") return buildBoxingSaturday();
-        if (dayEn === "Sunday")   return [];
-        // Ngày có tạ sau đó (T2/T4/T6) → 1 round freestyle để dành sức cho lift
-        if (dayEn === "Monday" || dayEn === "Wednesday" || dayEn === "Friday")
-          return [...WARMUP(), ...SHADOW(), ...DEFEND(), ...FREESTYLE().slice(0,1)];
-        // Ngày chỉ boxing (T3/T5) → đầy đủ 2 round freestyle
-        return buildBoxingNormal();
-      }
+      /* ── Màn hình chính: lịch tháng (chạm ngày → chạy luôn) ── */
+      const DAY_ICON = { 1: ["💪", "SỨC MẠNH A"], 2: ["🥊", "BOXING"], 3: ["🧘", "CARDIO NHẸ"], 4: ["💪", "SỨC MẠNH B"], 5: ["🧘", "CARDIO NHẸ"], 6: ["🛡️", "TỰ VỆ"], 0: ["😴", "NGHỈ"] };
+      let cdIv = null, pressT = null, longFired = false;
 
-      // bỏ các bài warmup (nhảy dây/xoay khớp) đầu phần strength vì boxing đã làm nóng người
-      function stripLeadingWarmup(items) {
-        let i = 0;
-        while (i < items.length && items[i].phase === "warmup") i++;
-        return items.slice(i);
+      function showHome() {
+        if (ts.iv) { clearInterval(ts.iv); ts.iv = null; }
+        cancelCountdown();
+        if (synth) synth.cancel();
+        unlockScreen();
+        $("timerOverlay").classList.remove("show");
+        $("homeView").style.display = "";
+        $("dayView").style.display = "none";
+        $("btnCalendar").style.display = "none";
+        $("dayBadge").textContent = "LỊCH TẬP";
+        $("dateBadge").textContent = "";
+        calYear = viewDate.getFullYear(); calMonth = viewDate.getMonth();
+        renderCalendar();
       }
-
-      // GỘP: boxing → chuyển giao → strength/core/recovery (đã cắt warmup trùng)
-      function buildCombinedDay(dayEn) {
-        if (dayEn === "Sunday") return [];
-        const boxing = buildBoxingForCombined(dayEn);
-        const after  = stripLeadingWarmup(buildAfternoon(dayEn) || []);
-        const out = [...boxing];
-        if (after.length) {
-          const isStrength = (dayEn==="Monday"||dayEn==="Wednesday"||dayEn==="Friday");
-          const labels = { Monday:"STRENGTH", Wednesday:"STRENGTH", Friday:"STRENGTH", Tuesday:"CORE", Thursday:"CORE", Saturday:"GIÃN CƠ" };
-          const lbl = labels[dayEn] || "PHẦN SAU";
-          if (isStrength) {
-            out.push({ phase:"transition", name:"Chuyển sang STRENGTH", detail:"Nghỉ 5 phút — uống nước, hạ nhịp tim cho ổn", onSec:300, offSec:0 });
-            out.push({ phase:"warmup", name:"Nhảy dây làm nóng lại", detail:"1 phút nhảy đều — gọi máu về cơ sau khi nghỉ, rồi vào tạ", onSec:60, offSec:0 });
-          } else {
-            out.push({ phase:"transition", name:`Chuyển sang ${lbl}`, detail:"Thở đều 30s rồi tiếp tục", onSec:30, offSec:0 });
-          }
-          out.push(...after);
-        }
-        return out;
+      function showDay() {
+        $("homeView").style.display = "none";
+        $("dayView").style.display = "";
+        $("btnCalendar").style.display = "";
       }
+      function openCalendar() { showHome(); }
+      function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
+      function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
 
-      function openCalendar() { calYear=viewDate.getFullYear(); calMonth=viewDate.getMonth(); renderCalendar(); document.getElementById("calOverlay").classList.add("show"); }
-      function closeCalendar() { document.getElementById("calOverlay").classList.remove("show"); }
-      function handleOverlayClick(e) { if (e.target===document.getElementById("calOverlay")) closeCalendar(); }
-      function calPrev() { calMonth--; if (calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
-      function calNext() { calMonth++; if (calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
       function renderCalendar() {
-        document.getElementById("calMonthTitle").textContent = `${MONTHS_VI[calMonth].toUpperCase()} ${calYear}`;
-        const firstDay = new Date(calYear,calMonth,1).getDay();
-        const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
-        const daysInPrev = new Date(calYear,calMonth,0).getDate();
+        $("calMonthTitle").textContent = `${MONTHS_VI[calMonth].toUpperCase()} ${calYear}`;
+        const log = loadLog();
+        const firstDay = new Date(calYear, calMonth, 1).getDay();
+        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+        const daysInPrev = new Date(calYear, calMonth, 0).getDate();
         let html = "";
-        for (let i=firstDay-1;i>=0;i--) html+=`<div class="cal-day other-month">${daysInPrev-i}</div>`;
-        for (let d=1;d<=daysInMonth;d++) {
-          const date=new Date(calYear,calMonth,d); const dow=date.getDay();
-          const isSun=dow===0;
-          const isTod=date.getFullYear()===TODAY_Y&&date.getMonth()===TODAY_M&&date.getDate()===TODAY_D;
-          const isSel=isViewDate(date); const hasTrain=!isSun;
-          let cls="cal-day";
-          if(isSun) cls+=" sunday"; if(isTod) cls+=" is-today"; if(isSel) cls+=" selected"; if(hasTrain) cls+=" has-training";
-          html+=`<div class="${cls}" onclick="selectDate(${calYear},${calMonth},${d})">${d}</div>`;
+        for (let i = firstDay - 1; i >= 0; i--) html += `<div class="cal-day other-month"><span class="dn">${daysInPrev - i}</span></div>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(calYear, calMonth, d), dow = date.getDay();
+          let cls = "cal-day";
+          if (dow === 0) cls += " sunday";
+          if (isToday(date)) cls += " is-today";
+          const done = !!log[dkey(date)];
+          if (done) cls += " done-day";
+          const ic = DAY_ICON[dow];
+          html += `<div class="${cls}" data-y="${calYear}" data-m="${calMonth}" data-d="${d}">${done ? '<span class="ck">✓</span>' : ""}<span class="dn">${d}</span><span class="em">${ic[0]}</span><span class="tt">${ic[1]}</span></div>`;
         }
-        const total=firstDay+daysInMonth; const remaining=total%7===0?0:7-(total%7);
-        for (let d=1;d<=remaining;d++) html+=`<div class="cal-day other-month">${d}</div>`;
-        document.getElementById("calDays").innerHTML=html;
-        const selDow=viewDate.getDay();
-        const selStr=`${DAYS_VI[selDow].toUpperCase()} ${viewDate.getDate().toString().padStart(2,"0")}/${(viewDate.getMonth()+1).toString().padStart(2,"0")}/${viewDate.getFullYear()}`;
-        document.getElementById("calFooterInfo").textContent=`ĐÃ CHỌN: ${selStr}`;
+        const total = firstDay + daysInMonth, remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+        for (let d = 1; d <= remaining; d++) html += `<div class="cal-day other-month"><span class="dn">${d}</span></div>`;
+        $("calDays").innerHTML = html;
+        bindHome();
+
+        // thẻ "hôm nay"
+        const keep = viewDate;
+        viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
+        const p = getPlan(), dEn = DAYS_EN[viewDate.getDay()], doneW = weekDoneCount();
+        viewDate = keep;
+        let sub = `TUẦN ${p.w} · ${p.phaseName}${p.deload ? " · TUẦN NHẸ" : ""}`;
+        if (p.pre) sub += ` · BẮT ĐẦU ${START_DATE.split("-").reverse().join("/")}`;
+        sub += ` · TUẦN NÀY ${doneW}/4 BUỔI`;
+        $("homeToday").innerHTML =
+          `<div class="ht-sub">HÔM NAY · ${DAYS_VI[new Date(TODAY_Y, TODAY_M, TODAY_D).getDay()].toUpperCase()} ${String(TODAY_D).padStart(2, "0")}/${String(TODAY_M + 1).padStart(2, "0")}</div>` +
+          `<div class="ht-title">${SESSION_TITLES[dEn]}</div><div class="ht-sub">${sub}</div>` +
+          (DAY_TIPS[dEn] ? `<div class="ht-tip">💡 ${DAY_TIPS[dEn]}</div>` : "") +
+          (dEn !== "Sunday" ? `<button class="btn-start" onclick="openToday()">▶ BẮT ĐẦU HÔM NAY</button>` : "");
       }
-      function selectDate(y,m,d) { viewDate=new Date(y,m,d); closeCalendar(); loadViewDate(); }
-      function goToday() { viewDate=new Date(TODAY_Y,TODAY_M,TODAY_D); closeCalendar(); loadViewDate(); }
+
+      function bindHome() {
+        const el = $("calDays");
+        el.onpointerdown = (e) => {
+          const c = e.target.closest(".cal-day[data-d]");
+          if (!c) return;
+          longFired = false; clearTimeout(pressT);
+          pressT = setTimeout(() => { longFired = true; openDay(c, false); }, 500);
+        };
+        el.onpointerup = el.onpointerleave = el.onpointercancel = () => clearTimeout(pressT);
+        el.onclick = (e) => {
+          const c = e.target.closest(".cal-day[data-d]");
+          if (!c) return;
+          if (longFired) { longFired = false; return; }
+          openDay(c, true);
+        };
+        el.oncontextmenu = (e) => e.preventDefault();
+      }
+      function openDay(c, run) {
+        viewDate = new Date(+c.dataset.y, +c.dataset.m, +c.dataset.d);
+        showDay(); loadViewDate();
+        if (run && sessData.main.length) startSession();
+      }
+      function openToday() {
+        viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
+        showDay(); loadViewDate(); startSession();
+      }
+      function selectDate(y, m, d) { viewDate = new Date(y, m, d); showDay(); loadViewDate(); }
+      function goToday() {
+        viewDate = new Date(TODAY_Y, TODAY_M, TODAY_D);
+        if ($("dayView").style.display !== "none") { loadViewDate(); }
+        else { calYear = TODAY_Y; calMonth = TODAY_M; renderCalendar(); }
+      }
+
+      /* ── Hiển thị ngày ── */
+      let sessData = { main: [] };
 
       function loadViewDate() {
-        const dayIdx=viewDate.getDay(); const dayEnView=DAYS_EN[dayIdx]; const preview=isPreviewMode();
-        document.getElementById("dayBadge").textContent=DAYS_VI[dayIdx].toUpperCase();
-        document.getElementById("dateBadge").textContent=viewDate.toLocaleDateString("vi-VN");
-        document.getElementById("sessionTitleBar").textContent=SESSION_TITLES[dayEnView]||"";
-        const banner=document.getElementById("viewingBanner");
+        const dayIdx = viewDate.getDay(), dayEn = DAYS_EN[dayIdx], preview = isPreviewMode();
+        $("dayBadge").textContent = DAYS_VI[dayIdx].toUpperCase();
+        $("dateBadge").textContent = viewDate.toLocaleDateString("vi-VN");
+        $("sessionTitleBar").textContent = SESSION_TITLES[dayEn] || "";
         if (preview) {
-          document.getElementById("viewingDate").textContent=`${DAYS_VI[dayIdx]} ${viewDate.getDate().toString().padStart(2,"0")}/${(viewDate.getMonth()+1).toString().padStart(2,"0")}/${viewDate.getFullYear()}`;
-          banner.classList.add("show");
-        } else { banner.classList.remove("show"); }
-        document.body.classList.toggle("preview-mode",preview);
-        document.getElementById("btnCalendar").classList.toggle("today-active",!preview);
-        document.getElementById("done-main").classList.remove("show");
-        document.getElementById("schedule-main").style.display="";
-        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
-        document.getElementById("timerOverlay").classList.remove("show");
-        document.getElementById("progressFill").style.width="0%";
-        if (dayEnView==="Sunday") {
-          document.getElementById("schedule-main").innerHTML='<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ ngơi hoàn toàn 🛌</div></div>';
-          document.getElementById("stickyStart").style.display="none";
-          sessData={main:[]};
-          document.getElementById("estTimebar").innerHTML="";
+          $("viewingDate").textContent = `${DAYS_VI[dayIdx]} ${String(viewDate.getDate()).padStart(2, "0")}/${String(viewDate.getMonth() + 1).padStart(2, "0")}/${viewDate.getFullYear()}`;
+          $("viewingBanner").classList.add("show");
+        } else $("viewingBanner").classList.remove("show");
+        $("btnCalendar").classList.toggle("today-active", !preview);
+        $("done-main").classList.remove("show");
+        $("schedule-main").style.display = "";
+        if (ts.iv) { clearInterval(ts.iv); ts.iv = null; }
+        $("timerOverlay").classList.remove("show");
+        $("progressFill").style.width = "0%";
+
+        const p = getPlan();
+        let info = `TUẦN <b>${p.w}</b> · <b>${p.phaseName}</b>`;
+        if (p.deload) info += " · <b>TUẦN NHẸ (DELOAD)</b>";
+        if (p.pre) info += ` · BẮT ĐẦU ${START_DATE.split("-").reverse().join("/")}`;
+        if (dayEn === "Tuesday") info += ` · CHỦ ĐỀ: <b>${THEMES[(p.w - 1) % THEMES.length].title.toUpperCase()}</b>`;
+        const done = weekDoneCount();
+        info += ` · TUẦN NÀY: <span class="${done >= 4 ? "ok" : ""}"><b>${done}/4</b></span> BUỔI CHÍNH`;
+        if (DAY_TIPS[dayEn]) info += `<span class="tip">💡 ${DAY_TIPS[dayEn]}</span>`;
+        $("infoBar").innerHTML = info;
+
+        if (dayEn === "Sunday") {
+          $("schedule-main").innerHTML = '<div class="no-content"><div class="no-content-icon">😴</div><div class="no-content-title">CHỦ NHẬT</div><div class="no-content-sub">nghỉ hoàn toàn — ngủ đủ, ăn đủ đạm 🛌</div></div>';
+          $("stickyStart").style.display = "none";
+          sessData = { main: [] };
           return;
         }
-        const combined=buildCombinedDay(dayEnView);
-        sessData={main:combined};
-        curSess="main";
-        renderSchedule(combined,"schedule-main");
-        document.getElementById("stickyStart").style.display="block";
-        updateEstTime();
+        const items = buildDay(dayEn);
+        sessData = { main: items };
+        renderSchedule(items, "schedule-main");
+        $("stickyStart").style.display = "block";
+        $("estTime").innerHTML = (() => { const e = calcEstTime(items); return e ? `⏱ ước tính cả buổi: <span>${e}</span>` : ""; })();
       }
 
       function fmtDur(item) {
-        if (item.reps) return item.restSec&&item.restSec>0 ? item.reps+" REP + "+item.restSec+"s" : item.reps+" REP";
-        if (item.offSec>0) return item.onSec+"s+"+item.offSec+"s";
-        const s=item.onSec;
-        return s>=60 ? Math.floor(s/60)+"m"+(s%60>0?(s%60)+"s":"") : s+"s";
+        if (item.reps) return item.restSec > 0 ? `${item.repTxt} REP + ${item.restSec}s` : `${item.repTxt} REP`;
+        if (item.offSec > 0) return `${item.onSec}s+${item.offSec}s`;
+        const s = item.onSec;
+        return s >= 60 ? Math.floor(s / 60) + "m" + (s % 60 > 0 ? (s % 60) + "s" : "") : s + "s";
       }
       function calcEstTime(items) {
-        if (!items||!items.length) return null;
-        let total=0;
-        items.forEach(item=>{
-          if(isRep(item)) total += (item.reps||0)*3 + (item.restSec||0); // ~3s/rep
-          else total+=(item.onSec||0)+(item.offSec||0);
-        });
-        if (total===0) return null;
-        const m=Math.floor(total/60),s=total%60;
-        return m>0?(s>0?`~${m} phút ${s}s`:`~${m} phút`):`~${s}s`;
+        if (!items || !items.length) return null;
+        let total = 0;
+        items.forEach((it) => { total += isRep(it) ? it.reps * 4 + (it.restSec || 0) : (it.onSec || 0) + (it.offSec || 0); });
+        if (!total) return null;
+        return `~${Math.round(total / 60)} phút`;
       }
-      function updateEstTime() {
-        const el=document.getElementById("estTimebar");
-        if (!el) return;
-        const est=calcEstTime(sessData.main);
-        el.innerHTML=est?`⏱ ước tính cả buổi: <span>${est}</span>`:"";
-      }
-      function renderSchedule(items,cid) {
-        const el=document.getElementById(cid);
-        if (!items||!items.length) { el.innerHTML='<div class="no-content"><div class="no-content-icon">📭</div><div class="no-content-title">KHÔNG CÓ LỊCH</div><div class="no-content-sub">hôm nay nghỉ 🛌</div></div>'; return; }
-        let html="",lastPh="";
-        items.forEach((item,i)=>{
-          const ph=item.phase;
-          if (ph!==lastPh) { html+=`<div class="phase-label ${ph}">${PH_LABEL[ph]||ph}</div>`; lastPh=ph; }
-          const durHtml=item.reps ? `<div class="rep-badge">${item.reps} REP</div>` : `<div class="round-dur">${fmtDur(item)}</div>`;
-          html+=`<div class="round-item ${ph}" id="item-${cid}-${i}" onclick="jumpToRound(${i})">
-            <div class="round-num">${i+1}</div>
-            <div class="round-info"><div class="round-name">${item.name}</div><div class="round-detail">${item.detail}</div></div>
-            ${durHtml}</div>`;
+      function renderSchedule(items, cid) {
+        const el = $(cid);
+        if (!items || !items.length) { el.innerHTML = '<div class="no-content"><div class="no-content-icon">📭</div><div class="no-content-title">KHÔNG CÓ LỊCH</div></div>'; return; }
+        let html = "", lastPh = "";
+        items.forEach((item, i) => {
+          if (item.phase !== lastPh) { html += `<div class="phase-label ${item.phase}">${PH_LABEL[item.phase] || item.phase}</div>`; lastPh = item.phase; }
+          const dur = item.reps ? `<div class="rep-badge">${fmtDur(item)}</div>` : `<div class="round-dur">${fmtDur(item)}</div>`;
+          html += `<div class="round-item ${item.phase}" id="item-${i}" onclick="jumpToRound(${i})">
+            <div class="round-num">${i + 1}</div>
+            <div class="round-info"><div class="round-name">${item.name}</div><div class="round-detail">${item.detail || ""}</div></div>
+            ${dur}</div>`;
         });
-        el.innerHTML=html;
+        el.innerHTML = html;
       }
 
-      let curSess="main", sessData={main:[]};
-      let ts={items:[],idx:0,isOn:true,rem:0,paused:false,iv:null,isResting:false,restRem:0};
-      const CIRC=2*Math.PI*44;
-      const synth=window.speechSynthesis;
-      let lastSpoken=-1;
+      /* ── Timer (dựa trên mốc thời gian thực, không lệch khi tab nền) ── */
+      const isRep = (item) => !!item.reps;
+      let ts = { items: [], idx: 0, mode: "on", endAt: 0, total: 0, remMs: 0, paused: false, iv: null };
+      let muted = false, lastBeep = -1, audioCtx = null, wakeLock = null;
+      const synth = window.speechSynthesis;
+      const CIRC = 2 * Math.PI * 44;
+
+      function speak(txt) {
+        if (muted || !synth) return;
+        try { synth.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = "vi-VN"; u.rate = 1.05; synth.speak(u); } catch (e) {}
+      }
+      function ensureAudio() {
+        try {
+          audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+        } catch (e) {}
+      }
+      function beep(type) {
+        if (muted) return;
+        try {
+          ensureAudio();
+          const tones = { warn: [[880, 0.12]], end: [[660, 0.15], [880, 0.25]], start: [[440, 0.3]] }[type] || [];
+          let t = audioCtx.currentTime;
+          tones.forEach(([f, d]) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.frequency.value = f; o.connect(g); g.connect(audioCtx.destination);
+            g.gain.setValueAtTime(0.4, t); g.gain.exponentialRampToValueAtTime(0.01, t + d);
+            o.start(t); o.stop(t + d); t += d + 0.05;
+          });
+        } catch (e) {}
+      }
+      async function lockScreen() { try { if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen"); } catch (e) {} }
+      function unlockScreen() { try { wakeLock && wakeLock.release(); } catch (e) {} wakeLock = null; }
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && $("timerOverlay").classList.contains("show")) lockScreen();
+      });
+
+      function toggleMute() { muted = !muted; $("btnMute").textContent = muted ? "🔇" : "🔊"; if (muted && synth) synth.cancel(); }
+      function getRem() { return ts.paused ? Math.ceil(ts.remMs / 1000) : Math.max(0, Math.ceil((ts.endAt - Date.now()) / 1000)); }
+      function setStage(mode, sec) { ts.mode = mode; ts.total = sec; ts.endAt = Date.now() + sec * 1000; ts.remMs = sec * 1000; lastBeep = -1; }
 
       function showRing(show) {
-        document.getElementById("timerMode").style.display=show?"block":"none";
-        document.getElementById("repMode").classList.toggle("show",!show);
-        document.getElementById("tControls").style.display=show?"flex":"none";
+        $("timerMode").style.display = show ? "block" : "none";
+        $("repMode").classList.toggle("show", !show);
       }
-      function speak(txt) { if(!synth)return; synth.cancel(); const u=new SpeechSynthesisUtterance(txt); u.lang="vi-VN"; u.rate=1.1; synth.speak(u); }
-      function updateRing(prog,ph) {
-        const r=document.getElementById("ringProgress");
-        r.style.strokeDashoffset=CIRC*(1-prog);
-        r.style.stroke=PH_COLOR[ph]||"#f0f0f0";
+      function updateRing(prog, ph) {
+        const r = $("ringProgress");
+        r.style.strokeDashoffset = CIRC * (1 - prog);
+        r.style.stroke = PH_COLOR[ph] || "#f0f0f0";
       }
       function updateUI() {
-        const item=ts.items[ts.idx];
-        if (!item) return;
-        if (ts.isResting) {
-          showRing(true);
-          document.getElementById("tPhase").textContent=PH_LABEL[item.phase]||item.phase;
-          document.getElementById("tName").textContent="NGHỈ";
-          document.getElementById("tDetail").textContent="Thở đều, chuẩn bị set tiếp theo";
-          const total=item.restSec,rem=ts.restRem;
-          const prog=total>0?rem/total:0,warn=rem<=10&&rem>0;
-          document.getElementById("tSec").textContent=rem;
-          document.getElementById("tLbl").textContent="NGHỈ";
-          document.getElementById("tSec").style.color="var(--muted)";
-          updateRing(prog,"warmup");
-          document.getElementById("ringContainer").classList.toggle("warn",warn);
-          const ni=document.getElementById("nextName"),nd=document.getElementById("nextDetail"),nx=ts.idx+1;
-          ni.textContent=nx<ts.items.length?ts.items[nx].name:"🏁 KẾT THÚC";
-          nd.textContent=nx<ts.items.length?ts.items[nx].detail||"":"";
-          ni.className="next-name";
-          document.querySelectorAll(`#schedule-${curSess} .round-item`).forEach((el,i)=>{ el.classList.toggle("current",i===ts.idx); el.classList.toggle("done",i<ts.idx); });
-          document.getElementById("progressFill").style.width=(ts.idx/ts.items.length)*100+"%";
-          return;
-        }
-        document.getElementById("tPhase").textContent=PH_LABEL[item.phase]||item.phase;
-        document.getElementById("tName").textContent=item.name;
-        document.getElementById("tDetail").textContent=item.detail;
-        if (isRep(item)) {
+        const it = ts.items[ts.idx];
+        if (!it) return;
+        const nx = ts.items[ts.idx + 1];
+        $("tPhase").textContent = PH_LABEL[it.phase] || it.phase;
+        let nextN = "", nextD = "";
+        if (ts.mode === "rep") {
           showRing(false);
-          document.getElementById("repNum").textContent=item.reps;
-          const niRep=document.getElementById("nextName"),ndRep=document.getElementById("nextDetail"),nxRep=ts.idx+1;
-          if (nxRep<ts.items.length){niRep.textContent=ts.items[nxRep].name;ndRep.textContent=ts.items[nxRep].detail||"";}
-          else{niRep.textContent="🏁 KẾT THÚC";ndRep.textContent="";}
-          niRep.className="next-name";
+          $("tName").textContent = it.name;
+          $("tDetail").textContent = it.detail || "";
+          $("repNum").textContent = it.repTxt;
+          if (it.restSec > 0) { nextN = `NGHỈ ${it.restSec}s`; nextD = nx ? nx.name : ""; }
+          else { nextN = nx ? nx.name : "🏁 KẾT THÚC"; nextD = nx ? nx.detail || "" : ""; }
         } else {
           showRing(true);
-          const {isOn,rem}=ts,total=isOn?item.onSec:item.offSec,prog=total>0?rem/total:0,warn=rem<=10&&rem>0;
-          document.getElementById("tSec").textContent=rem;
-          document.getElementById("tLbl").textContent=isOn?"ON":"NGHỈ";
-          document.getElementById("tSec").style.color=warn?"var(--survive)":!isOn?"var(--muted)":"var(--text)";
-          updateRing(prog,isOn?item.phase:"warmup");
-          document.getElementById("ringContainer").classList.toggle("warn",warn);
-          const ni=document.getElementById("nextName");
-          let nxt,nxtWarn=false;
-          if (isOn&&item.offSec>0){nxt=`NGHỈ ${item.offSec}s`;}
-          else{const nx=ts.idx+1;nxt=nx<ts.items.length?ts.items[nx].name:"🏁 KẾT THÚC";if(warn)nxtWarn=true;}
-          ni.textContent=nxt; ni.className="next-name"+(nxtWarn?" warn-txt":"");
-          const nd2=document.getElementById("nextDetail");
-          if (isOn&&item.offSec>0){nd2.textContent="";}
-          else{const nx2=ts.idx+1;nd2.textContent=nx2<ts.items.length?ts.items[nx2].detail||"":"";}
+          const on = ts.mode === "on", rem = getRem(), warn = on && rem <= 10 && rem > 0;
+          $("tName").textContent = on ? it.name : "NGHỈ";
+          $("tDetail").textContent = on ? it.detail || "" : "Thở đều, uống nước, chuẩn bị tiếp theo";
+          $("tSec").textContent = rem;
+          $("tLbl").textContent = on ? "ON" : "NGHỈ";
+          $("tSec").style.color = warn ? "var(--warn)" : on ? "var(--text)" : "var(--muted)";
+          updateRing(ts.total > 0 ? rem / ts.total : 0, on ? it.phase : "warmup");
+          $("ringContainer").classList.toggle("warn", warn);
+          if (on && it.offSec > 0) { nextN = `NGHỈ ${it.offSec}s`; nextD = ""; }
+          else { nextN = nx ? nx.name : "🏁 KẾT THÚC"; nextD = nx ? nx.detail || "" : ""; }
         }
-        document.querySelectorAll(`#schedule-${curSess} .round-item`).forEach((el,i)=>{ el.classList.toggle("current",i===ts.idx); el.classList.toggle("done",i<ts.idx); });
-        document.getElementById("progressFill").style.width=(ts.idx/ts.items.length)*100+"%";
+        $("nextName").textContent = nextN;
+        $("nextDetail").textContent = nextD;
+        document.querySelectorAll("#schedule-main .round-item").forEach((el, i) => {
+          el.classList.toggle("current", i === ts.idx);
+          el.classList.toggle("done", i < ts.idx);
+        });
+        $("progressFill").style.width = (ts.idx / ts.items.length) * 100 + "%";
       }
-      function tick() {
-        if (ts.paused) return;
-        if (ts.isResting) {
-          ts.restRem--;
-          if (ts.restRem<=10&&ts.restRem!==lastSpoken&&ts.restRem>0){lastSpoken=ts.restRem;speak(String(ts.restRem));}
-          if (ts.restRem<=0){ts.isResting=false;advance();return;}
-          updateUI(); return;
-        }
-        const item=ts.items[ts.idx];
-        if (!item||isRep(item)) return;
-        ts.rem--;
-        if (ts.rem<=0) {
-          playBeep(ts.isOn?"end":"start");
-          if (ts.isOn&&item.offSec>0){ts.isOn=false;ts.rem=item.offSec;lastSpoken=-1;speak("Nghỉ "+item.offSec+" giây");}
-          else{advance();return;}
-        }
-        if (ts.rem<=10&&ts.rem!==lastSpoken&&ts.rem>0){lastSpoken=ts.rem;speak(String(ts.rem));}
-        if (ts.rem===10&&ts.isOn) playBeep("warning");
+
+      function beginItem(idx) {
+        ts.idx = idx;
+        const it = ts.items[idx];
+        if (isRep(it)) { ts.mode = "rep"; lastBeep = -1; speak(`${it.name}. ${it.repTxt} rep`); }
+        else { setStage("on", it.onSec); speak(it.detail ? `${it.name}. ${it.detail.split("|")[0]}` : it.name); }
         updateUI();
       }
       function advance() {
-        ts.idx++;
-        if (ts.idx>=ts.items.length){finishSession();return;}
-        ts.isOn=true;ts.isResting=false;ts.restRem=0;lastSpoken=-1;
-        const it=ts.items[ts.idx];
-        ts.rem=isRep(it)?0:it.onSec;
-        speak(isRep(it)?it.name+" — "+it.reps+" rep":it.detail?it.name+". "+it.detail:it.name);
-        startIv();updateUI();
+        if (ts.idx + 1 >= ts.items.length) { finishSession(); return; }
+        beginItem(ts.idx + 1);
+      }
+      function stageEnd() {
+        const it = ts.items[ts.idx];
+        if (ts.mode === "on") {
+          beep("end");
+          if (it.offSec > 0) { setStage("off", it.offSec); speak("Nghỉ"); updateUI(); return; }
+          advance();
+        } else { beep("start"); advance(); }
+      }
+      function tick() {
+        if (ts.paused || ts.mode === "rep") return;
+        const rem = Math.ceil((ts.endAt - Date.now()) / 1000);
+        if (rem <= 0) { stageEnd(); return; }
+        if (rem <= 3 && rem !== lastBeep) { lastBeep = rem; beep("warn"); }
+        updateUI();
       }
       function repDone() {
-        playBeep("end");
-        const item=ts.items[ts.idx];
-        if (item&&item.restSec&&item.restSec>0){ts.isResting=true;ts.restRem=item.restSec;lastSpoken=-1;speak("Nghỉ "+item.restSec+" giây");startIv();updateUI();}
-        else{advance();}
+        beep("end");
+        const it = ts.items[ts.idx];
+        if (it && it.restSec > 0) { setStage("rest", it.restSec); speak(`Nghỉ ${it.restSec} giây`); updateUI(); }
+        else advance();
       }
-      function startIv() {
-        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
-        const item=ts.items[ts.idx];
-        if (ts.isResting||(item&&!isRep(item))) ts.iv=setInterval(tick,1000);
+      function togglePause() {
+        if (ts.mode === "rep") return;
+        if (!ts.paused) { ts.remMs = Math.max(0, ts.endAt - Date.now()); ts.paused = true; }
+        else { ts.endAt = Date.now() + ts.remMs; ts.paused = false; }
+        $("btnPR").textContent = ts.paused ? "TIẾP" : "PAUSE";
+        updateUI();
       }
-      function playBeep(type) {
-        try {
-          const C=new(window.AudioContext||window.webkitAudioContext)(),o=C.createOscillator(),g=C.createGain();
-          o.connect(g);g.connect(C.destination);
-          if (type==="warning"){o.frequency.value=880;g.gain.setValueAtTime(0.3,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.15);o.start();o.stop(C.currentTime+0.15);}
-          else if (type==="end"){o.frequency.value=660;g.gain.setValueAtTime(0.5,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.2);o.start();o.stop(C.currentTime+0.2);setTimeout(()=>{const C2=new(window.AudioContext||window.webkitAudioContext)(),o2=C2.createOscillator(),g2=C2.createGain();o2.connect(g2);g2.connect(C2.destination);o2.frequency.value=880;g2.gain.setValueAtTime(0.5,C2.currentTime);g2.gain.exponentialRampToValueAtTime(0.01,C2.currentTime+0.3);o2.start();o2.stop(C2.currentTime+0.3);},250);}
-          else{o.frequency.value=440;g.gain.setValueAtTime(0.4,C.currentTime);g.gain.exponentialRampToValueAtTime(0.01,C.currentTime+0.3);o.start();o.stop(C.currentTime+0.3);}
-        } catch(e){}
+      function skipRound() { advance(); }
+
+      function startSession() {
+        const items = sessData.main;
+        if (!items || !items.length) return;
+        ensureAudio();
+        startCountdown(items, 0);
       }
-      function startSession() { const items=sessData[curSess]; if(!items||!items.length)return; startCountdown(items,0); }
-      function startCountdown(items,startIdx) {
-        let count=5;
-        const overlay=document.getElementById("countdownOverlay"),numEl=document.getElementById("countdownNum"),nextEl=document.getElementById("countdownNext");
-        const firstItem=items[startIdx];
-        nextEl.textContent=firstItem.name+(firstItem.detail?" — "+firstItem.detail:"");
-        numEl.textContent=count;overlay.classList.add("show");speak("Chuẩn bị");
-        const iv=setInterval(()=>{
+      function startCountdown(items, startIdx) {
+        let count = 5;
+        const first = items[startIdx];
+        $("countdownNext").textContent = first.name;
+        $("countdownNum").textContent = count;
+        $("countdownOverlay").classList.add("show");
+        speak("Chuẩn bị");
+        ensureAudio();
+        if (cdIv) clearInterval(cdIv);
+        cdIv = setInterval(() => {
           count--;
-          if (count<=0){
-            clearInterval(iv);overlay.classList.remove("show");
-            ts={items,idx:startIdx,isOn:true,rem:isRep(firstItem)?0:firstItem.onSec,paused:false,iv:null,isResting:false,restRem:0};
-            lastSpoken=-1;document.getElementById("timerOverlay").classList.add("show");
-            document.getElementById("btnPR").textContent="PAUSE";
-            speak(firstItem.detail?firstItem.name+". "+firstItem.detail:firstItem.name);
-            startIv();updateUI();
-          } else{numEl.textContent=count;speak(String(count));}
-        },1000);
+          if (count <= 0) {
+            clearInterval(cdIv); cdIv = null;
+            $("countdownOverlay").classList.remove("show");
+            if (ts.iv) clearInterval(ts.iv);
+            ts = { items, idx: startIdx, mode: "on", endAt: 0, total: 0, remMs: 0, paused: false, iv: null };
+            $("btnPR").textContent = "PAUSE";
+            $("timerOverlay").classList.add("show");
+            lockScreen();
+            beginItem(startIdx);
+            ts.iv = setInterval(tick, 250);
+          } else { $("countdownNum").textContent = count; beep("warn"); }
+        }, 1000);
+      }
+      function cancelCountdown() {
+        if (cdIv) { clearInterval(cdIv); cdIv = null; }
+        $("countdownOverlay").classList.remove("show");
+        if (synth) synth.cancel();
       }
       function jumpToRound(idx) {
-        const items=sessData.main;
-        if (!items||idx>=items.length) return;
-        if (ts.iv){clearInterval(ts.iv);ts.iv=null;}
-        startCountdown(items,idx);
+        const items = sessData.main;
+        if (!items || idx >= items.length) return;
+        if (ts.iv) { clearInterval(ts.iv); ts.iv = null; }
+        startCountdown(items, idx);
       }
-      function togglePause() { ts.paused=!ts.paused; document.getElementById("btnPR").textContent=ts.paused?"TIẾP":"PAUSE"; if(!ts.paused)startIv(); }
-      function skipRound() { if(ts.iv){clearInterval(ts.iv);ts.iv=null;} ts.isResting=false;ts.restRem=0;advance(); }
-      function closeTimer() { if(ts.iv){clearInterval(ts.iv);ts.iv=null;} synth&&synth.cancel(); document.getElementById("timerOverlay").classList.remove("show"); }
+      function closeTimer() {
+        if (ts.iv) { clearInterval(ts.iv); ts.iv = null; }
+        if (synth) synth.cancel();
+        unlockScreen();
+        $("timerOverlay").classList.remove("show");
+      }
       function finishSession() {
-        if(ts.iv){clearInterval(ts.iv);ts.iv=null;} synth&&synth.cancel();
-        document.getElementById("timerOverlay").classList.remove("show");
-        document.getElementById(`schedule-${curSess}`).style.display="none";
-        document.getElementById(`done-${curSess}`).classList.add("show");
-        document.getElementById("stickyStart").style.display="none";
-        document.getElementById("progressFill").style.width="100%";
-        playBeep("end");setTimeout(()=>playBeep("end"),600);speak("Hoàn thành! Tuyệt vời!");
+        if (ts.iv) { clearInterval(ts.iv); ts.iv = null; }
+        if (synth) synth.cancel();
+        unlockScreen();
+        $("timerOverlay").classList.remove("show");
+        $("schedule-main").style.display = "none";
+        $("done-main").classList.add("show");
+        $("stickyStart").style.display = "none";
+        $("progressFill").style.width = "100%";
+        { const log = loadLog(); log[dkey(viewDate)] = 1; saveLog(log); loadInfoOnly(); }
+        beep("end"); setTimeout(() => beep("end"), 600);
+        speak("Hoàn thành! Tuyệt vời!");
+      }
+      function loadInfoOnly() {
+        // cập nhật lại số buổi trong tuần mà không dựng lại lịch
+        const done = weekDoneCount();
+        const el = $("infoBar");
+        el.innerHTML = el.innerHTML.replace(/TUẦN NÀY:[\s\S]*?BUỔI CHÍNH/, `TUẦN NÀY: <span class="${done >= 4 ? "ok" : ""}"><b>${done}/4</b></span> BUỔI CHÍNH`);
       }
 
-      const isRep = (item) => !!item.reps;
-      loadViewDate();
+      showHome();
     </script>
   </body>
 </html>
