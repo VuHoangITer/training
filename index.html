@@ -269,7 +269,7 @@
            T4  Cardio nhẹ tại nhà + giãn cơ
            T5  Sức mạnh B (kéo + mông/chân)
            T6  Cardio nhẹ tại nhà + giãn cơ
-           T7  Boxing tự vệ + ôn kỹ thuật
+           T7  Boxing tự vệ (né - đỡ - phản công - thoát góc) + ôn kỹ thuật
            CN  Nghỉ hoàn toàn
          6 giai đoạn x 4 tuần (tuần thứ 4 của mỗi giai đoạn là TUẦN NHẸ để hồi phục) + tuần 25-26 kiểm tra & duy trì.
          Cuối mỗi tháng (tuần nhẹ): đo cân, vòng eo, chụp ảnh, test max push-up để thấy tiến bộ.
@@ -284,7 +284,7 @@
       };
       const PH_LABEL = {
         warmup: "KHỞI ĐỘNG", drill: "KỸ THUẬT", shadow: "SHADOW", defend: "PHÒNG THỦ",
-        selfdef: "TỰ VỆ", build: "CARDIO ĐỐT MỠ", strength: "SỨC MẠNH", core: "CORE",
+        selfdef: "TỰ VỆ BẰNG BOXING", build: "CARDIO ĐỐT MỠ", strength: "SỨC MẠNH", core: "CORE",
         aerobic: "GIÃN CƠ / HỒI PHỤC", easy: "CARDIO NHẸ", transition: "CHUYỂN GIAO",
       };
       (function () {
@@ -302,7 +302,7 @@
         Wednesday: "🧘 CARDIO NHẸ TẠI NHÀ + GIÃN CƠ",
         Thursday: "💪 SỨC MẠNH B — KÉO + MÔNG/CHÂN",
         Friday: "🧘 CARDIO NHẸ TẠI NHÀ + GIÃN CƠ",
-        Saturday: "🥊 BOXING — TỰ VỆ + ÔN KỸ THUẬT",
+        Saturday: "🥊 BOXING TỰ VỆ — NÉ + ĐỠ + PHẢN CÔNG",
         Sunday: "😴 NGHỈ HOÀN TOÀN",
       };
       const DAY_TIPS = {
@@ -311,7 +311,7 @@
         Wednesday: "Cardio nhẹ ~60% sức: vừa tập vừa nói chuyện được. Mệt thì bỏ bớt hiệp, hoặc chỉ giãn cơ cũng được.",
         Thursday: "Kéo là bài giúp lưng, vai sau, dáng đẹp và chống gù. Bóp bả vai ở đỉnh, hạ chậm.",
         Friday: "Cardio nhẹ rồi giãn cơ. Ngủ đủ 7-8 tiếng — cơ lớn lên lúc nghỉ.",
-        Saturday: "Mục tiêu tự vệ: né, thoát thân trước; đánh chỉ để tạo cơ hội thoát. Luyện chậm, đúng form.",
+        Saturday: "Tự vệ bằng boxing: giữ guard, giữ cự ly bằng jab, né/đỡ rồi phản công 1-2 đòn và xoay góc đi. Luyện chậm, đúng form trước, nhanh sau.",
         Sunday: "",
       };
       const TRAIN_DOW = [1, 2, 4, 6]; // các ngày tính vào "buổi chính" mỗi tuần
@@ -350,8 +350,8 @@
         "Tháng 1 — làm quen nhịp tập, đúng form, thở và sức bền khá lên. Biết tư thế, jab, cross, bước chân.",
         "Tháng 2 — rep push-up/row tăng rõ, bụng-vai-lưng bắt đầu săn. Combo 1-2-3 và né/gạt/block thành phản xạ.",
         "Tháng 3 — thấy khác biệt qua ảnh: eo gọn, vai-lưng nở hơn. Làm liền 3-4 combo, nhớ các bài tự vệ cơ bản.",
-        "Tháng 4 — chuyển sang bài một chân và biến thể khó hơn (push-up chân cao, Bulgarian split squat). Học feint, teep, đòn chân an toàn.",
-        "Tháng 5 — sức mạnh nổ và tốc độ: push-up nổ, bài một chân. Cự ly gần: cùi chỏ, kiểm soát cự ly, thoát khi bị nắm/ôm.",
+        "Tháng 4 — chuyển sang bài một chân và biến thể khó hơn (push-up chân cao, Bulgarian split squat). Học feint, nhịp điệu, đòn thân và kiểm soát cự ly.",
+        "Tháng 5 — sức mạnh nổ và tốc độ: push-up nổ, bài một chân. Cự ly gần: inside boxing, bị dồn góc thì xoay thoát, đánh rồi di chuyển.",
         "Tháng 6 — hoàn thiện: kết hợp mọi kỹ thuật, phản xạ tự nhiên, đạt mốc thể lực cao nhất. Tuần 25-26: kiểm tra tổng hợp và duy trì.",
       ];
 
@@ -446,27 +446,27 @@
             ["Feint → combo", "Feint jab rồi cross-hook. Mắt nhìn trước, hồi guard cuối combo."],
           ],
           shadow: "Xen kẽ feint và combo thật, đổi nhịp liên tục. 65-70% lực." },
-        { title: "Teep & đòn chân an toàn",
+        { title: "Kiểm soát cự ly (jab & footwork)",
           drills: [
-            ["Teep chân trước", "Co gối, đạp thẳng bằng lòng bàn chân vào thân để giữ khoảng cách, thu về đứng vững. Không ngả người ra sau."],
-            ["Teep → Jab-Cross", "Teep giữ khoảng cách rồi bước vào 1-2, kết thúc bằng bước lùi."],
-            ["Đá thấp (chỉ shadow)", "Xoay hông, đá bằng ống chân ở tầm đùi tưởng tượng, tập chậm. Chưa đá bao nếu chưa khởi động kỹ — bảo vệ gối."],
+            ["Jab chặn khi đối thủ tiến", "Đối thủ tưởng tượng bước vào: jab vào mặt để chặn nhịp, lùi hoặc xoay ra góc. Jab nhẹ, nhanh, về guard ngay."],
+            ["Lùi bước giữ cự ly", "Lùi chân sau trước, chân trước theo sau, không bắt chéo chân, guard cao. Cứ 2-3 bước lại chặn bằng 1 jab."],
+            ["Jab → Cross → xoay góc", "Ra 1-2 rồi pivot ra ngoài chân trước. Không đứng yên trên đường thẳng sau khi đánh."],
           ],
-          shadow: "Teep xen kẽ 1-2, giữ cự ly bằng chân trước khi đối thủ tiến. 60-70% lực." },
-        { title: "Cự ly gần: cùi chỏ & kiểm soát",
+          shadow: "Giữ cự ly bằng jab và footwork, đối thủ tưởng tượng liên tục tiến. 60-70% lực." },
+        { title: "Cự ly gần (inside boxing)",
           drills: [
-            ["Cùi chỏ ngang", "Xoay hông, khuỷu ngang vai, tay kia che đầu. Chỉ dùng ở cự ly rất gần."],
-            ["Cùi chỏ chéo xuống", "Hạ nhẹ trọng tâm, chém chéo xuống bằng khuỷu, thu về guard."],
-            ["Đẩy ra & lùi", "Khi đối thủ áp sát: dùng cẳng tay đẩy ở ngực/vai, bước lùi tạo khoảng cách, về guard."],
+            ["Guard kín + uppercut", "Khi bị áp sát: khép hai khuỷu, cằm cúi, uppercut ngắn tay sau rồi hook ngắn. Thở ra mỗi đòn."],
+            ["Né dưới (bob & weave)", "Hạ gối, đầu đi theo hình chữ U dưới đòn hook tưởng tượng, đứng lên bằng chân, không cúi lưng."],
+            ["Đánh ngắn rồi pivot thoát", "Ra 2 đòn ngắn ở cự ly gần rồi xoay chân trước làm trụ, thoát ra góc, về guard."],
           ],
-          shadow: "Cự ly gần: cùi chỏ, đẩy ra, lùi bước. Giữ guard, 60% lực." },
-        { title: "Thoát khi bị nắm/ôm",
+          shadow: "Cự ly gần: guard kín, uppercut - hook ngắn, bob & weave, pivot thoát. 60% lực." },
+        { title: "Áp lực & thoát góc",
           drills: [
-            ["Thoát nắm cổ tay", "Xoay cổ tay về phía kẽ hở giữa ngón cái và các ngón của đối thủ, giật mạnh rồi lùi. Tập từng bước chậm, nhẹ lực."],
-            ["Thoát ôm từ phía trước", "Hạ trọng tâm, đẩy hông ra sau, đặt hai tay lên người đối thủ để tạo khoảng cách rồi thoát và lùi."],
-            ["Thoát kẹp cổ", "Hạ cằm bảo vệ cổ, hạ trọng tâm, xoay đầu thoát ra và lùi. Tập nhẹ lực, ưu tiên thoát thân."],
+            ["Bị dồn vào góc/tường", "Tưởng tượng góc tường sau lưng: guard kín, đỡ 1-2 đòn, rồi pivot thoát ra ngoài thay vì lùi thẳng."],
+            ["Đỡ - phản công liên tục", "Block/parry 2 đòn thẳng, trả lại 1-2, rồi xoay góc. Lặp lại, tăng dần tốc độ."],
+            ["Đổi hướng bằng pivot", "Xoay trái rồi phải liên tục, sau mỗi lần xoay ra 1 đòn. Giữ cân bằng, không bắt chéo chân."],
           ],
-          shadow: "Mô phỏng: bị nắm/ôm → thoát → ra 1 đòn → chạy. Chậm, đúng thứ tự." },
+          shadow: "Đối thủ tưởng tượng ép liên tục: đỡ - phản công - xoay góc. 65-70% lực." },
         { title: "Tổng hợp & phản xạ",
           drills: [
             ["Combo tự chọn", "Chọn 3 combo yêu thích, đánh lần lượt, chú ý guard và hồi tay."],
@@ -483,18 +483,18 @@
           shadow: "Freestyle 70-75% lực, ghi lại điểm yếu để duy trì sau lộ trình." },
       ];
 
-      /* ── Bài tự vệ (xoay vòng) ── */
+      /* ── Bài tự vệ bằng boxing (xếp từ dễ đến khó, mở khóa dần theo tuần) ── */
       const SD = [
-        ["Tư thế rào chắn (fence)", "Hai tay mở trước ngực, lòng bàn tay hướng ra, đứng chéo chân, hô 'Dừng lại!'. Giữ khoảng cách, lùi từng bước, sẵn sàng đánh hoặc chạy."],
-        ["Bàn tay + gối", "Đẩy gốc bàn tay (palm strike) thẳng ra cằm/mũi rồi kéo xuống và gối lên vào thân. Tập chậm cả hai bên, giữ thăng bằng."],
-        ["Teep (đạp thẳng)", "Co gối rồi đạp thẳng bằng lòng bàn chân vào thân để đẩy đối thủ ra. Thu chân về đứng vững, không ngả người ra sau."],
-        ["Cùi chỏ ngắn", "Cùi chỏ ngang và chéo xuống ở cự ly gần, xoay hông. Luôn có một tay che đầu."],
-        ["Né → đánh → chạy", "Né/gạt đòn thẳng, ra MỘT đòn mạnh nhất (cross hoặc palm), rồi xoay người chạy thoát. Mục tiêu là thoát thân, không phải thắng."],
-        ["Đứng dậy an toàn (get-up)", "Từ nằm ngửa: chống một tay, nâng hông, quay chân ra sau, đứng lên với tay còn lại che đầu, mắt luôn nhìn về phía đối thủ tưởng tượng. Làm chậm."],
-        ["Thoát nắm cổ tay", "Xoay cổ tay về phía kẽ hở ngón cái của đối thủ, giật mạnh về phía ngón cái rồi lùi ra, về tư thế rào chắn. Tập chậm, nhẹ lực."],
-        ["Thoát ôm từ phía trước", "Hạ trọng tâm, đẩy hông ra sau, hai tay đặt lên người đối thủ tạo khoảng cách, thoát ra và lùi. Ưu tiên thoát thân."],
-        ["Thoát kẹp cổ", "Hạ cằm bảo vệ cổ, hạ trọng tâm, xoay đầu thoát ra cùng hướng kẹp rồi lùi và chạy. Tập nhẹ lực, có bạn tập thì báo trước."],
-        ["Phản xạ nhìn - né - chạy", "Đứng thả lỏng, tự gọi ngẫu nhiên: né trái/phải, lùi, rào chắn, rồi chạy 5 bước. Rèn phản xạ thoát thân thay vì đối đầu."],
+        ["Giữ cự ly bằng jab", "Guard cao, jab chặn nhịp khi đối thủ tưởng tượng bước vào, bước chân giữ khoảng cách. Jab nhẹ, nhanh, về guard ngay."],
+        ["Lùi bước + jab chặn", "Bị ép tiến: lùi chân sau trước, không bắt chéo chân, cứ 2-3 bước chặn 1 jab. Không quay lưng, không cúi đầu."],
+        ["Pivot thoát góc", "Chân trước làm trụ, xoay chân sau ~90° ra ngoài đường tấn công, rồi ra 1 đòn và đi tiếp. Tập cả hai hướng."],
+        ["Phản xạ gọi số + áp lực", "Tự gán số: 1=jab, 2=cross, 3=lùi, 4=pivot trái, 5=pivot phải, 6=guard kín. Gọi ngẫu nhiên khi di chuyển (ghi âm hoặc nhờ người gọi thì phản xạ thật hơn). Học thêm hook, slip, block thì thêm vào dãy số."],
+        ["Parry / Block rồi trả đòn", "Gạt jab bằng tay sau hoặc đỡ hai tay, trả lại 1-2. Gạt nhẹ, không đỡ cứng, mắt luôn nhìn về phía trước."],
+        ["Né (slip) → Cross", "Slip ngoài đòn thẳng, đạp gót chân sau, xoay hông, cross thẳng ra. Về guard và xoay góc sau khi đánh."],
+        ["Đỡ → Hook trả đòn", "Đỡ cao bằng guard rồi hook trả lại bằng xoay hông, kết hợp bước xoay ra góc."],
+        ["Bob & weave + hook thân", "Đầu đi chữ U dưới hook tưởng tượng bằng gối, đứng lên và hook thân. Giữ lưng thẳng, guard không rơi."],
+        ["Đánh 1-2 rồi thoát", "Ra đúng 2 đòn sắc rồi pivot hoặc lùi ra khỏi tầm. Mục tiêu: đánh để tạo khoảng trống rồi đi, không đứng trao đổi."],
+        ["Cự ly gần: guard kín + uppercut", "Bị áp sát: khép khuỷu, uppercut ngắn, hook ngắn, rồi pivot thoát ra góc. Thở ra mỗi đòn."],
       ];
 
       /* ── Helpers tạo bài ── */
@@ -556,8 +556,8 @@
         return a;
       }
 
-      function coreFinisher() {
-        const p = getPlan(), n = p.deload ? 1 : p.phase >= 4 ? 3 : 2;
+      function coreFinisher(light) {
+        const p = getPlan(), n = Math.max(1, (p.deload ? 1 : p.phase >= 4 ? 3 : 2) - (light ? 1 : 0));
         return [
           ...timerSets("core", "Hollow Body Hold", "Lưng dán sàn, vai + chân nhấc nhẹ, siết bụng, thở đều", p.hold, 20, n),
           ...repSets("core", "Leg Raise", "Lưng dán sàn, hạ chân chậm, không thả rơi", pick(p, ["10-15", "10-15", "12-15", "12-15", "15-20", "15-20"]), n, 30),
@@ -587,16 +587,17 @@
       /* ── Boxing tự vệ (T7) ── */
       function buildBoxingSelfDefense() {
         const p = getPlan(), th = themeOf(p);
-        const tech = p.deload ? 1 : 2, rounds = p.sdRounds, wk = Math.min(p.w, TOTAL_WEEKS);
+        const tech = 1, rounds = p.deload ? 1 : 2, wk = Math.min(p.w, TOTAL_WEEKS);
         const items = [...warmupBoxing()];
         for (let i = 1; i <= tech; i++)
           items.push({ phase: "shadow", name: `Ôn kỹ thuật R${i} — ${th.title}`, detail: th.shadow, onSec: p.drillOn, offSec: 30 });
-        [0, 1, 2].map((k) => SD[((wk - 1) * 3 + k) % SD.length]).forEach((d) => {
+        const unlocked = Math.min(SD.length, 3 + Math.floor((wk - 1) / 2));
+        [0, 1, 2].map((k) => SD[((wk - 1) * 3 + k) % unlocked]).forEach((d) => {
           for (let r = 1; r <= rounds; r++)
-            items.push({ phase: "selfdef", name: `${d[0]} — hiệp ${r}`, detail: r === 1 ? d[1] : "Tăng dần tốc độ, vẫn giữ form và guard", onSec: 120, offSec: 30 });
+            items.push({ phase: "selfdef", name: `${d[0]} — hiệp ${r}`, detail: r === 1 ? d[1] : "Tăng dần tốc độ, vẫn giữ form và guard", onSec: 90, offSec: 30 });
         });
-        items.push(...buildCardio(2));
-        items.push(...coreFinisher());
+        items.push(...buildCardio(3));
+        items.push(...coreFinisher(true));
         return items;
       }
 
